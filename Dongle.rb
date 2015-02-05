@@ -15,18 +15,21 @@ class Dongle
 		scrub @gsm_modem.execute "AT+CGMM"
 	end
 	
+	def flush
+		@gsm_modem.flush
+	end
+	
 	def send_message(number, message)
 		@gsm_modem.execute "AT+CMGF=1"
-		@gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n)
-		scrub @gsm_modem.execute %Q(#{message}\x1a)
+		scrub @gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n#{message}\x1a)
+		@gsm_modem.flush
+		#scrub @gsm_modem.execute %Q()
 	end
 	
 	def messages
 		messages = @gsm_modem.execute %Q(AT+CMGL="ALL")
 		messages = scrub messages
-				
-		#puts "#{messages.split("\r\n").count} messages"
-		
+			
 		message_array = []
 		message_array_item = {}
 		messages.split("\r\n").each_with_index do |line, index|
@@ -49,7 +52,7 @@ class Dongle
 			end
 		end
 		
-		message_array.to_json
+		message_array.sort!{|x,y| y[:index] <=> x[:index]}.to_json
 		#messages
 	end
 	

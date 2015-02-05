@@ -7,9 +7,15 @@ namespace :dev do
 		require 'dongle'
 		dongle = Dongle.new "COM4"
 		begin
-		#puts dongle.manufacturer + " " + dongle.model
+		#dongle.flush
+		#puts dongle.model
+		#sleep 45
+		#puts "Checking load..."
 		#puts dongle.send_message "222", "BAL"
-			puts dongle.messages
+		#sleep 45
+		#puts "Press enter to proceed"
+		#gets
+		puts dongle.messages
 		ensure
 			dongle.close if !dongle.nil?
 		end

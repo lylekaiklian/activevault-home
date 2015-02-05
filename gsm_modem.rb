@@ -15,11 +15,14 @@ class Gsm_Modem
 	
 	def execute(at_command)
 		@out.write "#{at_command}\r\n".to_java_bytes
+		flush
+	end
+	
+	def flush
 		while @in.available == 0
 			#Wait until device responds
 		end
 		@in_io.read(@in.available)
-		
 	end
 	
 
