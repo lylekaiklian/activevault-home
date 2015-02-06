@@ -5,17 +5,21 @@ end
 namespace :dev do
 	task :dongle do
 		require 'dongle'
+		require 'thread'
 		dongle = Dongle.new "COM4"
 		begin
-		#dongle.flush
-		#puts dongle.model
-		#sleep 45
-		#puts "Checking load..."
-		#puts dongle.send_message "222", "BAL"
-		#sleep 45
-		#puts "Press enter to proceed"
-		#gets
-		puts dongle.messages
+		dongle.model
+		dongle.manufacturer		
+		dongle.messages
+		dongle.send_message "222", "BAL"
+		sleep 60
+		puts "Check for new message"
+		dongle.messages
+
+		
+		b = Queue.new
+		b.pop
+		
 		ensure
 			dongle.close if !dongle.nil?
 		end

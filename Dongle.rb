@@ -8,11 +8,11 @@ class Dongle
 	end
 	
 	def manufacturer
-		scrub @gsm_modem.execute "AT+CGMI"
+		@gsm_modem.execute "AT+CGMI"
 	end
 	
 	def model
-		scrub @gsm_modem.execute "AT+CGMM"
+		@gsm_modem.execute "AT+CGMM"
 	end
 	
 	def flush
@@ -21,12 +21,20 @@ class Dongle
 	
 	def send_message(number, message)
 		@gsm_modem.execute "AT+CMGF=1"
-		scrub @gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n#{message}\x1a)
-		@gsm_modem.flush
+		@gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n#{message}\x1a)
+		#@gsm_modem.flush
 		#scrub @gsm_modem.execute %Q()
 	end
 	
 	def messages
+		@gsm_modem.execute %Q(AT+CMGL="ALL")
+	end
+	
+	def wait
+		@gsm_modem.wait
+	end
+	
+	def messages_old
 		messages = @gsm_modem.execute %Q(AT+CMGL="ALL")
 		messages = scrub messages
 			
