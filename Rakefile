@@ -29,14 +29,20 @@ namespace :dev do
 		require 'gsm_modem'
 		begin
 			gsm_modem = Gsm_Modem.new "COM4"
-			puts gsm_modem.execute %Q(AT+CMGF=1)   
-			puts gsm_modem.execute %Q(AT+CMGL="ALL")
-			puts gsm_modem.execute %Q(AT+CGMI)
-			puts gsm_modem.execute %Q(AT+CGMM)
+			#puts gsm_modem.execute %Q(AT+CMGF=1)   
+			#puts gsm_modem.execute %Q(AT+CMGL="ALL")
+			#puts gsm_modem.execute %Q(AT+CGMI)
+			#puts gsm_modem.execute %Q(AT+CGMM)
+			#puts gsm_modem.execute %Q(AT+CMGS="222"\r\nBAL\x1a)
+			#gsm_modem.execute %Q(AT+CMGL="ALL")	do |response|
+			#	puts response.upcase
+			#end
+			
+			puts gsm_modem.execute "AT+CNUM"
 			puts gsm_modem.execute %Q(AT+CMGS="222"\r\nBAL\x1a)
-			gsm_modem.execute %Q(AT+CMGL="ALL")	do |response|
-				puts response.upcase
-			end			
+			gsm_modem.wait_for(/^\+CMTI/) do |response|
+				puts response
+			end
 		ensure
 			gsm_modem.close if !gsm_modem.nil?
 		end

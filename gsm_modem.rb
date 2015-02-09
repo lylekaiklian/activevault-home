@@ -57,15 +57,15 @@ class Gsm_Modem
 		end
 	end
 	
-	def flush
-		while @in.available == 0
-			#Wait until device responds
-		end
-		@in_io.read(@in.available)
-	end
 
-	def wait
+	#Wait for an AT "Interrupt", while ignoring/dropping others that
+	#do not qualify
+	def wait_for(interrupt_regex, &block)  
 		loop do
+			input = @response_queue.pop
+			if input =~ interrupt_regex
+				return block.call input
+			end
 		end
 	end
 
