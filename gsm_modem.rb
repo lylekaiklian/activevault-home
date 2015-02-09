@@ -16,15 +16,20 @@ class Gsm_Modem
 		@callback_queue = Queue.new
 		@command_queue = Queue.new
 		
+		#The purpose of this thread is to convert the asynchronous incoming stream
+		#of the device into a neat queue of strings.
 		@producer = Thread.new do
+			incoming_message = ""
 			loop do
 				in_available = @in.available
 				if in_available > 0
-					incoming_message = @in_io.read(in_available)
-					#puts "PUSHING #{incoming_message} in queue"
-					@response_queue.push(incoming_message)
+					incoming_message += @in_io.read(1)
+					if incoming_message[-2..-1] == "\r\n"
+						@response_queue.push(incoming_message)
+						incoming_message = ""
+					end
+					
 				end
-				#sleep 0.25
 			end
 		end
 		
@@ -34,25 +39,17 @@ class Gsm_Modem
 				puts "#{input}"
 				if input =~ /OK\r\n/ || input =~/\+CMS ERROR/
 					#puts "Ready to receive more commands!"
-					@command_queue_consumer.wakeup
+					Thread.main.wakeup
 				end
 			end
 		end
 		
-		@command_queue_consumer = Thread.new do
-			loop do
-				command = @command_queue.pop
-				puts "MESSAGE: #{command}"
-				@out.write command
-				#SLEEP until OK is received
-				sleep
-			end
-		end
 		
 	end
 	
 	def execute(at_command, regex_listener=nil, callback=nil)
-		@command_queue.push "#{at_command}\r\n".to_java_bytes
+		@out.write "#{at_command}\r\n".to_java_bytes
+		sleep
 	end
 	
 	def flush

@@ -27,9 +27,12 @@ namespace :dev do
 	
 	task :gsm_modem do
 		require 'gsm_modem'
-		gsm_modem = Gsm_Modem.new "COM4"
-		gsm_modem.execute %Q(AT+CMGF=1)   
-		puts gsm_modem.execute %Q(AT+CMGL="ALL")
-		gsm_modem.close
+		begin
+			gsm_modem = Gsm_Modem.new "COM4"
+			gsm_modem.execute %Q(AT+CMGF=1)   
+			gsm_modem.execute %Q(AT+CMGL="ALL")
+		ensure
+			gsm_modem.close if !gsm_modem.nil?
+		end
 	end
 end
