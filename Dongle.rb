@@ -42,7 +42,7 @@ class Dongle
 				
 				matches = /\+CMGR: "([^"]*)","([^"]*)",,"([^"]*)"\r\n(.*)\r\n\r\n/m.match(response)
 				status = matches[1]
-				carrier = matches[2]
+				sender = matches[2]
 				timestamp = matches[3]
 				message = matches[4]
 				

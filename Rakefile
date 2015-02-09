@@ -75,6 +75,17 @@ namespace :util do
 		end
 	end
 	
+	task :send_and_expect, :number, :message do |task, args|
+		require 'dongle'
+		begin
+			dongle = Dongle.new "COM4"
+			dongle.send_message(args[:number], args[:message])
+			puts dongle.wait_for_new_message
+		ensure
+			dongle.close if !dongle.nil?
+		end	
+	end
+	
 	task :bal do 
 		require 'dongle'
 		begin
@@ -84,4 +95,21 @@ namespace :util do
 			dongle.close if !dongle.nil?
 		end	
 	end
+	
+	task :num do
+		require 'dongle'
+		begin
+			dongle = Dongle.new "COM4"
+			puts dongle.number
+		ensure
+			dongle.close if !dongle.nil?
+		end		
+	end
+end
+
+namespace :test do
+	task :case1 do
+		puts "Case 1"
+	end
+
 end

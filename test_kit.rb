@@ -6,6 +6,12 @@ require 'dongle'
 class TestKit
 	def initialize(comm_port)
 		@dongle = Dongle.new comm_port
+		
+		#Put this into config file later
+		@mapping = {
+			"COM4" => "+639154322739",
+			"COM5" => "+639173292739"
+		}
 	end
 
 	def send_and_must_receive(number, sms_content, response_regex)
