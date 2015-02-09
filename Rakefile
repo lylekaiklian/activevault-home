@@ -6,19 +6,22 @@ namespace :dev do
 	task :dongle do
 		require 'dongle'
 		require 'thread'
+		require 'json'
+		
 		dongle = Dongle.new "COM4"
 		begin
-		dongle.model
-		dongle.manufacturer		
-		dongle.messages
-		dongle.send_message "222", "BAL"
-		sleep 60
-		puts "Check for new message"
-		dongle.messages
+		#dongle.model
+		#dongle.manufacturer		
+		#dongle.messages
+		#dongle.send_message "222", "BAL"
+		#sleep 60
+		#puts "Check for new message"
+		#dongle.messages
+		puts dongle.balance_inquiry.to_json
 
 		
-		b = Queue.new
-		b.pop
+		#b = Queue.new
+		#b.pop
 		
 		ensure
 			dongle.close if !dongle.nil?
@@ -47,6 +50,16 @@ namespace :dev do
 			end
 		ensure
 			gsm_modem.close if !gsm_modem.nil?
+		end
+	end
+	
+	task :test_kit do
+		require 'test_kit'
+		test_kit = TestKit.new "COM4"
+		begin
+			#puts test_kit.balance_inquiry
+		ensure		
+			test_kit.close if !test_kit.nil?
 		end
 	end
 end

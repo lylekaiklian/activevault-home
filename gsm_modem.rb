@@ -1,7 +1,10 @@
 require 'java'
 require 'RXTXComm.jar'
 require 'thread'
-
+##
+# Here is the abstraction of a GSM Modem, how to get input into it,
+# and how to get output from it.
+##
 class Gsm_Modem
 
 	def initialize(comm_port)
