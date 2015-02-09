@@ -8,9 +8,17 @@ class TestKit
 		@dongle = Dongle.new comm_port
 		
 		#Put this into config file later
-		@mapping = {
-			"COM4" => "+639154322739",
-			"COM5" => "+639173292739"
+		@sticks = {
+			"A" => {
+					"port" => "COM4", 
+					"number" => "+639154322739",
+					"dongle_object" => Dongle.new "COM4" 
+					},
+			"B" =>	{
+					"port" => "COM5", 
+					"number" => "+639173292739",
+					"dongle_object" => Dongle.new "COM5"
+					}
 		}
 	end
 
@@ -29,7 +37,8 @@ class TestKit
 	end
 
 	def close
-		@dongle.close if !@dongle.nil?
+		@sticks["A"]["dongle_object"].close if !@sticks["A"]["dongle_object"].nil?
+		@sticks["B"]["dongle_object"].close if !@sticks["B"]["dongle_object"].nil?
 	end	
 	
 end
