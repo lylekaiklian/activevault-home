@@ -41,7 +41,9 @@ namespace :dev do
 			puts gsm_modem.execute "AT+CNUM"
 			puts gsm_modem.execute %Q(AT+CMGS="222"\r\nBAL\x1a)
 			gsm_modem.wait_for(/^\+CMTI/) do |response|
-				puts response
+				matches = /^\+CMTI: "[^"]*",(\d+)/.match(response)
+				message_index = matches[1]
+				puts gsm_modem.execute %Q(AT+CMGR=#{message_index})
 			end
 		ensure
 			gsm_modem.close if !gsm_modem.nil?
