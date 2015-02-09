@@ -32,24 +32,26 @@ class Gsm_Modem
 				end
 			end
 		end
-		
-		@consumer = Thread.new do
-			loop do
-				input = @response_queue.pop
-				puts "#{input}"
-				if input =~ /OK\r\n/ || input =~/\+CMS ERROR/
-					#puts "Ready to receive more commands!"
-					Thread.main.wakeup
-				end
-			end
-		end
-		
+				
 		
 	end
 	
-	def execute(at_command, regex_listener=nil, callback=nil)
+	def execute(at_command, &block)
 		@out.write "#{at_command}\r\n".to_java_bytes
-		sleep
+		return_input = ""
+		
+		#Consume all input from the device
+		loop do
+			input = @response_queue.pop
+			return_input += input
+			
+			if input =~ /OK\r\n/ || input =~/\+CMS ERROR/
+				break
+			end
+		end
+		
+		block.call return_input if !block.nil?
+		return_input
 	end
 	
 	def flush
