@@ -63,3 +63,25 @@ namespace :dev do
 		end
 	end
 end
+
+namespace :util do
+	task :send, :number, :message do |task, args|
+		require 'dongle'
+		begin
+			dongle = Dongle.new "COM4"
+			dongle.send_message(args[:number], args[:message])
+		ensure
+			dongle.close if !dongle.nil?
+		end
+	end
+	
+	task :bal do 
+		require 'dongle'
+		begin
+			dongle = Dongle.new "COM4"
+			puts dongle.balance_inquiry
+		ensure
+			dongle.close if !dongle.nil?
+		end	
+	end
+end
