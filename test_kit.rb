@@ -5,19 +5,20 @@ require 'dongle'
 ##
 class TestKit
 	def initialize(comm_port)
-		@dongle = Dongle.new comm_port
 		
 		#Put this into config file later
 		@sticks = {
 			"A" => {
 					"port" => "COM4", 
 					"number" => "+639154322739",
-					"dongle_object" => Dongle.new "COM4" 
+					"dongle_object" => Dongle.new "COM4",
+					"balance" => nil
 					},
 			"B" =>	{
 					"port" => "COM5", 
 					"number" => "+639173292739",
-					"dongle_object" => Dongle.new "COM5"
+					"dongle_object" => Dongle.new "COM5",
+					"balance" => nil
 					}
 		}
 	end
@@ -40,5 +41,9 @@ class TestKit
 		@sticks["A"]["dongle_object"].close if !@sticks["A"]["dongle_object"].nil?
 		@sticks["B"]["dongle_object"].close if !@sticks["B"]["dongle_object"].nil?
 	end	
+	
+	def run
+		puts "Let's go go go go go!"
+	end
 	
 end
