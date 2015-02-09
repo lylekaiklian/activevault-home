@@ -50,8 +50,11 @@ class Gsm_Modem
 			end
 		end
 		
-		block.call return_input if !block.nil?
-		return_input
+		if !block.nil?
+			return block.call return_input 
+		else
+			return return_input
+		end
 	end
 	
 	def flush
