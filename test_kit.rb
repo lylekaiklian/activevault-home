@@ -71,6 +71,35 @@ class TestKit
 		puts "Acutal charge: #{charge}"
 		return amount.to_f == charge
 	end
+	
+	def send_reply(parameters)
+		stick = parameters[0]
+		message = parameters[1]
+		timeout = parameters[2].to_i #Deal with the timeout later
+		
+		reply_number = @sticks[stick.to_sym][:reply_number]
+		dongle = @sticks[stick.to_sym][:dongle_object]
+		dongle.send_message(reply_number, message)
+		return nil
+	end
+	
+	def must_receive(parameters)
+		stick = parameters[0]
+		sender = parameters[1]
+		regex = parameters[2]
+		
+		dongle = @sticks[stick.to_sym][:dongle_object]
+		response = dongle.wait_for_new_message
+		
+		@sticks[stick.to_sym][:reply_number] = response[:sender]
+		response_message = response[:message]
+		puts "#{sender}: #{response_message}"
+		
+		# Tame Regex later
+		#return (/#{regex}/ =~ response_message)
+		return !response_message.nil? && sender == response[:sender]		
+
+	end
 
 	def close
 		#Will clean. Sorry for the hackish code.
