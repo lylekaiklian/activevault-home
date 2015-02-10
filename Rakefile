@@ -28,6 +28,16 @@ namespace :dev do
 		end
 	end
 	
+	task :dongle2 do
+		require 'dongle'
+		dongle = Dongle.new "COM9"
+		begin
+			puts dongle.balance_inquiry		
+		ensure
+			dongle.close if !dongle.nil?
+		end		
+	end
+	
 	task :gsm_modem do
 		require 'gsm_modem'
 		begin
@@ -53,9 +63,21 @@ namespace :dev do
 		end
 	end
 	
+	task :gsm_modem2 do
+		require 'gsm_modem'
+		begin
+			gsm_modem = Gsm_Modem.new "COM9"
+			puts gsm_modem.execute %Q(AT+CPBS="ON")
+			puts gsm_modem.execute %Q(AT+CPBW=1,"+639062627862",129,"Voice")
+			puts gsm_modem.execute "AT+CNUM"
+		ensure
+			gsm_modem.close if !gsm_modem.nil?
+		end
+	end
+	
 	task :test_kit do
 		require 'test_kit'
-		test_kit = TestKit.new "COM4"
+		test_kit = TestKit.new
 		begin
 			#puts test_kit.balance_inquiry
 		ensure		

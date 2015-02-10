@@ -9,6 +9,10 @@ class Dongle
 		@gsm_modem = Gsm_Modem.new comm_port
 	end
 	
+	def device_info
+		@gsm_modem.execute "ATI"
+	end
+	
 	def manufacturer
 		@gsm_modem.execute "AT+CGMI"
 	end
@@ -47,7 +51,7 @@ class Dongle
 				message = matches[4]
 				
 				return_value = { status: status, 
-						carrier: carrier,
+						sender: sender,
 						timestamp: timestamp,
 						message:message
 					}

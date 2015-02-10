@@ -9,6 +9,13 @@ AT+CPBS? - phonebook
 AT+CPBR=? - get phonebook status
 AT+CPBR=1 - get first phonebook entry
 
+** ENable +CNUM ** 
+AT+CPBS="ON"
+OK
+AT+CPBW=1,"99XXXXXXXX",129,"Voice"
+OK
+
+
 ** SMS **
 AT+CMGF - set message format. Easier to use text mode (1) than PDU mode (0)
 AT+CMGF=1 - set to text mode
