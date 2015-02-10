@@ -9,19 +9,21 @@ class TestKit
 		#Put this into config file later, 
 		#and let the kit query the dongles future releases
 		@sticks = {
-			:A => {
-					port: "COM4", 
-					number: "+639154322739",
-					dongle_object:  Dongle.new("COM4"),
-					description: "yellow dongle", 
-					balance: nil,
-					reply_number: nil
-					},
-			:B =>	{
+			:A =>	{
 					port: "COM9", 
 					number: "+639062627862",
 					dongle_object: Dongle.new("COM9"),
 					description: "blue dongle",
+					balance: nil,
+					reply_number: nil
+					},
+		
+			:B => {
+					port: "COM4", 
+					#number: "+639154322739",
+					number: "+639054292739",
+					dongle_object:  Dongle.new("COM4"),
+					description: "yellow dongle", 
 					balance: nil,
 					reply_number: nil
 					}
@@ -30,7 +32,7 @@ class TestKit
 		puts "Sanity check"
 		@sticks.keys.each do |key|
 			puts "Information for #{key}:"
-			puts @sticks[key][:dongle_object].number
+			puts @sticks[key][:dongle_object].device_info
 		end
 	end
 
@@ -119,30 +121,40 @@ class TestKit
 	
 	def run
 		puts "Let's go go go go go!\n\n"
-		File.open("input.in", "r") do |f|
-			f.each_line do |line|
-				commands = line.split(",")
-				method = commands[1].strip
-				parameters = Array.new(commands).map{|p| p.strip}
-				
-				parameters.delete_at(1)
-				puts "[#{method}(#{parameters.join(",")})]"
-				begin
-					#puts self.class.name
-					truth = self.send(method, parameters)
-					if truth.nil?
-						puts "**N/A**\n\n"
-					elsif truth === true
-						puts "**PASSED**\n\n"
-					else
-						puts "**FAILED**\n\n"
+		File.open("output.csv", "w") do |out|
+			File.open("input.in", "r") do |f|
+				f.each_line do |line|
+					commands = line.split(",")
+					method = commands[1].strip
+					parameters = Array.new(commands).map{|p| p.strip}
+					
+					parameters.delete_at(1)
+					puts "[#{method}(#{parameters.join(",")})]"
+					begin
+						#puts self.class.name
+						truth = self.send(method, parameters)
+						if truth.nil?
+							result = "**N/A**"	
+						elsif truth === true
+							result = "**PASSED**"
+						else
+							result = "**FAILED**"
+						end
+						
+						puts result + "\n\n"
+						out.puts line.strip + "," + result
+					rescue NoMethodError => ex
+						puts ex.message
+						puts %Q(Method "#{method}" not yet implemented)
 					end
-				rescue NoMethodError => ex
-					puts ex.message
-					puts %Q(Method "#{method}" not yet implemented)
 				end
 			end
 		end
+		
+		self.html
+	end
+	
+	def html
 	end
 	
 
