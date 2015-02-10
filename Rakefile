@@ -79,7 +79,7 @@ namespace :dev do
 		require 'test_kit'
 		test_kit = TestKit.new
 		begin
-			#puts test_kit.balance_inquiry
+			test_kit.run
 		ensure		
 			test_kit.close if !test_kit.nil?
 		end
