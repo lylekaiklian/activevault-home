@@ -17,7 +17,7 @@ namespace :dev do
 		#sleep 60
 		#puts "Check for new message"
 		#dongle.messages
-		puts dongle.number
+		puts dongle.balance_inquiry	
 
 		
 		#b = Queue.new
