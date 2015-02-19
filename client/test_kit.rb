@@ -127,35 +127,37 @@ class TestKit
 		return nil #n/a
 	end	
 	
+	def execute_line(line)
+		commands = line.split(",")
+		method = commands[1].strip
+		parameters = Array.new(commands).map{|p| p.strip}
+		
+		parameters.delete_at(1)
+		puts "[#{method}(#{parameters.join(",")})]"
+		begin
+			#puts self.class.name
+			truth = self.send(method, parameters)
+			if truth.nil?
+				result = "**N/A**"	
+			elsif truth === true
+				result = "**PASSED**"
+			else
+				result = "**FAILED**"
+			end
+			
+			puts result + "\n\n"
+			out.puts line.strip + "," + result
+		rescue NoMethodError => ex
+			puts ex.message
+			puts %Q(Method "#{method}" not yet implemented)
+		end	
+	end
+	
 	def run
 		puts "Let's go go go go go!\n\n"
 		File.open("output.csv", "w") do |out|
 			File.open("input.in", "r") do |f|
-				f.each_line do |line|
-					commands = line.split(",")
-					method = commands[1].strip
-					parameters = Array.new(commands).map{|p| p.strip}
-					
-					parameters.delete_at(1)
-					puts "[#{method}(#{parameters.join(",")})]"
-					begin
-						#puts self.class.name
-						truth = self.send(method, parameters)
-						if truth.nil?
-							result = "**N/A**"	
-						elsif truth === true
-							result = "**PASSED**"
-						else
-							result = "**FAILED**"
-						end
-						
-						puts result + "\n\n"
-						out.puts line.strip + "," + result
-					rescue NoMethodError => ex
-						puts ex.message
-						puts %Q(Method "#{method}" not yet implemented)
-					end
-				end
+				f.each_line { |line| execute_line(line)}
 			end
 		end
 		
@@ -174,20 +176,20 @@ class TestKit
 		loop do
 			#puts "Waiting for messages..."
 			messages = sqs.receive_message(queue_url).get_messages
-			
-			
 		
 			messages.each do |message|
-				puts message.get_body
-				puts (receipt_handle = message.get_receipt_handle)
+				receipt_handle = message.get_receipt_handle
+				message_body = JSON.parse(message.get_body, {symbolize_names: true})
+				puts "#{message_body[:batch]} - #{message_body[:order_id]} : #{message_body[:data]}"
 				sqs.delete_message(queue_url, receipt_handle)
 			end
 			sleep 0.25
 		end
 		
-		puts "\nrun_using_sqs"
-		
+		puts "\nrun_using_sqs"		
 	end
+	
+	
 	
 
 	
