@@ -1,4 +1,6 @@
 require 'dongle'
+require 'jar/aws-java-sdk-1.9.20.1.jar'
+require 'jar/commons-logging-1.2.jar'
 
 ##
 # Here lies the promo codes we humans are all familiar with!
@@ -155,6 +157,13 @@ class TestKit
 	end
 	
 	def html
+	end
+	
+	#Run the testkit using the web frontend via SQS
+	def run_using_sqs
+		import('com.amazonaws.services.sqs.AmazonSQSClient')
+		puts "run_using_sqs"
+		
 	end
 	
 

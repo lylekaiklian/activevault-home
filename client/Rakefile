@@ -84,6 +84,17 @@ namespace :dev do
 			test_kit.close if !test_kit.nil?
 		end
 	end
+	
+	task :test_kit_sqs do
+		require 'test_kit'
+		test_kit = TestKit.new
+		begin
+			test_kit.run_using_sqs
+		ensure		
+			test_kit.close if !test_kit.nil?
+		end
+	end
+	
 end
 
 namespace :util do
