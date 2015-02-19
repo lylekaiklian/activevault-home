@@ -1,5 +1,5 @@
 <h1>Upload Input File</h1>
-<form method="post" action="lost_treasure/submit">
-    <input type="file" />
-    <input type="submit" />
-</form>
+<%= form_tag({action: 'submit' , method: 'post'}, multipart: true) do %>
+  <%= file_field_tag 'test_case_input' %>
+  <%= submit_tag "Upload" %>
+<% end %>

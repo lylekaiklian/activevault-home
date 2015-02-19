@@ -4,7 +4,8 @@ class LostTreasureController < ApplicationController
   
   #Process incoming CSV file, and queue it to SQS
   def submit
-      treasure_test_case = TreasureTestCase.new  
+      test_case_input = params[:test_case_input].read
+      treasure_test_case = TreasureTestCase.new(file_content: test_case_input)  
       @output = treasure_test_case.push_to_sqs
   end
   
