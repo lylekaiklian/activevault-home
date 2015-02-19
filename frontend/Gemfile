@@ -43,3 +43,6 @@ group :development, :test do
   gem 'spring'
 end
 
+# AWS SDK to access the SQS
+gem 'aws-sdk', '~> 2.0.26'
+

@@ -1,6 +1,9 @@
 # This class represents a single Test Case. 
 # A test case contains multiple lines of Test Case Items.
 # For simplicity, a test case item is a line of comma-separated value.
+
+require 'aws-sdk'
+
 class TreasureTestCase
     
     attr_accessor :items
@@ -24,7 +27,15 @@ class TreasureTestCase
     
     #Push to SQS. Push it line by line. 
     def push_to_sqs
-        #raise "Hey!"
+        sqs = Aws::SQS::Client.new(region: 'ap-southeast-1')
+        output =""
+        sqs.list_queues.each do |resp|
+            output += resp.data.to_json + "\n"
+        end
+    
+        
+
+        return output
     end
     
      

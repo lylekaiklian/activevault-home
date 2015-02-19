@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   root 'lost_treasure#index'
       
-  get 'lost_treasure/index'
+  get 'lost_treasure/index' 
   post 'lost_treasure/submit'
 
   # The priority is based upon order of creation: first created -> highest priority.
