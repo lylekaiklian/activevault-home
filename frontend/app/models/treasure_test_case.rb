@@ -34,17 +34,21 @@ class TreasureTestCase
     
     #Push to SQS. Push it line by line. 
     def push_to_sqs
+        return_value = ""
         batch = Time.now.to_i
         @items.each_with_index do |test_item, order_id|
-            response = @sqs.send_message(queue_url: @sqs_url, 
-                message_body: {
+            message_body  = {
                     target_machine: @target_machine,
                     batch: batch,
                     order_id: order_id + 1,
                     data: test_item
-                    }.to_json)
+                    }.to_json
+            response = @sqs.send_message(queue_url: @sqs_url, 
+                message_body: message_body )
             #TODO: double check if SQS receives the message correcty via MD5 Checking
+            return_value += "#{message_body}\n"
         end
+        return return_value
         
     end
     
