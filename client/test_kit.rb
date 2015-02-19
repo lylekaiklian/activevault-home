@@ -1,6 +1,12 @@
 require 'dongle'
+require 'java'
 require 'jar/aws-java-sdk-1.9.20.1.jar'
 require 'jar/commons-logging-1.2.jar'
+require 'jar/jackson-databind-2.3.1.jar'
+require 'jar/jackson-core-2.5.0.jar'
+require 'jar/jackson-annotations-2.5.0.jar'
+require 'jar/httpcore-4.4.jar'
+require 'jar/httpclient-4.4.jar'
 
 ##
 # Here lies the promo codes we humans are all familiar with!
@@ -162,7 +168,24 @@ class TestKit
 	#Run the testkit using the web frontend via SQS
 	def run_using_sqs
 		import('com.amazonaws.services.sqs.AmazonSQSClient')
-		puts "run_using_sqs"
+		queue_url = "https://sqs.ap-southeast-1.amazonaws.com/119554206391/lost_treasure"
+
+		sqs = AmazonSQSClient.new
+		loop do
+			#puts "Waiting for messages..."
+			messages = sqs.receive_message(queue_url).get_messages
+			
+			
+		
+			messages.each do |message|
+				puts message.get_body
+				puts (receipt_handle = message.get_receipt_handle)
+				sqs.delete_message(queue_url, receipt_handle)
+			end
+			sleep 0.25
+		end
+		
+		puts "\nrun_using_sqs"
 		
 	end
 	
