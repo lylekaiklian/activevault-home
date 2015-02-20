@@ -19,6 +19,7 @@ class Gsm_Modem
 		@response_queue = QueueWithTimeout.new
 		@callback_queue = Queue.new
 		@command_queue = Queue.new
+		@timeout_seconds = 10
 		
 		#The purpose of this thread is to convert the asynchronous incoming stream
 		#of the device into a neat queue of strings.
@@ -46,7 +47,7 @@ class Gsm_Modem
 		
 		#Consume all input from the device
 		loop do
-			input = @response_queue.pop
+			input = @response_queue.pop_with_timeout(@timeout_seconds)
 			return_input += input
 			
 			if input =~ /OK\r\n/ || input =~/\+CMS ERROR/
@@ -65,9 +66,8 @@ class Gsm_Modem
 	#Wait for an AT "Interrupt", while ignoring/dropping others that
 	#do not qualify
 	def wait_for(interrupt_regex, &block)
-		timeout_seconds = 20
 		loop do
-			input = @response_queue.pop_with_timeout(timeout_seconds)
+			input = @response_queue.pop_with_timeout(@timeout_seconds)
 			if input =~ interrupt_regex
 				return block.call input
 			end
@@ -78,6 +78,27 @@ class Gsm_Modem
 		@out.close if !@out.nil?
 		@in.close if !@in.nil?
 		@port.close if !@port.nil?
+	end
+	
+	def self.port_sweep
+		require 'dongle'
+		import('gnu.io.CommPortIdentifier')
+		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
+			port = port_ids.get_name
+			puts "Sweeping port #{port}..."
+			x = nil
+			begin
+				x = Dongle.new(port)
+				puts x.number
+			rescue ThreadError => ex
+				next
+			rescue NoMethodError =>ex2
+				puts "Number not yet set"
+				next
+			ensure
+				x.close if !x.nil?
+			end
+		end
 	end
 
 	class Timeout < StandardError

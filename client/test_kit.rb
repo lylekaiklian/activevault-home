@@ -18,22 +18,23 @@ class TestKit
 		#and let the kit query the dongles future releases
 		@sticks = {
 =begin
-		:A =>	{
+		:B =>	{
 					port: "COM9", 
 					number: "+639062627862",
 					dongle_object: Dongle.new("COM9"),
 					description: "blue dongle",
 					balance: nil,
+					
 					reply_number: nil
 					}
 			
 					,
 =end		
 			:A => {
-					port: "COM4", 
+					port: "COM9", 
 					#number: "+639154322739",
 					number: "+639054292739",
-					dongle_object:  Dongle.new("COM4"),
+					dongle_object:  Dongle.new("COM9"),
 					description: "yellow dongle", 
 					balance: nil,
 					reply_number: nil

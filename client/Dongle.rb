@@ -20,7 +20,7 @@ class Dongle
 	def number
 		@gsm_modem.execute "AT+CNUM" do |response|
 			matches = /\+CNUM: "[^"]*","([^"]*)",\d+/.match(response)
-			return matches[1]
+			return matches[1] 
 		end
 	end
 	

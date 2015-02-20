@@ -1,9 +1,2 @@
-A,check_balance,**N/A**
-A,send_and_must_receive,2954,STOP ALL,Sorry,[\s]*you are not subscribed to any 2954 services.[\s]*To know more about 2954 services, text HELP to 2954 for free.[\s]*This message is free.[\s]*,**FAILED**
-A,must_be_charged,0,**PASSED**
 A,check_balance,**FAILED**
-A,send_and_must_receive,2954,HELP MYTONES,Sa MyTones,[\s]*makukuha mo ang sikat na tones kada linggo for only P10/tone.[\s]*Get a free tone when you subscribe now![\s]*(for 1st time subscribers)![\s]*Txt ON TRU to 2954[\n]*Pag ang load mo ay below P10,[\s]*makukuha mo ang tone mo basta may P5 ka. Sa susunod na araw sisingilin ang kakulangang bayad para sa P10 na tone.[\s]*To stop service anytime, reply STOP TRU to 2954. Help? Call (02)988-9688 M-F, 9am-5pm.[\s]*,**PASSED**
-A,must_be_charged,0,**N/A**
-A,check_balance,**N/A**
-A,send_and_must_receive,2954,MYTONES,Available services from 2954![\s]*MYTONES: Get the hottest tones! P10/tone[\s]*TRU[\s]*SAYA TEXT: Get daily infotxt! P1/txt for 7 days. P2.5/txt[\s]*LAB[\s]*NUM[\s]*ORIG[\s]*PERA[\s]*PINOY[\s]*TAWA[\s]*TIPID[\s]*Text ON <KEYWORD> to 2954,**FAILED**
-A,must_be_charged,2.50,**FAILED**
+A,must_be_charged,0,**FAILED**

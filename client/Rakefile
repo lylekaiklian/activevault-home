@@ -158,7 +158,7 @@ task :run, :method, :param1 do |task, args|
 		when :file
 			test_kit.run_using_file(args[:param1])		
 		when :sqs
-			puts "TODO"
+			test_kit.run_using_sqs
 		end
 	ensure		
 		test_kit.close if !test_kit.nil?
