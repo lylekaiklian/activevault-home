@@ -115,7 +115,7 @@ class Gsm_Modem
 			begin
 				gsm_modem = Gsm_Modem.new(port)
 				gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
-				puts gsm_modem.execute "ATI"
+				puts (gsm_modem.execute("ATI"){|input| input += gsm_modem.execute "AT+CNUM"})
 			rescue ThreadError => ex
 				puts ex.message
 				next
