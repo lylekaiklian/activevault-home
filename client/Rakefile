@@ -144,5 +144,21 @@ namespace :test do
 	task :case1 do
 		puts "Case 1"
 	end
+end
 
+
+task :run, :method, :param1 do |task, args|
+	require 'test_kit'
+	test_kit = TestKit.new
+	args[:method] ||= :file
+	begin
+		case args[:method].to_sym
+		when :file
+			test_kit.run_using_file(args[:param1])		
+		when :sqs
+			puts "TODO"
+		end
+	ensure		
+		test_kit.close if !test_kit.nil?
+	end
 end

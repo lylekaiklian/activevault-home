@@ -17,16 +17,19 @@ class TestKit
 		#Put this into config file later, 
 		#and let the kit query the dongles future releases
 		@sticks = {
-			:A =>	{
+=begin
+		:A =>	{
 					port: "COM9", 
 					number: "+639062627862",
 					dongle_object: Dongle.new("COM9"),
 					description: "blue dongle",
 					balance: nil,
 					reply_number: nil
-					},
-		
-			:B => {
+					}
+			
+					,
+=end		
+			:A => {
 					port: "COM4", 
 					#number: "+639154322739",
 					number: "+639054292739",
@@ -35,6 +38,7 @@ class TestKit
 					balance: nil,
 					reply_number: nil
 					}
+
 		}
 		
 		puts "Sanity check"
@@ -66,6 +70,8 @@ class TestKit
 		
 		# Tame Regex later
 		#return (/#{regex}/ =~ response_message)
+		puts /#{regex}/
+		puts "Match?" + ((/#{regex}/ =~ response_message) ? "true" : "false")
 		return !response_message.nil?
 	end
 	
@@ -113,8 +119,12 @@ class TestKit
 
 	def close
 		#Will clean. Sorry for the hackish code.
-		@sticks[:A][:dongle_object].close if !@sticks[:A][:dongle_object].nil?
-		@sticks[:B][:dongle_object].close if !@sticks[:B][:dongle_object].nil?
+		#@sticks[:A][:dongle_object].close if !@sticks[:A][:dongle_object].nil?
+		#@sticks[:B][:dongle_object].close if !@sticks[:B][:dongle_object].nil?
+		
+		@sticks.keys.each do |key|
+			puts @sticks[key][:dongle_object].close
+		end		
 	end	
 	
 	def check_balance(parameters)
@@ -127,7 +137,20 @@ class TestKit
 		return nil #n/a
 	end	
 	
-	def execute_line(line)
+	def execute_line(line, out=nil)
+	
+		# Deal with white spaces
+		return if line.strip.empty?
+	
+		# Deal with comments
+		if line.strip[0] == "#"
+			puts "COMMENT: #{line}"
+			result = "**N/A**"
+			puts result + "\n\n"
+			return
+		end
+		
+	
 		commands = line.split(",")
 		method = commands[1].strip
 		parameters = Array.new(commands).map{|p| p.strip}
@@ -146,18 +169,18 @@ class TestKit
 			end
 			
 			puts result + "\n\n"
-			out.puts line.strip + "," + result
+			out.puts line.strip + "," + result if !out.nil?
 		rescue NoMethodError => ex
 			puts ex.message
 			puts %Q(Method "#{method}" not yet implemented)
 		end	
 	end
 	
-	def run
+	def run_using_file(filename)
 		puts "Let's go go go go go!\n\n"
 		File.open("output.csv", "w") do |out|
-			File.open("input.in", "r") do |f|
-				f.each_line { |line| execute_line(line)}
+			File.open(filename, "r") do |f|
+				f.each_line { |line| execute_line(line, out)}
 			end
 		end
 		
