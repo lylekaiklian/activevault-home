@@ -1,3 +1,5 @@
+require 'gsm_modem'
+
 task :default do
 	puts "Project Lost Treasure"
 end
@@ -142,12 +144,7 @@ namespace :util do
 	end
 end
 
-namespace :test do
-	task :case1 do
-		puts "Case 1"
-	end
-end
-
+## Real tasks from hereon. Delete tasks above later.
 
 task :run, :method, :param1 do |task, args|
 	require 'test_kit'
@@ -163,4 +160,8 @@ task :run, :method, :param1 do |task, args|
 	ensure		
 		test_kit.close if !test_kit.nil?
 	end
+end
+
+task :port_sweep do
+	Gsm_Modem.port_sweep(5)
 end

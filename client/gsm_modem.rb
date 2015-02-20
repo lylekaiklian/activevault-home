@@ -8,6 +8,8 @@ require 'queue_with_timeout'
 ##
 class Gsm_Modem
 
+	attr_accessor :timeout_seconds
+
 	def initialize(comm_port)
 		import('gnu.io.CommPortIdentifier')
 		import('gnu.io.SerialPort')
@@ -16,7 +18,7 @@ class Gsm_Modem
 		@in = @port.input_stream
 		@in_io = @in.to_io
 		@out = @port.output_stream	
-		@response_queue = QueueWithTimeout.new
+		@response_queue = Queue.new
 		@callback_queue = Queue.new
 		@command_queue = Queue.new
 		@timeout_seconds = 10
@@ -42,16 +44,37 @@ class Gsm_Modem
 	end
 	
 	def execute(at_command, &block)
+		#puts "Execute #{at_command}"
 		@out.write "#{at_command}\r\n".to_java_bytes
 		return_input = ""
 		
 		#Consume all input from the device
 		loop do
-			input = @response_queue.pop_with_timeout(@timeout_seconds)
+			#input = @response_queue.pop_with_timeout(@timeout_seconds)
+
+			#resort to polling and non-blocking pop to have a timeout
+			start = Time.now
+			input = ""
+			
+			#Insist until we have input
+			timeout_throttle = 0.3
+			loop do
+				final = Time.now
+				begin				
+					input = @response_queue.pop(true)
+				rescue StandardError => ex
+					#carry on
+				end
+				
+				break if !input.empty?
+				raise ThreadError, "Exceeded timeout of #{@timeout_seconds} seconds" if final - start > @timeout_seconds
+				sleep timeout_throttle #Throttle loop				
+			end
+			
 			return_input += input
 			
 			if input =~ /OK\r\n/ || input =~/\+CMS ERROR/
-				break
+				break				
 			end
 		end
 		
@@ -67,7 +90,7 @@ class Gsm_Modem
 	#do not qualify
 	def wait_for(interrupt_regex, &block)
 		loop do
-			input = @response_queue.pop_with_timeout(@timeout_seconds)
+			input = @response_queue.pop
 			if input =~ interrupt_regex
 				return block.call input
 			end
@@ -75,30 +98,36 @@ class Gsm_Modem
 	end
 
 	def close
+		@producer.kill
+		
 		@out.close if !@out.nil?
 		@in.close if !@in.nil?
-		@port.close if !@port.nil?
+		@port.close if !@port.nil?		
 	end
 	
-	def self.port_sweep
+	def self.port_sweep(timeout_seconds = nil)
 		require 'dongle'
 		import('gnu.io.CommPortIdentifier')
 		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
 			port = port_ids.get_name
 			puts "Sweeping port #{port}..."
-			x = nil
+			gsm_modem = nil
 			begin
-				x = Dongle.new(port)
-				puts x.number
+				gsm_modem = Gsm_Modem.new(port)
+				gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
+				puts gsm_modem.execute "ATI"
 			rescue ThreadError => ex
+				puts ex.message
 				next
 			rescue NoMethodError =>ex2
 				puts "Number not yet set"
 				next
 			ensure
-				x.close if !x.nil?
+				gsm_modem.close if !gsm_modem.nil?
 			end
+
 		end
+		puts "Done!"
 	end
 
 	class Timeout < StandardError

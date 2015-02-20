@@ -5,6 +5,8 @@ require 'json'
 ##
 class Dongle
 
+	attr_reader :gsm_modem
+
 	def initialize(comm_port)
 		@gsm_modem = Gsm_Modem.new comm_port
 	end
