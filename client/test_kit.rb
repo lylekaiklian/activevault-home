@@ -70,9 +70,9 @@ class TestKit
 		
 		# Tame Regex later
 		#return (/#{regex}/ =~ response_message)
-		puts /#{regex}/
+		#puts /#{regex}/
 		puts "Match?" + ((/#{regex}/ =~ response_message) ? "true" : "false")
-		return !response_message.nil?
+		return !(/#{regex}/ =~ response_message).nil?
 	end
 	
 	def must_be_charged(parameters)
@@ -168,11 +168,17 @@ class TestKit
 				result = "**FAILED**"
 			end
 			
-			puts result + "\n\n"
-			out.puts line.strip + "," + result if !out.nil?
+		rescue ThreadError => ex
+			puts ex.message
+			result = "**FAILED**"
 		rescue NoMethodError => ex
 			puts ex.message
 			puts %Q(Method "#{method}" not yet implemented)
+			result = "**N/A**"
+		
+		ensure
+			puts result + "\n\n"
+			out.puts line.strip + "," + result if !out.nil?
 		end	
 	end
 	

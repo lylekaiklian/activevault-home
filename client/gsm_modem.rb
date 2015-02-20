@@ -1,6 +1,7 @@
 require 'java'
 require 'RXTXComm.jar'
 require 'thread'
+require 'queue_with_timeout'
 ##
 # Here is the abstraction of a GSM Modem, how to get input into it,
 # and how to get output from it.
@@ -15,7 +16,7 @@ class Gsm_Modem
 		@in = @port.input_stream
 		@in_io = @in.to_io
 		@out = @port.output_stream	
-		@response_queue = Queue.new
+		@response_queue = QueueWithTimeout.new
 		@callback_queue = Queue.new
 		@command_queue = Queue.new
 		
@@ -63,9 +64,10 @@ class Gsm_Modem
 
 	#Wait for an AT "Interrupt", while ignoring/dropping others that
 	#do not qualify
-	def wait_for(interrupt_regex, &block)  
+	def wait_for(interrupt_regex, &block)
+		timeout_seconds = 20
 		loop do
-			input = @response_queue.pop
+			input = @response_queue.pop_with_timeout(timeout_seconds)
 			if input =~ interrupt_regex
 				return block.call input
 			end
@@ -78,5 +80,7 @@ class Gsm_Modem
 		@port.close if !@port.nil?
 	end
 
+	class Timeout < StandardError
+	end
 	
 end
