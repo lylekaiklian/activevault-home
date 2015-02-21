@@ -12,12 +12,26 @@ require 'jar/httpclient-4.4.jar'
 # Here lies the promo codes we humans are all familiar with!
 ##
 class TestKit
-	def initialize
+
+	attr_accessor :timeout_seconds
+
+	def initialize(params={})
+	
+		@timeout_seconds = params[:timeout_seconds] || 60
 		
 		#Put this into config file later, 
 		#and let the kit query the dongles future releases
 		@sticks = {
-=begin
+		
+			:A => {
+					port: "COM4", 
+					number: "+639054292739",
+					dongle_object:  Dongle.new("COM4"),
+					description: "yellow dongle", 
+					balance: nil,
+					reply_number: nil
+			},	
+
 		:B =>	{
 					port: "COM9", 
 					number: "+639062627862",
@@ -27,23 +41,14 @@ class TestKit
 					
 					reply_number: nil
 					}
-			
-					,
-=end		
-			:A => {
-					port: "COM9", 
-					#number: "+639154322739",
-					number: "+639054292739",
-					dongle_object:  Dongle.new("COM9"),
-					description: "yellow dongle", 
-					balance: nil,
-					reply_number: nil
-					}
+
+
 
 		}
 		
 		puts "Sanity check"
 		@sticks.keys.each do |key|
+			@sticks[key][:dongle_object].gsm_modem.timeout_seconds = @timeout_seconds
 			puts "Information for #{key}:"
 			puts @sticks[key][:dongle_object].device_info
 		end
