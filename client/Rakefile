@@ -201,4 +201,19 @@ namespace :dongle do
 			dongle.close if !dongle.nil?
 		end		
 	end	
+	
+	desc "Delete all messages"
+	task :delete_all_messages, :com_port do |task, args|
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.delete_all_messages
+		rescue ThreadError => ex
+			puts ex.message
+		rescue StandardError => ex
+			puts "#{ex.class.name} - #{ex.message}"
+		ensure
+			dongle.close if !dongle.nil?
+		end		
+	end		
 end

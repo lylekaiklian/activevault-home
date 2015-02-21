@@ -75,6 +75,35 @@ class Dongle
 		@gsm_modem.execute %Q(AT+CMGL="ALL")
 	end
 	
+	def delete_message(index, &block)
+		puts "deleting message #{index}"
+		@gsm_modem.execute %Q(AT+CMGD=#{index}) do |response|
+			#Allow further chaining
+			if !block.nil?
+				response += "#{block.call(response)}"
+			end
+			response
+		end
+	end
+	
+	def delete_all_messages(start_index = 0, &block)
+		#Assume sim card has 30 messages.
+		#Bad assumption, but may just work for now.
+		upper_limit = 30 
+		
+		if start_index >= upper_limit
+			if !block.nil?
+				return block.call
+			else
+				return
+			end
+		end
+		
+		delete_message(start_index) do
+			delete_all_messages(start_index + 1)
+		end
+	end
+	
 	def wait_for_new_message(&block)
 		@gsm_modem.wait_for(/^\+CMTI/) do |response|
 			matches = /^\+CMTI: "[^"]*",(\d+)/.match(response)
