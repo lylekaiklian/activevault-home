@@ -42,6 +42,23 @@ class Dongle
 		end
 	end
 	
+	def set_number(number, &block)
+		response = ""
+		@gsm_modem.execute %Q(AT+CPBS="ON") do |response|
+				response += @gsm_modem.execute %Q(AT+CPBW=1,"#{number}",129,"My Number") do |response|
+				
+					#Allow further chaining
+					if !block.nil?
+						response += "#{block.call(response)}"
+					end	
+
+					response
+			end
+			response
+		end	
+	end
+	
+	
 	def model
 		@gsm_modem.execute "AT+CGMM"
 	end
@@ -143,7 +160,7 @@ class Dongle
 				dongle = Dongle.new(port)
 				dongle.gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
 				puts(dongle.device_info do |response|
-					response += "#{dongle.number}"
+					"#{dongle.number}"
 				end)
 			rescue ThreadError => ex
 				puts ex.message

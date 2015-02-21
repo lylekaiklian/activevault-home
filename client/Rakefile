@@ -188,4 +188,17 @@ namespace :dongle do
 			dongle.close if !dongle.nil?
 		end		
 	end
+	
+	desc "Set number of dongle. This is not set by default on Globe prepaid sims."
+	task :set_number, :com_port, :number do |task, args|
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.set_number(args[:number])
+		rescue ThreadError => ex
+			puts ex.message	
+		ensure
+			dongle.close if !dongle.nil?
+		end		
+	end	
 end

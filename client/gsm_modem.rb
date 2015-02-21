@@ -9,6 +9,7 @@ require 'queue_with_timeout'
 class Gsm_Modem
 
 	attr_accessor :timeout_seconds
+	attr_accessor :debug
 
 	def initialize(comm_port)
 		import('gnu.io.CommPortIdentifier')
@@ -22,6 +23,7 @@ class Gsm_Modem
 		@callback_queue = Queue.new
 		@command_queue = Queue.new
 		@timeout_seconds = 10
+		@debug = false
 		
 		#The purpose of this thread is to convert the asynchronous incoming stream
 		#of the device into a neat queue of strings.
@@ -65,7 +67,7 @@ class Gsm_Modem
 				rescue StandardError => ex
 					#carry on
 				end
-				#puts input
+				puts input if @debug
 				#puts "#{final - start}"
 				break if !input.empty?
 				raise ThreadError, "Exceeded timeout of #{@timeout_seconds} seconds" if final - start > @timeout_seconds
