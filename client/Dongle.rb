@@ -47,8 +47,11 @@ class Dongle
 	end
 		
 	def send_message(number, message)
-		@gsm_modem.execute "AT+CMGF=1"
-		@gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n#{message}\x1a)
+		response = @gsm_modem.execute "AT+CMGF=1" do |response|
+			response += @gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n#{message}\x1a)
+		end
+		
+		response
 	end
 	
 	def messages

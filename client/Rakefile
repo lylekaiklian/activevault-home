@@ -165,7 +165,6 @@ namespace :dongle do
 	
 	desc "Get the available balance for this dongle"
 	task :balance, :com_port do |task, args| 
-		require 'dongle'
 		dongle = nil
 		begin
 			dongle = Dongle.new(args[:com_port])
@@ -175,5 +174,18 @@ namespace :dongle do
 		ensure
 			dongle.close if !dongle.nil?
 		end	
+	end
+	
+	desc "Send SMS to some number"
+	task :send_message, :com_port, :number, :message do |task, args|
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.send_message(args[:number],args[:message])
+		rescue ThreadError => ex
+			puts ex.message	
+		ensure
+			dongle.close if !dongle.nil?
+		end		
 	end
 end
