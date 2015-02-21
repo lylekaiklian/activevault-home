@@ -16,6 +16,8 @@ class Dongle
 			if !block.nil?
 				response += "#{block.call(response)}"
 			end
+			
+			response
 		end
 	end
 	
@@ -34,7 +36,9 @@ class Dongle
 			
 			if !block.nil?
 				response += "#{block.call(response)}"
-			end			
+			end	
+
+			response
 		end
 	end
 	
