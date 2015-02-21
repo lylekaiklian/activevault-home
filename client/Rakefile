@@ -123,25 +123,7 @@ namespace :util do
 		end	
 	end
 	
-	task :bal do 
-		require 'dongle'
-		begin
-			dongle = Dongle.new "COM4"
-			puts dongle.balance_inquiry
-		ensure
-			dongle.close if !dongle.nil?
-		end	
-	end
-	
-	task :num do
-		require 'dongle'
-		begin
-			dongle = Dongle.new "COM4"
-			puts dongle.number
-		ensure
-			dongle.close if !dongle.nil?
-		end		
-	end
+
 end
 
 ## Real tasks from hereon. Delete tasks above later.
@@ -167,13 +149,31 @@ task :port_sweep do
 end
 
 namespace :dongle do
+
+	desc "Get the number of this dongle"
 	task :number, :com_port do |task, args|
 		dongle = nil
 		begin
 			dongle = Dongle.new(args[:com_port])
 			puts dongle.number
+		rescue ThreadError => ex
+			puts ex.message
 		ensure
 			dongle.close if !dongle.nil?
 		end		
+	end
+	
+	desc "Get the available balance for this dongle"
+	task :balance, :com_port do |task, args| 
+		require 'dongle'
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.balance_inquiry
+		rescue ThreadError => ex
+			puts ex.message	
+		ensure
+			dongle.close if !dongle.nil?
+		end	
 	end
 end

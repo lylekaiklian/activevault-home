@@ -65,7 +65,8 @@ class Gsm_Modem
 				rescue StandardError => ex
 					#carry on
 				end
-				
+				#puts input
+				#puts "#{final - start}"
 				break if !input.empty?
 				raise ThreadError, "Exceeded timeout of #{@timeout_seconds} seconds" if final - start > @timeout_seconds
 				sleep timeout_throttle #Throttle loop				
@@ -90,10 +91,26 @@ class Gsm_Modem
 	#do not qualify
 	def wait_for(interrupt_regex, &block)
 		loop do
-			input = @response_queue.pop
+			start = Time.now
+			input = ""
+			timeout_throttle = 0.3
+			loop do
+				final = Time.now
+				begin
+					input = @response_queue.pop(true)
+				rescue StandardError => ex
+					#carry on
+				end	
+				
+				break if !input.empty?
+				raise ThreadError, "Exceeded timeout of #{@timeout_seconds} seconds" if final - start > @timeout_seconds
+				sleep timeout_throttle #Throttle loop	
+			end
+			
 			if input =~ interrupt_regex
 				return block.call input
 			end
+			
 		end
 	end
 
