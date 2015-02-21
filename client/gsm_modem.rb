@@ -105,30 +105,7 @@ class Gsm_Modem
 		@port.close if !@port.nil?		
 	end
 	
-	def self.port_sweep(timeout_seconds = nil)
-		require 'dongle'
-		import('gnu.io.CommPortIdentifier')
-		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
-			port = port_ids.get_name
-			puts "Sweeping port #{port}..."
-			gsm_modem = nil
-			begin
-				gsm_modem = Gsm_Modem.new(port)
-				gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
-				puts (gsm_modem.execute("ATI"){|input| input += gsm_modem.execute "AT+CNUM"})
-			rescue ThreadError => ex
-				puts ex.message
-				next
-			rescue NoMethodError =>ex2
-				puts "Number not yet set"
-				next
-			ensure
-				gsm_modem.close if !gsm_modem.nil?
-			end
 
-		end
-		puts "Done!"
-	end
 
 	class Timeout < StandardError
 	end

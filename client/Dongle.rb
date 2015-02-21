@@ -11,18 +11,30 @@ class Dongle
 		@gsm_modem = Gsm_Modem.new comm_port
 	end
 	
-	def device_info
-		@gsm_modem.execute "ATI"
+	def device_info(&block)
+		@gsm_modem.execute "ATI" do |response|
+			if !block.nil?
+				response += "#{block.call(response)}"
+			end
+		end
 	end
 	
 	def manufacturer
 		@gsm_modem.execute "AT+CGMI"
 	end
 	
-	def number
+	def number(&block)
 		@gsm_modem.execute "AT+CNUM" do |response|
 			matches = /\+CNUM: "[^"]*","([^"]*)",\d+/.match(response)
-			return matches[1] 
+			if !matches.nil?
+				response = matches[1]
+			else
+				response = ""
+			end
+			
+			if !block.nil?
+				response += "#{block.call(response)}"
+			end			
 		end
 	end
 	
@@ -113,5 +125,37 @@ class Dongle
 	def scrub(text)
 		text.gsub(/(\r\nOK\r\n)$/, '').strip
 	end
+	
+	def self.port_sweep(timeout_seconds = nil)
+		import('gnu.io.CommPortIdentifier')
+		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
+			port = port_ids.get_name
+			puts "Sweeping port #{port}..."
+			dongle = nil
+			begin
+				dongle = Dongle.new(port)
+				dongle.gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
+				puts(dongle.device_info do |response|
+					response += "#{dongle.number}"
+				end)
+			rescue ThreadError => ex
+				puts ex.message
+				next
+			rescue NoMethodError =>ex2
+				puts "Number not yet set"
+				next
+			rescue Java::GnuIo::PortInUseException => ex
+				puts "Port #{port} in use." 
+				next
+			rescue StandardError => ex3
+				puts "Uncaught exception #{ex3.class.name} please fix"
+				raise ex3
+			ensure
+				dongle.close if !dongle.nil?
+			end
+
+		end
+		puts "Done!"
+	end	
 
 end
