@@ -120,6 +120,7 @@ class Dongle
 		end
 	end
 	
+=begin	
 	def wait_for_new_message(&block)
 		@gsm_modem.wait_for(/^\+CMTI/) do |response|
 			matches = /^\+CMTI: "[^"]*",(\d+)/.match(response)
@@ -145,6 +146,18 @@ class Dongle
 				end
 			end
 		end		
+	end
+=end
+
+	#Use the listener implementation for all
+	def wait_for_new_message(waiting_timeout = 10, &block)
+		wait_for_new_message_via_listeners(waiting_timeout) do |response|
+			if !block.nil?
+				block.call(response)
+			else
+				response
+			end
+		end
 	end
 	
 	def wait_for_new_message_via_listeners(waiting_timeout, &block)
@@ -202,7 +215,7 @@ class Dongle
 	
 	def balance_inquiry(waiting_timeout = 10)
 		send_message(222, "BAL")
-		wait_for_new_message_via_listeners(waiting_timeout) do |response|
+		wait_for_new_message(waiting_timeout) do |response|
 			matches = /Your balance as of (\d+\/\d+\/\d+ \d+:\d+) is (P\d+\.\d+) valid til (\d+\/\d+\/\d+ \d+:\d+) w\/ (\d+) FREE txts. Pls note that system time may vary from the time on ur phone\./.match(response[:message])
 			return {timestamp: matches[1], balance: matches[2], validity: matches[3], free_text: matches[4]}
 		end
