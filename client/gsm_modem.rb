@@ -110,11 +110,38 @@ class Gsm_Modem
 			end
 			
 			if input =~ interrupt_regex
-				return block.call input
-			end
-			
+				block.call input
+			end			
 		end
 	end
+	
+	#Open the input queue for a certain number of seconds,
+	#and process listeners
+	def wait_for_via_listeners(waiting_timeout, lambda_array)
+		start_time = Time.now
+		timeout_throttle = 0.3
+		return_value = []
+		loop do
+			final_time = Time.now
+			begin
+				input = @response_queue.pop(true)
+			rescue StandardError => ex
+				#carry on
+			end	
+			
+			if !input.nil?
+				lambda_array.each do |l|
+					lambda_result = l.call(input)
+					return_value << "#{lambda_result}" if !lambda_result.nil?
+				end
+			end
+			
+			break if final_time - start_time > waiting_timeout
+			sleep timeout_throttle #Throttle loop	
+		end	
+		return_value
+	end
+	
 
 	def close
 		@producer.kill

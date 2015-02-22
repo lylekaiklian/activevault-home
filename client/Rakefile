@@ -2,11 +2,26 @@ require 'gsm_modem'
 require 'dongle'
 require 'test_kit'
 
-
+=begin
 task :default do
 	puts "Project Lost Treasure"
 end
+=end
 
+task :default do
+	dongle = nil
+	begin
+		dongle = Dongle.new('COM4')
+		dongle.gsm_modem.timeout_seconds = 30
+		puts dongle.balance_inquiry
+		#dongle.send_message("222", "BAL")
+		#dongle.send_message("2954", "HELP MYTONES")
+		#puts dongle.wait_for_new_message_via_listeners(30)
+	ensure
+		dongle.close if !dongle.nil?
+	end
+	
+end
 
 task :run, :method, :param1 do |task, args|
 	test_kit = TestKit.new

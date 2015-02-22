@@ -147,9 +147,62 @@ class Dongle
 		end		
 	end
 	
-	def balance_inquiry
+	def wait_for_new_message_via_listeners(waiting_timeout, &block)
+		result_message_index_array = @gsm_modem.wait_for_via_listeners(waiting_timeout,[
+			(lambda do |input|
+				matches = /^\+CMTI: "[^"]*",(\d+)/.match(input)
+				if !matches.nil?
+					message_index = matches[1]
+				else
+					return nil
+				end
+			end)
+		])
+		
+		# puts result_message_index_array.to_json
+		# Process collected messages here.
+		# Read the incoming messages recursively		
+		
+		read_lambda = lambda do |message_index_array|
+
+			return {message: ""} if message_index_array.empty?
+
+			message_index = message_index_array.shift
+			
+			@gsm_modem.execute %Q(AT+CMGR=#{message_index}) do |response|
+				
+				matches = /\+CMGR: "([^"]*)","([^"]*)",,"([^"]*)"\r\n(.*)\r\n\r\n/m.match(response)
+				status = matches[1]
+				sender = matches[2]
+				timestamp = matches[3]
+				message = matches[4]
+				
+				return_value = { status: status, 
+						sender: sender,
+						timestamp: timestamp,
+						message:message
+					}
+				
+				next_message = read_lambda.call(message_index_array)
+				
+				#concatenate message, assume sender is the same
+				return_value[:message] += next_message[:message]
+
+				return_value
+			end
+		end
+		
+		#Give ability to chain this command
+		if !block.nil?
+			block.call(read_lambda.call(result_message_index_array))
+		else
+			read_lambda.call(result_message_index_array)
+		end
+	end
+	
+	def balance_inquiry(waiting_timeout = 10)
 		send_message(222, "BAL")
-		wait_for_new_message do |response|
+		wait_for_new_message_via_listeners(waiting_timeout) do |response|
 			matches = /Your balance as of (\d+\/\d+\/\d+ \d+:\d+) is (P\d+\.\d+) valid til (\d+\/\d+\/\d+ \d+:\d+) w\/ (\d+) FREE txts. Pls note that system time may vary from the time on ur phone\./.match(response[:message])
 			return {timestamp: matches[1], balance: matches[2], validity: matches[3], free_text: matches[4]}
 		end
