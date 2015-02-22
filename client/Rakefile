@@ -37,8 +37,17 @@ end
 desc "Delete all messages on all dongles"
 task :delete_all_messages do
 	sweep_timeout = 5
-	ports = Dongle.port_sweep(sweep_timeout)
-
+	sticks = Dongle.port_sweep(sweep_timeout)
+	sticks.each do |key, value|
+		puts "Clearing messages on port #{value[:port]}"
+		dongle = nil
+		begin
+			dongle = Dongle.new(value[:port])
+			dongle.delete_all_messages
+		ensure
+			dongle.close if !dongle.nil?
+		end
+	end
 end
 
 namespace :dongle do

@@ -232,7 +232,7 @@ class Dongle
 						reply_number: nil
 					}
 					
-					raise "Please assign number first to device #{imei}." if imei.empty?
+					#raise "Please assign number first to device #{imei}." if imei.empty?
 					
 					seen_imei << imei
 					label_index += 1
