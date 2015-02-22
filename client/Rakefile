@@ -2,8 +2,15 @@ require 'gsm_modem'
 require 'dongle'
 require 'test_kit'
 
+=begin
 task :default do
 	puts "Project Lost Treasure"
+end
+=end
+
+task :default do
+	value = Dongle.port_sweep(5)
+	puts "\n#{value}"
 end
 
 
@@ -117,4 +124,5 @@ namespace :dongle do
 			end if !dongles.nil?
 		end			
 	end
+	
 end

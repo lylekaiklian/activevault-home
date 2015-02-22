@@ -14,15 +14,32 @@ class Dongle
 	def device_info(&block)
 		@gsm_modem.execute "ATI" do |response|
 			if !block.nil?
-				response += "#{block.call(response)}"
-			end
-			
+				"#{block.call(response)}"
+			end			
 			response
 		end
 	end
 	
 	def manufacturer
 		@gsm_modem.execute "AT+CGMI"
+	end
+	
+	def imei(&block)
+		@gsm_modem.execute "ATI" do |response|
+			matches = /IMEI:[\s]*(.*)[\s]*/.match(response)
+			if !matches.nil?
+				response = matches[1]
+			else
+				response = ""
+			end
+			
+			if !block.nil?
+				return "#{block.call(response)}"
+			else
+				return response
+			end			
+			
+		end		
 	end
 	
 	def number(&block)
@@ -35,26 +52,24 @@ class Dongle
 			end
 			
 			if !block.nil?
-				response += "#{block.call(response)}"
+				return response += "#{block.call(response)}"
+			else
+				return response
 			end	
-
-			response
 		end
 	end
 	
 	def set_number(number, &block)
-		response = ""
-		@gsm_modem.execute %Q(AT+CPBS="ON") do |response|
-				response += @gsm_modem.execute %Q(AT+CPBW=1,"#{number}",129,"My Number") do |response|
-				
+		return @gsm_modem.execute %Q(AT+CPBS="ON") do |response1|
+				response1 += @gsm_modem.execute %Q(AT+CPBW=1,"#{number}",129,"My Number") do |response2|				
 					#Allow further chaining
 					if !block.nil?
-						response += "#{block.call(response)}"
+						return"#{block.call(response2)}"
+					else
+						response2
 					end	
-
-					response
-			end
-			response
+				end
+			response1
 		end	
 	end
 	
@@ -180,6 +195,8 @@ class Dongle
 	end
 	
 	def self.port_sweep(timeout_seconds = nil)
+		sticks = {}
+		labels = ('A'..'Z').to_a
 		import('gnu.io.CommPortIdentifier')
 		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
 			port = port_ids.get_name
@@ -188,8 +205,11 @@ class Dongle
 			begin
 				dongle = Dongle.new(port)
 				dongle.gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
-				puts(dongle.device_info do |response|
-					"#{dongle.number}"
+				puts(dongle.imei do |response|
+					number = dongle.number do |number_response|
+						"Number: #{number_response}\n"
+					end
+					#response = "IMEI: #{response}\n"
 				end)
 			rescue ThreadError => ex
 				puts ex.message
