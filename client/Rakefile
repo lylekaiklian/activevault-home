@@ -1,135 +1,13 @@
 require 'gsm_modem'
 require 'dongle'
+require 'test_kit'
+
 task :default do
 	puts "Project Lost Treasure"
 end
 
-namespace :dev do
-	task :dongle do
-		require 'dongle'
-		require 'thread'
-		require 'json'
-		
-		dongle = Dongle.new "COM4"
-		begin
-		#dongle.model
-		#dongle.manufacturer		
-		#dongle.messages
-		#dongle.send_message "222", "BAL"
-		#sleep 60
-		#puts "Check for new message"
-		#dongle.messages
-		puts dongle.balance_inquiry	
-
-		
-		#b = Queue.new
-		#b.pop
-		
-		ensure
-			dongle.close if !dongle.nil?
-		end
-	end
-	
-	task :dongle2 do
-		require 'dongle'
-		dongle = Dongle.new "COM9"
-		begin
-			puts dongle.balance_inquiry		
-		ensure
-			dongle.close if !dongle.nil?
-		end		
-	end
-	
-	task :gsm_modem do
-		require 'gsm_modem'
-		begin
-			gsm_modem = Gsm_Modem.new "COM4"
-			#puts gsm_modem.execute %Q(AT+CMGF=1)   
-			#puts gsm_modem.execute %Q(AT+CMGL="ALL")
-			#puts gsm_modem.execute %Q(AT+CGMI)
-			#puts gsm_modem.execute %Q(AT+CGMM)
-			#puts gsm_modem.execute %Q(AT+CMGS="222"\r\nBAL\x1a)
-			#gsm_modem.execute %Q(AT+CMGL="ALL")	do |response|
-			#	puts response.upcase
-			#end
-			
-			puts gsm_modem.execute %Q(AT+CMGDA="DEL ALL")
-			
-			#puts gsm_modem.execute "AT+CNUM"
-			#puts gsm_modem.execute %Q(AT+CMGS="222"\r\nBAL\x1a)
-			#gsm_modem.wait_for(/^\+CMTI/) do |response|
-			#	matches = /^\+CMTI: "[^"]*",(\d+)/.match(response)
-			#	message_index = matches[1]
-			#	puts gsm_modem.execute %Q(AT+CMGR=#{message_index})
-			#end
-		ensure
-			gsm_modem.close if !gsm_modem.nil?
-		end
-	end
-	
-	task :gsm_modem2 do
-		require 'gsm_modem'
-		begin
-			gsm_modem = Gsm_Modem.new "COM9"
-			puts gsm_modem.execute %Q(AT+CPBS="ON")
-			puts gsm_modem.execute %Q(AT+CPBW=1,"+639062627862",129,"Voice")
-			puts gsm_modem.execute "AT+CNUM"
-		ensure
-			gsm_modem.close if !gsm_modem.nil?
-		end
-	end
-	
-	task :test_kit do
-		require 'test_kit'
-		test_kit = TestKit.new
-		begin
-			test_kit.run
-		ensure		
-			test_kit.close if !test_kit.nil?
-		end
-	end
-	
-	task :test_kit_sqs do
-		require 'test_kit'
-		test_kit = TestKit.new
-		begin
-			test_kit.run_using_sqs
-		ensure		
-			test_kit.close if !test_kit.nil?
-		end
-	end
-	
-end
-
-namespace :util do
-	task :send, :number, :message do |task, args|
-		require 'dongle'
-		begin
-			dongle = Dongle.new "COM4"
-			dongle.send_message(args[:number], args[:message])
-		ensure
-			dongle.close if !dongle.nil?
-		end
-	end
-	
-	task :send_and_expect, :number, :message do |task, args|
-		require 'dongle'
-		begin
-			dongle = Dongle.new "COM4"
-			dongle.send_message(args[:number], args[:message])
-			puts dongle.wait_for_new_message
-		ensure
-			dongle.close if !dongle.nil?
-		end	
-	end
-	
-
-end
-
-## Real tasks from hereon. Delete tasks above later.
 
 task :run, :method, :param1 do |task, args|
-	require 'test_kit'
 	test_kit = TestKit.new
 	args[:method] ||= :file
 	begin
@@ -145,7 +23,9 @@ task :run, :method, :param1 do |task, args|
 end
 
 task :port_sweep do
-	Dongle.port_sweep(5)
+	#dongles should respond really fast in a sweep
+	sweep_timeout = 5
+	Dongle.port_sweep(sweep_timeout)
 end
 
 namespace :dongle do
@@ -215,5 +95,26 @@ namespace :dongle do
 		ensure
 			dongle.close if !dongle.nil?
 		end		
-	end		
+	end
+
+	desc "Open the port, and do not release"
+	#http://blog.stevenocchipinti.com/2013/10/18/rake-task-with-an-arbitrary-number-of-arguments/
+	task :hog do |task, args| 
+		dongles = []
+		begin
+			args.extras.each do |port|
+				puts "Hogging PORT #{port}..."
+				dongles << Dongle.new(port)
+			end
+			sleep 
+		rescue ThreadError => ex
+			puts ex.message
+		rescue StandardError => ex
+			puts "#{ex.class.name} - #{ex.message}"
+		ensure
+			dongles.each do |dongle|
+				dongle.close if !dongle.nil?
+			end if !dongles.nil?
+		end			
+	end
 end
