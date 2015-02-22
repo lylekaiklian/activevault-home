@@ -24,6 +24,8 @@ task :default do
 end
 
 task :run, :method, :param1 do |task, args|
+	start_time = Time.now
+
 	test_kit = TestKit.new
 	args[:method] ||= :file
 	begin
@@ -36,6 +38,12 @@ task :run, :method, :param1 do |task, args|
 	ensure		
 		test_kit.close if !test_kit.nil?
 	end
+	
+	end_time = Time.now
+	elapsed_time = end_time - start_time
+	elapsed_minutes = (elapsed_time / 60).floor
+	elapsed_seconds = elapsed_time - (elapsed_minutes * 60)
+	puts "Elapsed time: #{elapsed_minutes.floor} minutes and #{elapsed_seconds} seconds"
 end
 
 task :port_sweep do

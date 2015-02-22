@@ -69,7 +69,7 @@ class TestKit
 		
 		dongle = @sticks[stick.to_sym][:dongle_object]
 		dongle.send_message(number, message)
-		response = dongle.wait_for_new_message(30)
+		response = dongle.wait_for_new_message(60)
 		
 		@sticks[stick.to_sym][:reply_number] = response[:sender]
 		response_message = response[:message]
@@ -94,7 +94,7 @@ class TestKit
 		dongle = @sticks[stick.to_sym][:dongle_object]
 		
 		old_amount = @sticks[stick.to_sym][:balance]
-		new_amount = dongle.balance_inquiry[:balance].gsub(/[^\.0-9]/, "").to_f
+		new_amount = dongle.balance_inquiry(15)[:balance].gsub(/[^\.0-9]/, "").to_f
 		charge = old_amount - new_amount
 		puts "Acutal charge: #{charge}"
 		if amount.to_f == charge
@@ -121,7 +121,7 @@ class TestKit
 		regex = parameters[2]
 		
 		dongle = @sticks[stick.to_sym][:dongle_object]
-		response = dongle.wait_for_new_message(30)
+		response = dongle.wait_for_new_message(60)
 		
 		@sticks[stick.to_sym][:reply_number] = response[:sender]
 		response_message = response[:message]
@@ -146,7 +146,7 @@ class TestKit
 	def check_balance(parameters)
 		stick = parameters[0]
 		dongle = @sticks[stick.to_sym][:dongle_object]
-		balance_response = dongle.balance_inquiry(10)
+		balance_response = dongle.balance_inquiry(15)
 		balance =  balance_response[:balance].gsub(/[^\.0-9]/, "").to_f
 		@sticks[stick.to_sym][:balance] = balance
 		puts balance
@@ -194,7 +194,7 @@ class TestKit
 		
 		ensure
 			puts result + "\n\n"
-			out.puts line.strip + "," + result if !out.nil?
+			out.puts result + "," + line.strip if !out.nil?
 		end	
 	end
 	
