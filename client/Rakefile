@@ -50,6 +50,30 @@ task :delete_all_messages do
 	end
 end
 
+task :hog_all_except, :port do |task, args|		
+	port_to_unhog = args[:port]
+	puts "Hogging all ports except #{port_to_unhog}"
+
+	begin
+		sweep_timeout = 5
+		sticks = Dongle.port_sweep(sweep_timeout)
+		dongles = []
+
+		#hog all other ports
+		sticks.each do |key, value|	
+			next if value[:port] == port_to_unhog	#Skip this particular port.
+			dongles << Dongle.new(value[:port])
+		end
+		
+		puts "Now hanging..."
+		sleep
+	ensure
+		dongles.each do |dongle|
+			dongle.close if !dongle.nil?
+		end if !dongles.nil?			
+	end	
+end
+
 namespace :dongle do
 
 	desc "Get the number of this dongle"
@@ -128,6 +152,7 @@ namespace :dongle do
 				puts "Hogging PORT #{port}..."
 				dongles << Dongle.new(port)
 			end
+			puts "Now hanging..."
 			sleep 
 		rescue ThreadError => ex
 			puts ex.message
@@ -139,5 +164,4 @@ namespace :dongle do
 			end if !dongles.nil?
 		end			
 	end
-	
 end
