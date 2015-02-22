@@ -69,7 +69,7 @@ class TestKit
 		
 		dongle = @sticks[stick.to_sym][:dongle_object]
 		dongle.send_message(number, message)
-		response = dongle.wait_for_new_message
+		response = dongle.wait_for_new_message(30)
 		
 		@sticks[stick.to_sym][:reply_number] = response[:sender]
 		response_message = response[:message]
@@ -79,7 +79,12 @@ class TestKit
 		#return (/#{regex}/ =~ response_message)
 		#puts /#{regex}/
 		puts "Match?" + ((/#{regex}/ =~ response_message) ? "true" : "false")
-		return !(/#{regex}/ =~ response_message).nil?
+		if !(/#{regex}/ =~ response_message).nil?
+			return true
+		else
+			return [false, "Pattern does not match"]
+		end
+			
 	end
 	
 	def must_be_charged(parameters)
@@ -92,7 +97,11 @@ class TestKit
 		new_amount = dongle.balance_inquiry[:balance].gsub(/[^\.0-9]/, "").to_f
 		charge = old_amount - new_amount
 		puts "Acutal charge: #{charge}"
-		return amount.to_f == charge
+		if amount.to_f == charge
+			return true
+		else
+			return [false, "Must be charged #{amount.to_f}, actual charge is #{charge}"]
+		end
 	end
 	
 	def send_reply(parameters)
@@ -112,7 +121,7 @@ class TestKit
 		regex = parameters[2]
 		
 		dongle = @sticks[stick.to_sym][:dongle_object]
-		response = dongle.wait_for_new_message
+		response = dongle.wait_for_new_message(30)
 		
 		@sticks[stick.to_sym][:reply_number] = response[:sender]
 		response_message = response[:message]
@@ -137,7 +146,7 @@ class TestKit
 	def check_balance(parameters)
 		stick = parameters[0]
 		dongle = @sticks[stick.to_sym][:dongle_object]
-		balance_response = dongle.balance_inquiry
+		balance_response = dongle.balance_inquiry(10)
 		balance =  balance_response[:balance].gsub(/[^\.0-9]/, "").to_f
 		@sticks[stick.to_sym][:balance] = balance
 		puts balance
@@ -166,18 +175,18 @@ class TestKit
 		puts "[#{method}(#{parameters.join(",")})]"
 		begin
 			#puts self.class.name
-			truth = self.send(method, parameters)
+			truth, reason = self.send(method, parameters)
 			if truth.nil?
 				result = "**N/A**"	
 			elsif truth === true
 				result = "**PASSED**"
 			else
-				result = "**FAILED**"
+				result = "**FAILED** #{reason}"
 			end
 			
 		rescue ThreadError => ex
-			puts ex.message
-			result = "**FAILED**"
+			#puts ex.message
+			result = "**FAILED** #{ex.message}"
 		rescue NoMethodError => ex
 			puts ex.message
 			puts %Q(Method "#{method}" not yet implemented)

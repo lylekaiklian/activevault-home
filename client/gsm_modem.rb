@@ -136,7 +136,8 @@ class Gsm_Modem
 				end
 			end
 			
-			break if final_time - start_time > waiting_timeout
+			break if final_time - start_time > waiting_timeout && return_value.count > 0
+			raise ThreadError, "Exceeded timeout of #{waiting_timeout} seconds" if final_time - start_time > waiting_timeout && return_value.count == 0
 			sleep timeout_throttle #Throttle loop	
 		end	
 		return_value
