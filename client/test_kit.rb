@@ -21,6 +21,7 @@ class TestKit
 		
 		#Put this into config file later, 
 		#and let the kit query the dongles future releases
+=begin		
 		@sticks = {
 		
 			:A => {
@@ -41,16 +42,16 @@ class TestKit
 					
 					reply_number: nil
 					}
-
-
-
 		}
+=end
+		@sticks = Dongle.port_sweep(5)
 		
 		puts "Sanity check"
 		@sticks.keys.each do |key|
+			@sticks[key][:dongle_object] = Dongle.new(@sticks[key][:port])
 			@sticks[key][:dongle_object].gsm_modem.timeout_seconds = @timeout_seconds
 			puts "Information for #{key}:"
-			puts @sticks[key][:dongle_object].device_info
+			puts @sticks[key]
 		end
 	end
 

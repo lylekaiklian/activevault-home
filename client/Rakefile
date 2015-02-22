@@ -2,14 +2,9 @@ require 'gsm_modem'
 require 'dongle'
 require 'test_kit'
 
-=begin
-task :default do
-	puts "Project Lost Treasure"
-end
-=end
 
 task :default do
-	puts Dongle.port_sweep(5)
+	puts "Project Lost Treasure"
 end
 
 
