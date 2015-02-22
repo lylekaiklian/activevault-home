@@ -26,7 +26,7 @@ class Dongle
 	
 	def imei(&block)
 		@gsm_modem.execute "ATI" do |response|
-			matches = /IMEI:[\s]*(.*)[\s]*/.match(response)
+			matches = /IMEI:[\s]*(.*)[\r]*[\s]*/.match(response)
 			if !matches.nil?
 				response = matches[1]
 			else
@@ -199,20 +199,45 @@ class Dongle
 		sticks = {}
 		labels = ('A'..'Z').to_a
 		label_index = 0
+		seen_imei = []	#collect all imei's encountered already so as not to repeat.
 		import('gnu.io.CommPortIdentifier')
 		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
 			port = port_ids.get_name
 			puts "\nSweeping port #{port}..."
 			dongle = nil
+			imei = nil
+			number = nil
 			begin
 				dongle = Dongle.new(port)
 				dongle.gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
-				puts(dongle.imei do |response1|
-					number = (dongle.number do |response2|
-						"Number: #{response2}\n"
-					end)
-					"IMEI: #{response1}\n#{number}"
-				end)
+				dongle.imei do |response1|
+					imei = response1.strip
+					dongle.number do |response2|
+						number = response2.strip
+					end					
+				end
+				puts "IMEI: #{imei}"
+				puts "Number: #{number}"
+				
+				#If this is a new IMEI, then record it.
+				if !seen_imei.member? imei
+					label = labels[label_index].to_sym
+					sticks[label] = {
+						port: port,
+						number: number,
+						imei: imei,
+						dongle_object:  nil,
+						description: nil, 
+						balance: nil,
+						reply_number: nil
+					}
+					
+					raise "Please assign number first to device #{imei}." if imei.empty?
+					
+					seen_imei << imei
+					label_index += 1
+				end
+				
 			rescue ThreadError => ex
 				puts ex.message
 				next
@@ -231,6 +256,7 @@ class Dongle
 
 		end
 		puts "Done!"
+		sticks
 	end	
 
 end

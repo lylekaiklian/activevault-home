@@ -9,8 +9,7 @@ end
 =end
 
 task :default do
-	value = Dongle.port_sweep(5)
-	puts "\n#{value}"
+	puts Dongle.port_sweep(5)
 end
 
 
@@ -33,6 +32,13 @@ task :port_sweep do
 	#dongles should respond really fast in a sweep
 	sweep_timeout = 5
 	Dongle.port_sweep(sweep_timeout)
+end
+
+desc "Delete all messages on all dongles"
+task :delete_all_messages do
+	sweep_timeout = 5
+	ports = Dongle.port_sweep(sweep_timeout)
+
 end
 
 namespace :dongle do
