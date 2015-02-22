@@ -198,10 +198,11 @@ class Dongle
 	def self.port_sweep(timeout_seconds = nil)
 		sticks = {}
 		labels = ('A'..'Z').to_a
+		label_index = 0
 		import('gnu.io.CommPortIdentifier')
 		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
 			port = port_ids.get_name
-			puts "Sweeping port #{port}..."
+			puts "\nSweeping port #{port}..."
 			dongle = nil
 			begin
 				dongle = Dongle.new(port)
