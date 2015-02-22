@@ -52,9 +52,9 @@ class Dongle
 			end
 			
 			if !block.nil?
-				return "#{block.call(response)}"
+				"#{block.call(response)}"
 			else
-				return response
+				response
 			end	
 		end
 	end
