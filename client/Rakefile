@@ -112,7 +112,7 @@ namespace :dongle do
 		dongle = nil
 		begin
 			dongle = Dongle.new(args[:com_port])
-			puts dongle.balance_inquiry
+			puts dongle.balance_inquiry(15)
 		rescue ThreadError => ex
 			puts ex.message	
 		ensure
