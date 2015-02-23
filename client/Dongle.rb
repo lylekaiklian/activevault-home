@@ -267,8 +267,15 @@ class Dongle
 		label_index = 0
 		seen_imei = []	#collect all imei's encountered already so as not to repeat.
 		import('gnu.io.CommPortIdentifier')
-		CommPortIdentifier.getPortIdentifiers.reverse.each do |port_ids|
-			port = port_ids.get_name
+		
+		# Reversing port sweeping. This seems to be more agreeable to Huawei
+		port_identifiers = []
+		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
+			port_identifiers << port_ids.get_name
+		end
+		
+		port_identifiers.reverse.each do |port|
+			#port = port_ids.get_name
 			puts "\nSweeping port #{port}..."
 			dongle = nil
 			imei = nil
