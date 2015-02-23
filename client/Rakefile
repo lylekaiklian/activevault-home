@@ -1,6 +1,7 @@
 require 'gsm_modem'
 require 'dongle'
 require 'test_kit'
+require 'yaml'
 
 =begin
 task :default do
@@ -46,16 +47,23 @@ task :run, :method, :param1 do |task, args|
 	puts "Elapsed time: #{elapsed_minutes.floor} minutes and #{elapsed_seconds} seconds"
 end
 
-task :port_sweep do
+desc "Two types of port sweep. The one that asks for balance, and the one that does not"
+task :port_sweep, :with_balance do |task, args|
 	#dongles should respond really fast in a sweep
-	sweep_timeout = 5
-	Dongle.port_sweep(sweep_timeout)
+	with_balance = (args[:with_balance] === 'true')
+	sweep_timeout = 30 if with_balance
+	
+	ports_yml = Dongle.port_sweep(sweep_timeout || 5, with_balance).each {|dongle_name, config_hash| config_hash.select!{|key, value| !value.nil?&& !value.empty?}}.to_yaml
+	puts "Generating result to ports.yml"
+	File.open("ports.yml", "w") do |out|
+		out.puts ports_yml
+	end
 end
 
 desc "Delete all messages on all dongles"
 task :delete_all_messages do
 	sweep_timeout = 5
-	sticks = Dongle.port_sweep(sweep_timeout)
+	sticks = Dongle.port_sweep(sweep_timeout, false)
 	sticks.each do |key, value|
 		puts "Clearing messages on port #{value[:port]}"
 		dongle = nil

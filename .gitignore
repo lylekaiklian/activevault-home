@@ -1,3 +1,5 @@
 *.jar
 *.dll
 Gemfile.lock
+ports.yaml
+output.csv

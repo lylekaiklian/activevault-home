@@ -261,7 +261,7 @@ class Dongle
 		text.gsub(/(\r\nOK\r\n)$/, '').strip
 	end
 	
-	def self.port_sweep(timeout_seconds = nil)
+	def self.port_sweep(timeout_seconds = nil, must_have_balance = false)
 		sticks = {}
 		labels = ('A'..'Z').to_a
 		label_index = 0
@@ -269,17 +269,18 @@ class Dongle
 		import('gnu.io.CommPortIdentifier')
 		
 		# Reversing port sweeping. This seems to be more agreeable to Huawei
-		port_identifiers = []
-		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
-			port_identifiers << port_ids.get_name
-		end
+		#port_identifiers = []
+		#CommPortIdentifier.getPortIdentifiers.each do |port_ids|
+		#	port_identifiers << port_ids.get_name
+		#end
 		
-		port_identifiers.reverse.each do |port|
-			#port = port_ids.get_name
+		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
+			port = port_ids.get_name
 			puts "\nSweeping port #{port}..."
 			dongle = nil
 			imei = nil
 			number = nil
+			balance = nil
 			begin
 				dongle = Dongle.new(port)
 				dongle.gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
@@ -287,13 +288,17 @@ class Dongle
 					imei = response1.strip
 					dongle.number do |response2|
 						number = response2.strip
+						balance = dongle.balance_inquiry if must_have_balance
 					end					
 				end
 				puts "IMEI: #{imei}"
 				puts "Number: #{number}"
+				puts "Balance: #{balance[:balance]}" if !balance.nil? 
 				
-				#If this is a new IMEI, then record it.
-				if !seen_imei.member? imei
+				# If this is a new IMEI, then record it.
+				# Disregard ports that cannot do balance inquiry
+				if !seen_imei.member? imei #&& !(must_have_balance && balance.nil?)
+				
 					label = labels[label_index].to_sym
 					sticks[label] = {
 						port: port,

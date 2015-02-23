@@ -160,9 +160,9 @@ class TestKit
 	
 		# Deal with comments
 		if line.strip[0] == "#"
-			puts "COMMENT: #{line}"
-			result = "**N/A**"
-			puts result + "\n\n"
+			#puts "COMMENT: #{line}"
+			#result = "**N/A**"
+			#puts result + "\n\n"
 			return
 		end
 		
