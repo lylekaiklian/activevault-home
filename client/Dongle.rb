@@ -297,7 +297,7 @@ class Dongle
 				
 				# If this is a new IMEI, then record it.
 				# Disregard ports that cannot do balance inquiry
-				if !seen_imei.member? imei #&& !(must_have_balance && balance.nil?)
+				if !seen_imei.member? imei && !(must_have_balance && balance.nil?)
 				
 					label = labels[label_index].to_sym
 					sticks[label] = {

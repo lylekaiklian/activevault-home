@@ -7,6 +7,7 @@ require 'jar/jackson-core-2.5.0.jar'
 require 'jar/jackson-annotations-2.5.0.jar'
 require 'jar/httpcore-4.4.jar'
 require 'jar/httpclient-4.4.jar'
+require 'yaml'
 
 ##
 # Here lies the promo codes we humans are all familiar with!
@@ -18,33 +19,8 @@ class TestKit
 	def initialize(params={})
 	
 		@timeout_seconds = params[:timeout_seconds] || 60
-		
-		#Put this into config file later, 
-		#and let the kit query the dongles future releases
-=begin		
-		@sticks = {
-		
-			:A => {
-					port: "COM4", 
-					number: "+639054292739",
-					dongle_object:  Dongle.new("COM4"),
-					description: "yellow dongle", 
-					balance: nil,
-					reply_number: nil
-			},	
-
-		:B =>	{
-					port: "COM9", 
-					number: "+639062627862",
-					dongle_object: Dongle.new("COM9"),
-					description: "blue dongle",
-					balance: nil,
-					
-					reply_number: nil
-					}
-		}
-=end
-		@sticks = Dongle.port_sweep(5)
+				
+		@sticks = YAML::load(File.read('ports.yml'))
 		
 		puts "Sanity check"
 		@sticks.keys.each do |key|

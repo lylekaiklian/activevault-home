@@ -50,7 +50,7 @@ end
 desc "Two types of port sweep. The one that asks for balance, and the one that does not"
 task :port_sweep, :with_balance do |task, args|
 	#dongles should respond really fast in a sweep
-	with_balance = (args[:with_balance] === 'true')
+	with_balance = (args[:with_balance] === 'with_balance')
 	sweep_timeout = 30 if with_balance
 	
 	ports_yml = Dongle.port_sweep(sweep_timeout || 5, with_balance).each {|dongle_name, config_hash| config_hash.select!{|key, value| !value.nil?&& !value.empty?}}.to_yaml
