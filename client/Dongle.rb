@@ -267,7 +267,7 @@ class Dongle
 		label_index = 0
 		seen_imei = []	#collect all imei's encountered already so as not to repeat.
 		import('gnu.io.CommPortIdentifier')
-		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
+		CommPortIdentifier.getPortIdentifiers.reverse.each do |port_ids|
 			port = port_ids.get_name
 			puts "\nSweeping port #{port}..."
 			dongle = nil
