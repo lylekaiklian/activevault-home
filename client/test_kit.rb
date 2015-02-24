@@ -8,6 +8,7 @@ require 'jar/jackson-annotations-2.5.0.jar'
 require 'jar/httpcore-4.4.jar'
 require 'jar/httpclient-4.4.jar'
 require 'yaml'
+require 'bigdecimal'
 
 ##
 # Here lies the promo codes we humans are all familiar with!
@@ -36,6 +37,8 @@ class TestKit
 		number = parameters[1]
 		message = parameters[2]
 		regex = parameters[3]
+		charge = parameters[4]
+		output = []
 		
 		#deal with 29173292739
 		if matches = number.match(/2\+([A-Z])/)			
@@ -44,21 +47,81 @@ class TestKit
 		end
 		
 		dongle = @sticks[stick.to_sym][:dongle_object]
+		
+		#but first, we do a balance inquiry
+		puts "Checking initial balance..."
+		initial_balance = nil
+		initial_balance_response = dongle.balance_inquiry(15)		
+		initial_balance =  initial_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !initial_balance_response.nil?
+		puts "Initial balance: #{initial_balance}"
+		
+		time_sent = Time.now
 		dongle.send_message(number, message)
 		response = dongle.wait_for_new_message(60)
+		time_received = Time.now
 		
 		@sticks[stick.to_sym][:reply_number] = response[:sender]
 		response_message = response[:message]
 		puts response_message
 		
+		#Then we do a final balance inquiry to check
+		puts "Checking final balance..."
+		final_balance = nil
+		final_balance_response = dongle.balance_inquiry(15)
+		final_balance =  final_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !final_balance_response.nil?
+		puts "Final balance: #{final_balance}"
+		
+		is_match = !(/#{regex}/ =~ response_message).nil?
+		
+		
+		is_charged_correctly = false
+		if !initial_balance.nil? && !final_balance.nil?
+			puts "Actual Charge: #{(BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)).to_s("F")}"
+			is_charged_correctly = ((BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)) == BigDecimal.new(charge.to_s))
+		else
+			puts "Cannot calculate actual charge"
+		end
+		
+		is_pass = is_match && is_charged_correctly
+		
+		#delete all messages to cleanup
+		puts "Deleting all messages..."
+		dongle.delete_all_messages
+		
+
+		#Output
+		output = [
+			Time.now.strftime("%m/%d/%Y"),
+			message,
+			@sticks[stick.to_sym][:number],
+			number,
+			time_sent.strftime("%I:%M %p"),
+			time_received.strftime("%I:%M %p"),
+			"#{initial_balance}",
+			"#{final_balance}",
+			(!initial_balance.nil? && !final_balance.nil?) ? "#{final_balance - initial_balance}" : "ERROR",
+			regex,
+			response_message,
+			is_pass.to_s,
+			"Pattern does not match"
+		]
+		
+		
 		# Tame Regex later
 		#return (/#{regex}/ =~ response_message)
 		#puts /#{regex}/
-		puts "Match?" + ((/#{regex}/ =~ response_message) ? "true" : "false")
-		if !(/#{regex}/ =~ response_message).nil?
-			return true
+		puts "Match? #{is_match}"
+
+		if !is_pass && !is_match
+			reason = "Pattern does not match"
+			output[12] = reason
+			return [false, reason, output]
+		elsif !is_pass && !is_charged_correctly
+			reason = "Not charged correctly (or balance check failed)"
+			output[12] = reason
+			return [false, reason, output]
 		else
-			return [false, "Pattern does not match"]
+			return [true, nil, output]
 		end
 			
 	end
@@ -68,6 +131,7 @@ class TestKit
 		amount = parameters[1]
 		
 		dongle = @sticks[stick.to_sym][:dongle_object]
+
 		
 		old_amount = @sticks[stick.to_sym][:balance]
 		new_amount = dongle.balance_inquiry(15)[:balance].gsub(/[^\.0-9]/, "").to_f
@@ -146,12 +210,13 @@ class TestKit
 		commands = line.split(",")
 		method = commands[1].strip
 		parameters = Array.new(commands).map{|p| p.strip}
+		result =  ""
 		
 		parameters.delete_at(1)
 		puts "[#{method}(#{parameters.join(",")})]"
 		begin
 			#puts self.class.name
-			truth, reason = self.send(method, parameters)
+			truth, reason, file_out_array = self.send(method, parameters)
 			if truth.nil?
 				result = "**N/A**"	
 			elsif truth === true
@@ -169,14 +234,33 @@ class TestKit
 			result = "**N/A**"
 		
 		ensure
-			puts result + "\n\n"
-			out.puts result + "," + line.strip if !out.nil?
+			puts result + "\n\n" if !result.nil?
+			out.puts file_out_array.join(";") if !out.nil? && !file_out_array.nil?
 		end	
 	end
 	
 	def run_using_file(filename)
 		puts "Let's go go go go go!\n\n"
 		File.open("output.csv", "w") do |out|
+		
+			headers = [
+				"Test Date",
+				"Keyword",
+				"A Number",
+				"B Number",
+				"Time Sent",
+				"Time Received",
+				"Beginning Balance",
+				"Ending Balance",
+				"Amount Charged",
+				"Expected Result",
+				"Actual Result",
+				"P/F",
+				"Remarks"
+			]
+			
+			out.puts headers.join(";")
+		
 			File.open(filename, "r") do |f|
 				f.each_line { |line| execute_line(line, out)}
 			end

@@ -92,7 +92,7 @@ class Dongle
 	end
 	
 	def delete_message(index, &block)
-		puts "deleting message #{index}"
+		#puts "deleting message #{index}"
 		@gsm_modem.execute %Q(AT+CMGD=#{index}) do |response|
 			#Allow further chaining
 			if !block.nil?
