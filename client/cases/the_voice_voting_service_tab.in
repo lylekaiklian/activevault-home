@@ -1,7 +1,7 @@
 ###############################################################################
 # Ref.#1 Texter gets info on how to vote. In Blue: Subject to change.
 ###############################################################################
-A	send_and_must_receive	2331	VOICE HELP	The Voice: Pangarap ang Puhunan, Boses ang Labanan! Vote for the artist deserving to get The Voice title! Please choose:[\s]*(.+\n)*[\s]*To vote, text VOICE <name of artist> to 2331. P2.50/text. Call (02) 4158766 for help.[\s]*	2.50
+A	send_and_must_receive	2331	VOICE HELP	The Voice: Pangarap ang Puhunan, Boses ang Labanan! Vote for the artist deserving to get The Voice title! Please choose:.*To vote, text VOICE <name of artist> to 2331. P2.50\/text. Call \(02\) 4158766 for help\.	2.50
 ###############################################################################
 # Ref.#2 Texter sends artist not in the choices. In Blue: Subject to change.
 ###############################################################################

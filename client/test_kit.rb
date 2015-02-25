@@ -71,7 +71,7 @@ class TestKit
 		final_balance =  final_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !final_balance_response.nil?
 		puts "Final balance: #{final_balance}"
 		
-		is_match = !(/#{regex}/ =~ response_message).nil?
+		is_match = !(/#{regex}/m =~ response_message).nil?
 		
 		
 		is_charged_correctly = false
@@ -103,7 +103,7 @@ class TestKit
 			regex,
 			response_message.gsub(/\n/, '\n'),
 			is_pass.to_s,
-			"Pattern does not match"
+			""
 		]
 		
 		
@@ -121,6 +121,7 @@ class TestKit
 			output[12] = reason
 			return [false, reason, output]
 		else
+			reason = "Passed"
 			return [true, nil, output]
 		end
 			
