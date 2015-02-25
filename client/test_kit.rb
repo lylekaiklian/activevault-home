@@ -99,9 +99,9 @@ class TestKit
 			time_received.strftime("%I:%M %p"),
 			"#{initial_balance}",
 			"#{final_balance}",
-			(!initial_balance.nil? && !final_balance.nil?) ? "#{final_balance - initial_balance}" : "ERROR",
+			(!initial_balance.nil? && !final_balance.nil?) ? "#{initial_balance - final_balance}" : "ERROR",
 			regex,
-			response_message,
+			response_message.gsub(/\n/, '\n'),
 			is_pass.to_s,
 			"Pattern does not match"
 		]
@@ -205,16 +205,17 @@ class TestKit
 			#puts result + "\n\n"
 			return
 		end
-		
-	
-		commands = line.split(",")
-		method = commands[1].strip
-		parameters = Array.new(commands).map{|p| p.strip}
-		result =  ""
-		
-		parameters.delete_at(1)
-		puts "[#{method}(#{parameters.join(",")})]"
+						
 		begin
+			commands = line.split("\t")
+			method = commands[1].strip
+			parameters = Array.new(commands).map{|p| p.strip}
+			result =  ""
+			
+			parameters.delete_at(1)
+			puts "method: #{method}"
+			puts "*** #{parameters.join("\n*** ")}"
+
 			#puts self.class.name
 			truth, reason, file_out_array = self.send(method, parameters)
 			if truth.nil?
@@ -232,10 +233,12 @@ class TestKit
 			puts ex.message
 			puts %Q(Method "#{method}" not yet implemented)
 			result = "**N/A**"
-		
+		rescue StandardError => ex
+			puts "Unexpected error: #{ex.message}"
+			result = "**ERROR**"
 		ensure
 			puts result + "\n\n" if !result.nil?
-			out.puts file_out_array.join(";") if !out.nil? && !file_out_array.nil?
+			out.puts file_out_array.join("\t") if !out.nil? && !file_out_array.nil?
 		end	
 	end
 	
@@ -259,7 +262,7 @@ class TestKit
 				"Remarks"
 			]
 			
-			out.puts headers.join(";")
+			out.puts headers.join("\t")
 		
 			File.open(filename, "r") do |f|
 				f.each_line { |line| execute_line(line, out)}
