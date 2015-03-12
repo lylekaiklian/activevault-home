@@ -13,7 +13,6 @@ The desktop client must be installed on the machine where the USB dongles are co
 * rake port_sweep
 * rake delete_all_messages
 * rake hog_all_except
- 
 * rake dongle:number['COM4']
 * rake dongle:balance['COM4']
 * rake dongle:send_message['COM4','222','BAL']
