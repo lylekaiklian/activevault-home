@@ -18,8 +18,10 @@ body {
 .header,
 .marketing,
 .footer {
+    /*
   padding-left: 15px;
   padding-right: 15px;
+  */
 }
 
 /* Custom page header */
@@ -65,6 +67,31 @@ body {
   p + h4 {
     margin-top: 28px;
   }
+}
+
+.table {
+    $table-font-size: 11px;
+    font-size: $table-font-size;
+    
+    th,td {
+       .expected_result {
+           width: 600px;
+       }
+    }
+    
+    tbody {
+        textarea {
+            min-height: 300px;
+            font-size: $table-font-size;
+        }
+    }
+}
+
+/* Lost treasure related stuff */
+
+
+.treasure-column-action {
+    width: 10%;
 }
 
 /* Responsive: Portrait tablets and up */
