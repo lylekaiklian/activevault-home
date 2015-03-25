@@ -9,8 +9,15 @@ The desktop client must be installed on the machine where the USB dongles are co
 * See https://gist.github.com/ardeearam/b20a48ab10b0e7458c74 for a complete list of JAR dependencies of the AWS Java SDK
 
 ### Running ###
-rake dev:test_kit	
-rake dev:test_kit_sqs
+* rake run['file','cases/mycase.in']
+* rake port_sweep
+* rake delete_all_messages
+* rake hog_all_except
+* rake dongle:number['COM4']
+* rake dongle:balance['COM4']
+* rake dongle:send_message['COM4','222','BAL']
+* rake dongle:set_number['COM4','+639173292739']
+* rake dongle:hog['COM4','COM5','COM6']
 
 ## Web Front-end ##
 The web front-end enables to run the test suite remotey. This runs on Rails 4.
