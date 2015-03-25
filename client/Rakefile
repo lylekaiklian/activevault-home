@@ -1,137 +1,198 @@
+require 'gsm_modem'
+require 'dongle'
+require 'test_kit'
+require 'yaml'
+
+=begin
 task :default do
 	puts "Project Lost Treasure"
 end
+=end
 
-namespace :dev do
-	task :dongle do
-		require 'dongle'
-		require 'thread'
-		require 'json'
-		
-		dongle = Dongle.new "COM4"
-		begin
-		#dongle.model
-		#dongle.manufacturer		
-		#dongle.messages
-		#dongle.send_message "222", "BAL"
-		#sleep 60
-		#puts "Check for new message"
-		#dongle.messages
-		puts dongle.balance_inquiry	
+task :default do
+	dongle = nil
+	begin
+		dongle = Dongle.new('COM4')
+		dongle.gsm_modem.timeout_seconds = 30
+		puts dongle.balance_inquiry
+		#dongle.send_message("222", "BAL")
+		#dongle.send_message("2954", "HELP MYTONES")
+		#puts dongle.wait_for_new_message_via_listeners(30)
+	ensure
+		dongle.close if !dongle.nil?
+	end
+	
+end
 
-		
-		#b = Queue.new
-		#b.pop
-		
-		ensure
-			dongle.close if !dongle.nil?
+task :run, :method, :param1 do |task, args|
+	start_time = Time.now
+
+	test_kit = TestKit.new
+	args[:method] ||= :file
+	begin
+		case args[:method].to_sym
+		when :file
+			test_kit.run_using_file(args[:param1])		
+		when :sqs
+			test_kit.run_using_sqs
 		end
+	ensure		
+		test_kit.close if !test_kit.nil?
 	end
 	
-	task :dongle2 do
-		require 'dongle'
-		dongle = Dongle.new "COM9"
-		begin
-			puts dongle.balance_inquiry		
-		ensure
-			dongle.close if !dongle.nil?
-		end		
-	end
+	end_time = Time.now
+	elapsed_time = end_time - start_time
+	elapsed_minutes = (elapsed_time / 60).floor
+	elapsed_seconds = elapsed_time - (elapsed_minutes * 60)
+	puts "Elapsed time: #{elapsed_minutes.floor} minutes and #{elapsed_seconds} seconds"
+end
+
+desc "Two types of port sweep. The one that asks for balance, and the one that does not"
+task :port_sweep, :with_balance, :to_file do |task, args|
+	#dongles should respond really fast in a sweep
+	with_balance = (args[:with_balance] === 'with_balance')
+	sweep_timeout = 30 if with_balance
 	
-	task :gsm_modem do
-		require 'gsm_modem'
-		begin
-			gsm_modem = Gsm_Modem.new "COM4"
-			#puts gsm_modem.execute %Q(AT+CMGF=1)   
-			#puts gsm_modem.execute %Q(AT+CMGL="ALL")
-			#puts gsm_modem.execute %Q(AT+CGMI)
-			#puts gsm_modem.execute %Q(AT+CGMM)
-			#puts gsm_modem.execute %Q(AT+CMGS="222"\r\nBAL\x1a)
-			#gsm_modem.execute %Q(AT+CMGL="ALL")	do |response|
-			#	puts response.upcase
-			#end
-			
-			puts gsm_modem.execute "AT+CNUM"
-			puts gsm_modem.execute %Q(AT+CMGS="222"\r\nBAL\x1a)
-			gsm_modem.wait_for(/^\+CMTI/) do |response|
-				matches = /^\+CMTI: "[^"]*",(\d+)/.match(response)
-				message_index = matches[1]
-				puts gsm_modem.execute %Q(AT+CMGR=#{message_index})
-			end
-		ensure
-			gsm_modem.close if !gsm_modem.nil?
-		end
-	end
+	ports_yml = Dongle.port_sweep(sweep_timeout || 5, with_balance).each {|dongle_name, config_hash| config_hash.select!{|key, value| !value.nil?&& !value.empty?}}.to_yaml
+	puts ports_yml
 	
-	task :gsm_modem2 do
-		require 'gsm_modem'
-		begin
-			gsm_modem = Gsm_Modem.new "COM9"
-			puts gsm_modem.execute %Q(AT+CPBS="ON")
-			puts gsm_modem.execute %Q(AT+CPBW=1,"+639062627862",129,"Voice")
-			puts gsm_modem.execute "AT+CNUM"
-		ensure
-			gsm_modem.close if !gsm_modem.nil?
-		end
-	end
-	
-	task :test_kit do
-		require 'test_kit'
-		test_kit = TestKit.new
-		begin
-			test_kit.run
-		ensure		
-			test_kit.close if !test_kit.nil?
+	to_file = (args[:to_file] === 'to_file')
+	if to_file
+		puts "Generating result to ports.yml"
+		File.open("ports.yml", "w") do |out|
+			out.puts ports_yml
 		end
 	end
 end
 
-namespace :util do
-	task :send, :number, :message do |task, args|
-		require 'dongle'
+desc "Delete all messages on all dongles"
+task :delete_all_messages do
+	sweep_timeout = 5
+	sticks = Dongle.port_sweep(sweep_timeout, false)
+	sticks.each do |key, value|
+		puts "Clearing messages on port #{value[:port]}"
+		dongle = nil
 		begin
-			dongle = Dongle.new "COM4"
-			dongle.send_message(args[:number], args[:message])
+			dongle = Dongle.new(value[:port])
+			dongle.delete_all_messages
 		ensure
 			dongle.close if !dongle.nil?
 		end
 	end
-	
-	task :send_and_expect, :number, :message do |task, args|
-		require 'dongle'
-		begin
-			dongle = Dongle.new "COM4"
-			dongle.send_message(args[:number], args[:message])
-			puts dongle.wait_for_new_message
-		ensure
+end
+
+task :hog_all_except, :port do |task, args|		
+	port_to_unhog = args[:port]
+	puts "Hogging all ports except #{port_to_unhog}"
+
+	begin
+		sweep_timeout = 5
+		sticks = Dongle.port_sweep(sweep_timeout)
+		dongles = []
+
+		#hog all other ports
+		sticks.each do |key, value|	
+			next if value[:port] == port_to_unhog	#Skip this particular port.
+			dongles << Dongle.new(value[:port])
+		end
+		
+		puts "Now hanging..."
+		sleep
+	ensure
+		dongles.each do |dongle|
 			dongle.close if !dongle.nil?
-		end	
-	end
-	
-	task :bal do 
-		require 'dongle'
+		end if !dongles.nil?			
+	end	
+end
+
+namespace :dongle do
+
+	desc "Get the number of this dongle"
+	task :number, :com_port do |task, args|
+		dongle = nil
 		begin
-			dongle = Dongle.new "COM4"
-			puts dongle.balance_inquiry
-		ensure
-			dongle.close if !dongle.nil?
-		end	
-	end
-	
-	task :num do
-		require 'dongle'
-		begin
-			dongle = Dongle.new "COM4"
+			dongle = Dongle.new(args[:com_port])
 			puts dongle.number
+		rescue ThreadError => ex
+			puts ex.message
 		ensure
 			dongle.close if !dongle.nil?
 		end		
 	end
-end
-
-namespace :test do
-	task :case1 do
-		puts "Case 1"
+	
+	desc "Get the available balance for this dongle"
+	task :balance, :com_port do |task, args| 
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.balance_inquiry(15)
+		rescue ThreadError => ex
+			puts ex.message	
+		ensure
+			dongle.close if !dongle.nil?
+		end	
+	end
+	
+	desc "Send SMS to some number"
+	task :send_message, :com_port, :number, :message do |task, args|
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.send_message(args[:number],args[:message])
+		rescue ThreadError => ex
+			puts ex.message	
+		ensure
+			dongle.close if !dongle.nil?
+		end		
+	end
+	
+	desc "Set number of dongle. This is not set by default on Globe prepaid sims."
+	task :set_number, :com_port, :number do |task, args|
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.set_number(args[:number])
+		rescue ThreadError => ex
+			puts ex.message	
+		ensure
+			dongle.close if !dongle.nil?
+		end		
+	end	
+	
+	desc "Delete all messages"
+	task :delete_all_messages, :com_port do |task, args|
+		dongle = nil
+		begin
+			dongle = Dongle.new(args[:com_port])
+			puts dongle.delete_all_messages
+		rescue ThreadError => ex
+			puts ex.message
+		rescue StandardError => ex
+			puts "#{ex.class.name} - #{ex.message}"
+		ensure
+			dongle.close if !dongle.nil?
+		end		
 	end
 
+	desc "Open the port, and do not release"
+	#http://blog.stevenocchipinti.com/2013/10/18/rake-task-with-an-arbitrary-number-of-arguments/
+	task :hog do |task, args| 
+		dongles = []
+		begin
+			args.extras.each do |port|
+				puts "Hogging PORT #{port}..."
+				dongles << Dongle.new(port)
+			end
+			puts "Now hanging..."
+			sleep 
+		rescue ThreadError => ex
+			puts ex.message
+		rescue StandardError => ex
+			puts "#{ex.class.name} - #{ex.message}"
+		ensure
+			dongles.each do |dongle|
+				dongle.close if !dongle.nil?
+			end if !dongles.nil?
+		end			
+	end
 end
