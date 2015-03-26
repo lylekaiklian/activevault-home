@@ -1,6 +1,7 @@
 
 <h1>Lost Treasure</h1>
-<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-play"></span> Run</button>
+<button class="btn btn-success" type="submit" ng-click="lost_treasure.methods.add_entry()" ng-disabled="lost_treasure.running"><span class="glyphicon glyphicon-plus"></span> Add</button>
+<button class="btn btn-success" type="submit" ng-click="lost_treasure.methods.run()" ng-disabled="lost_treasure.running"><span class="glyphicon glyphicon-play"></span> Run </button> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="lost_treasure.running" />
 <div class="form-group">
     <label>Service</label><input class="form-control" type="text" ng-model="lost_treasure.service"/>
     <label>Tester / Department</label><input class="form-control" type="text" ng-model="lost_treasure.tester"/> 
@@ -10,7 +11,7 @@
         <tr>
             <th>Ref #</th>
             <th>Test Date</th>
-            <th style="width:10%;">Scenario</th>
+            <th class="scenario">Scenario</th>
             <th style="width:10%;">Keyword</th>
             <th style="width:7%;">A Number</th>
             <th>B Number</th>
@@ -28,24 +29,24 @@
     </thead>
     <tbody>
         <tr ng-repeat="entry in lost_treasure.entries">
-            <td>{{entry.ref_no}}</td>
+            <td><input type="text" ng-model="entry.ref_no" style="width:20px"/></td>
             <td>{{entry.test_date}}</td>
             <td><textarea class="form-control" ng-model="entry.scenario"></textarea></td>
             <td><textarea class="form-control" ng-model="entry.keyword"></textarea></td>
             <td><input type="text" ng-model="entry.a_number" style="width:80px"/></td>
             <td><input type="text" ng-model="entry.b_number" style="width:80px"/></td>
-            <td>{{entry.time_sent}}</td>
-            <td>{{entry.time_received}}</td>
-            <td>{{entry.beginning_balance}}</td>
-            <td>{{entry.ending_balance}}</td>
-            <td>{{entry.amount_charged}}</td>
+            <td><span ng-show="!entry.meta.loading">{{entry.time_sent}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td><span ng-show="!entry.meta.loading">{{entry.time_received}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td><span ng-show="!entry.meta.loading">{{entry.beginning_balance}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td><span ng-show="!entry.meta.loading">{{entry.ending_balance}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td><span ng-show="!entry.meta.loading">{{entry.amount_charged}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><textarea class="form-control" ng-model="entry.expected_result"></textarea></td>
-            <td>{{entry.actual_result}}</td>
-            <td><span class="glyphicon glyphicon-ok-circle" style="color:green; font-size: 25px;"></span></td>
-            <td>{{entry.remarks}}</td>
+            <td><span ng-show="!entry.meta.loading">{{entry.actual_result}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td><span ng-show="!entry.meta.loading" class="glyphicon glyphicon-ok-circle" style="color:green; font-size: 25px;"></span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td><span ng-show="!entry.meta.loading">{{entry.remarks}}</span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td>
-                <button class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></button>
-                 <button class="btn btn-xs btn-success"><span class="glyphicon glyphicon-minus"></button>
+                <button class="btn btn-xs btn-success lt-add-entry" ng-click="lost_treasure.methods.add_entry()" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-plus"></button>
+                <button class="btn btn-xs btn-danger lt-remove-entry" ng-click="lost_treasure.methods.remove_entry($index)" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-minus"></button>
             </td>
         </tr>
     </tbody>

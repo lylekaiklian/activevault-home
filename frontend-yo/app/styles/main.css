@@ -13,8 +13,8 @@ body {
 .header,
 .marketing,
 .footer {
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 /* Custom page header */
@@ -59,10 +59,29 @@ body {
   margin-top: 28px;
 }
 
+/* Lost Treasure Specific styles*/
+
+.table {
+    font-size: 11px;
+}
+
+.table textarea {
+    min-height: 300px;
+    font-size: 11px;
+    min-width: 100px;
+}
+
+.table th.scenario {
+    width:10%;
+}
+
+
+
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   .container {
-    max-width: 730px;
+    /*max-width: 730px;*/
   }
 
   /* Remove the padding we set earlier */
