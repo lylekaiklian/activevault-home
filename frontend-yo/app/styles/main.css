@@ -62,18 +62,47 @@ body {
 /* Lost Treasure Specific styles*/
 
 .table {
-    font-size: 11px;
+     font-size: 11px !important;
 }
 
-.table textarea {
-    min-height: 300px;
+/*
+.table tbody tr {
+    cursor: pointer;
+}*/
+
+.table .form-control {
     font-size: 11px;
-    min-width: 100px;
 }
 
 .table th.scenario {
     width:10%;
 }
+
+.table th.expected_charge {
+    min-width:7px;
+    width: 7px;
+}
+
+.table textarea {
+    min-height: 120px;
+    max-height: 120px;
+    font-size: 11px;
+    min-width: 100px;
+}
+
+.table input.expected_charge {
+    width: 45px;
+}
+
+.table td.ref_no input {
+    width: 20px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+
+
 
 /** Refactor hard-coded CSS here **/
 

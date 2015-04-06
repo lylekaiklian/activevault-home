@@ -19,41 +19,21 @@ angular.module('frontendYoApp')
     };
 
     $scope.lost_treasure = {};
-    $scope.lost_treasure.service = 'ABS-CBN Customer Care Text Hotline';
-    $scope.lost_treasure.tester = 'Lea Samoy';
-    $scope.lost_treasure.mobtel_number = '9356102709';
-    $scope.lost_treasure.network = 'TM';
+    $scope.lost_treasure.service = 'Piso Club Service';
+    $scope.lost_treasure.tester = 'KATE	';
+    $scope.lost_treasure.mobtel_number = '09273299820';
+    $scope.lost_treasure.network = 'GHP';
 
-    $scope.lost_treasure.mock_entries = [
-        {
-            'ref_no': 1,
-            'test_date': '2/18/2015',
-            'scenario':  'Subscriber sends query or message for the 1st or 2nd time within the day',
-            'keyword': 'How do I join the MMK text promo?',
-            'a_number':'9356102709',
-            'b_number':'23661',
-            'time_sent':'2:19 PM',
-            'time_received':'2:20 PM',
-            'beginning_balance':'10.00',
-            'ending_balance':'10.00',
-            'amount_charged':'0.00',
-            'expected_result':'ABS-CBN TV Plus: Hi Kapamilya! Salamat po sa interest ninyo sa ABS-CBN TV plus. Ito po ay available na sa SM Appliance, SolidService Center, 2GO, Silicon Valley, Villman, Puregold Ambassador, Asianic, Complink, Accent Micro, PC Hub, PC Express, PC Corner, PC Worx sa halagang P2,500.00. Salamat po. This message is free of charge.',
-            'actual_result':'ABS-CBN TV Plus: Hi Kapamilya! Salamat po sa interest ninyo sa ABS-CBN TV plus. Ito po ay available na sa SM Appliance, SolidService Center, 2GO, Silicon Valley, Villman, Puregold Ambassador, Asianic, Complink, Accent Micro, PC Hub, PC Express, PC Corner, PC Worx sa halagang P2,500.00. Salamat po. This message is free of charge.',
-            'pass_fail':'P',
-            'remarks':'OK',
-            'meta': {
-                'loading': false
-            }
-        }
-    ];
-    
-    $scope.lost_treasure.entries = $scope.lost_treasure.mock_entries;
-    $scope.lost_treasure.running = false;
-    
-    $scope.lost_treasure.tmp = {
+    /** Counters keep track of the sequence and batch of the scenarios **/
+    $scope.lost_treasure.counters = {
         batch: new Date().getTime(),
         sequence_no: 1
     };
+
+
+    $scope.lost_treasure.running = false;
+    
+
     
     $scope.lost_treasure.methods = {
         
@@ -63,9 +43,9 @@ angular.module('frontendYoApp')
             /** Randomize message **/
             
             var scenario = {
-                'batch': $scope.lost_treasure.tmp.batch,
+                'batch': $scope.lost_treasure.counters.batch,
                 'id': new Date().getTime(),
-                'sequence_no': $scope.lost_treasure.tmp.sequence_no++,
+                'sequence_no': $scope.lost_treasure.counters.sequence_no++,
                 'keyword': 'BAL',
                 'a_number': '+639173292739',
                 'b_number': '222',
@@ -73,16 +53,26 @@ angular.module('frontendYoApp')
             };
             
             $http.post(endpoint + '/scenarios', scenario).
-             success(function(data, status, headers, config) {
+             success(function() {
                 // this callback will be called asynchronously
                 // when the response is available
               }).
-              error(function(data, status, headers, config) {
+              error(function() {
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.
               });            
             
         },
+        
+        beep: function(text) {
+          //var alert;
+          alert(text);   // jshint ignore:line
+        },
+        
+        generate_id: function() {
+            return new Date().getTime();
+        },
+        
         
         add_entry: function() {
             var last_entry = $scope.lost_treasure.entries[$scope.lost_treasure.entries.length - 1];
@@ -101,19 +91,117 @@ angular.module('frontendYoApp')
         },
         
         remove_entry: function(index) {
-            if (confirm('Do you really want to delete this row?')) {
+            //var confirm;
+            if (confirm('Do you really want to delete this row?')) { // jshint ignore:line
                 $scope.lost_treasure.entries.splice(index,1);
             }
         },
         
+        push: function(scenario) {
+            $http.post(endpoint + '/scenarios', angular.toJson(scenario)).
+             success(function() {
+                // this callback will be called asynchronously
+                // when the response is available
+              }).
+              error(function() {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+              });              
+        },
+        
         run: function() {
             $scope.lost_treasure.running = true;
+            
+            //Set loading icons a-circling to give the user sense of movement and progress
             for (var i = 0; i < $scope.lost_treasure.entries.length; i++) {
                 $scope.lost_treasure.entries[i].meta.loading = true;
                 $scope.lost_treasure.entries[i].status = statuses.local_queue;
             }
+            
+            //Push each item to queue
+            for (i = 0; i < $scope.lost_treasure.entries.length; i++) {
+                $scope.lost_treasure.methods.push($scope.lost_treasure.entries[i]);
+                $scope.lost_treasure.entries[i].status = statuses.remote_queue;
+            }            
         
         }
     };
+    
+    $scope.lost_treasure.mock_entries = [
+        {
+            'batch': $scope.lost_treasure.counters.batch,
+            'id': $scope.lost_treasure.methods.generate_id(),
+            'sequence_no': $scope.lost_treasure.counters.sequence_no++,
+            'ref_no': 1,
+            'test_date': '2/26/2015',
+            'scenario': 'Subscriber texts invalid keyword Catch All Reply',
+            'keyword': 'INVALID',
+            'a_number':'09273299820',
+            'b_number':'2346',
+            'time_sent': null,
+            'time_received': null,
+            'beginning_balance': null,
+            'ending_balance': null,
+            'amount_charged': null,
+            'expected_charge': 2.50,
+            'expected_result':'Sorry, you sent an invalid keyword. Text CHECK to 2346 for free to know your services. To Activate your MMS, txt GO to 2951 .Need help on 2346 downloads? Call (02)892-9999, Mon-Fri 9am-5pm. Thank you',
+            'actual_result': null,
+            'pass_fail': null,
+            'remarks': null,
+            'meta': {
+                'loading': false
+            }
+         },
+         {
+            'batch': $scope.lost_treasure.counters.batch,
+            'id': $scope.lost_treasure.methods.generate_id(),
+            'sequence_no': $scope.lost_treasure.counters.sequence_no++,             
+            'ref_no': 2,
+            'test_date': '2/26/2015',
+            'scenario': 'Without Subscriptions',
+            'keyword': 'CHECK',
+            'a_number':'09273299820',
+            'b_number':'2346',
+            'time_sent': null,
+            'time_received': null,
+            'beginning_balance': null,
+            'ending_balance': null,
+            'amount_charged': null,
+            'expected_charge': 0,
+            'expected_result':'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
+            'actual_result': null,
+            'pass_fail': null,
+            'remarks': null,
+            'meta': {
+                'loading': false
+            }
+        },
+        {
+            'batch': $scope.lost_treasure.counters.batch,
+            'id': $scope.lost_treasure.methods.generate_id(),
+            'sequence_no': $scope.lost_treasure.counters.sequence_no++,            
+            'ref_no': 3,
+            'test_date': '2/26/2015',
+            'scenario': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
+            'keyword': 'PCLUBINFO',
+            'a_number':'09273299820',
+            'b_number':'2346',
+            'time_sent': null,
+            'time_received': null,
+            'beginning_balance': null,
+            'ending_balance': null,
+            'amount_charged': null,
+            'expected_charge': 0,
+            'expected_result':'PISO Club Service is your premium access to fun & latest MP3’s, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily. To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.',
+            'actual_result': null,
+            'pass_fail': null,
+            'remarks': null,
+            'meta': {
+                'loading': false
+            }
+        }        
+    ];
+    
+    $scope.lost_treasure.entries = $scope.lost_treasure.mock_entries;
     
   });
