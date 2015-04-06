@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   
 
 
-  resources :scenarios
+  resources :scenarios, only: [:create], defaults: { format:'json' }
 
   root 'lost_treasure#index'
       

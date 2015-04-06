@@ -1,6 +1,10 @@
 class Scenario
     
     include ActiveModel::Model
+    include ActiveModel::Validations
+    include ActiveModel::Conversion
+    extend ActiveModel::Naming
+
     
     
     
@@ -10,7 +14,7 @@ class Scenario
         
     attr_reader :id, :batch, :sequence_no, :time_sent, :time_received,
         :beginning_balance, :ending_balance, :amount_charged,
-        :expected_result, :actual_result, :pass_or_fail, :remarks
+        :expected_result, :actual_result, :pass_or_fail, :remarks, :errors
     
     def initialize(params = {})
         
@@ -73,16 +77,17 @@ class Scenario
         does_validate = true
         
         #Sequence numbers are required to be able to get the appropriate response
-        (@errors << "Batch is required"; does_validate = false)  if batch.blank?
-        (@errors << "ID is required"; does_validate = false)  if id.blank?
-        (@errors << "Sequence Number is required"; does_validate = false)  if sequence_no.blank?
+        (@errors << "Batch (batch) is required."; does_validate = false)  if batch.blank?
+        (@errors << "ID (id) is required."; does_validate = false)  if id.blank?
+        (@errors << "Sequence Number (sequence_no) is required."; does_validate = false)  if sequence_no.blank?
         
         #Can't make the thing work without these
-        (@errors << "Keyword is required"; does_validate = false)  if keyword.blank?
-        (@errors << "A Number is required"; does_validate = false)  if a_number.blank?
-        (@errors << "B Number is required"; does_validate = false)  if b_number.blank?
-        (@errors << "Expected result is required"; does_validate = false)  if expected_result.blank?
+        (@errors << "Keyword (keyword) is required."; does_validate = false)  if keyword.blank?
+        (@errors << "A Number (a_number) is required."; does_validate = false)  if a_number.blank?
+        (@errors << "B Number (b_number) is required."; does_validate = false)  if b_number.blank?
+        (@errors << "Expected result (expected_result) is required."; does_validate = false)  if expected_result.blank?
         
+        does_validate
     end    
     
 end

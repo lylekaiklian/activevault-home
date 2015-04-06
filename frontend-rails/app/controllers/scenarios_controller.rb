@@ -25,16 +25,25 @@ class ScenariosController < ApplicationController
   # POST /scenarios.json
   def create
     @scenario = Scenario.new(scenario_params)
-
-    respond_to do |format|
-      if @scenario.save
-        format.html { redirect_to @scenario, notice: 'Scenario was successfully created.' }
-        format.json { render :show, status: :created, location: @scenario }
-      else
-        format.html { render :new }
-        format.json { render json: @scenario.errors, status: :unprocessable_entity }
-      end
+    begin
+        @scenario.push
+        render json: @scenario
+    rescue StandardError => ex
+        render json: @scenario.errors, status: :unprocessable_entity
     end
+    
+
+    
+
+    #respond_to do |format|
+    #  if @scenario.save
+    #    format.html { redirect_to @scenario, notice: 'Scenario was successfully created.' }
+    #    format.json { render :show, status: :created, location: @scenario }
+    #  else
+    #    format.html { render :new }
+    #    format.json { render json: @scenario.errors, status: :unprocessable_entity }
+    #  end
+    #end
   end
 
   # PATCH/PUT /scenarios/1
@@ -68,7 +77,7 @@ class ScenariosController < ApplicationController
   #  end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-  #  def scenario_params
-  #    params[:scenario]
-  #  end
+    def scenario_params
+      params    #whitelist later.
+    end
 end
