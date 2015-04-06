@@ -1,6 +1,11 @@
 # Project Lost Treasure
 
-## Desktop Client ##
+## Setup ##
+* `lost-treasure/frontend-yo` is an AngularJS-based user-interface, and must run on port 3006.
+* `lost-treasure/frontend-rails` is a Rails-based middleware API between the UI and Amazon SQS, and must run on port 3007.
+* `lost-treasure/client` is a JRuby-based application that must run on a machine where dongles are plugged to USB ports.
+
+## Desktop Client (`lost-treasure/client`) ##
 The desktop client must be installed on the machine where the USB dongles are connected. The desktop client runs on JRuby.
 
 ### Prerequisites ###
@@ -19,5 +24,9 @@ The desktop client must be installed on the machine where the USB dongles are co
 * rake dongle:set_number['COM4','+639173292739']
 * rake dongle:hog['COM4','COM5','COM6']
 
-## Web Front-end ##
-The web front-end enables to run the test suite remotey. This runs on Rails 4.
+## Web Front-end (`lost-treasure/frontend-yo`) ##
+The web front-end enables to run the test suite remotey. This runs on AngularJS/Yeoman.
+
+## Middleware API (`lost-treasure/frontend-rails`) ##
+This is an API that connects the AngularJS frontend to Amazon SQS. This design was chosen over AngularJS directly connecting
+to Amazon SQS, as there is no secure way to hide Amazon credentials in a client-sided code. 
