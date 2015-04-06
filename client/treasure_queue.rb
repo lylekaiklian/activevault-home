@@ -11,34 +11,37 @@ class TreasureQueue
     messages_sorted = [];
     message_index = 1;
     
-    loop do
-      #puts "Waiting for messages..."
-      messages = sqs.receive_message(queue_url).get_messages
-    
-      messages.each do |message|
-        receipt_handle = message.get_receipt_handle
-        message_body = JSON.parse(message.get_body, {symbolize_names: true})
-        puts "Sequence #{message_body[:sequence_no]} receieved."
-        messages_sorted[message_body[:sequence_no]] = message_body
-        sqs.delete_message(queue_url, receipt_handle)
-      end
-      
+    puts "Waiting for messages..."
+  
+    begin  
       loop do
-        if !messages_sorted[message_index].nil?
-          puts "Processing sequence #{message_index}..."
-          message_index += 1
-          next
-        else
-          #Wait for the next index in the queue
-          break 
-        end 
+          messages = sqs.receive_message(queue_url).get_messages
+        
+          messages.each do |message|
+            receipt_handle = message.get_receipt_handle
+            message_body = JSON.parse(message.get_body, {symbolize_names: true})
+            puts "Sequence #{message_body[:sequence_no]} receieved."
+            messages_sorted[message_body[:sequence_no]] = message_body
+            sqs.delete_message(queue_url, receipt_handle)
+          end
+          
+          loop do
+            if !messages_sorted[message_index].nil?
+              puts "Processing sequence #{message_index}..."
+              puts messages_sorted[message_index].to_json
+              message_index += 1
+              next
+            else
+              #Wait for the next index in the queue
+              break 
+            end 
+          end
+        
+        sleep 0.10            
       end
       
-      
-      
-      sleep 0.10
-      
-      
-    end
+    rescue StandardError => ex
+      puts "Ignoring #{ex.class.name} - #{ex.message}"
+    end  
   end
 end
