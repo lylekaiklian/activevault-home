@@ -105,6 +105,9 @@ task :hog_all_except, :port do |task, args|
 	end	
 end
 
+###############################################################################
+# Dongle-related tasks 
+###############################################################################
 namespace :dongle do
 
 	desc "Get the number of this dongle"
@@ -195,4 +198,14 @@ namespace :dongle do
 			end if !dongles.nil?
 		end			
 	end
+end
+
+###############################################################################
+# Queue-related tasks 
+###############################################################################
+
+namespace :q do  
+  task :unpack do 
+    
+  end
 end
