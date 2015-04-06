@@ -1,0 +1,12 @@
+########################################################
+# Ref # 01 - User requests for a validation code
+########################################################
+A	send_and_must_receive	2158	via web	‘gamer\.com\.ph’ would like to access your account, enter confirmation code to proceed: XXXXXXXX 	0.00
+########################################################
+# Ref # 02 -  User successfully validates number
+########################################################
+A	send_and_must_receive	2158	via web	" Thank you for subscribing to gamer\.com\.ph\. You have allowed your mobile number:\s*\s*- to receive sms\s*\s*- to be charged P0\.00 or P1\.00 or P2\.00 or P5\.00 or P10\.00 or P11\.00 or P12\.50 or P15\.00 or P20\.00 or P25\.00 or P50\.00 or P62\.00 or P100\.00 or P110\.00 or P1125\.00 or P200\.00 or P250\.00 or P300\.00 or P375\.00\s*\s*To unsubscribe for free, text STOP to 21588579\. For more info visit https:\/\/www\.gamer\.com\.ph\. For other options, text HELP and send to 21588579\. This message is FREE of charge\.\s*\s*"	0.00
+########################################################
+# Ref # 03 -  User purchases and e-pin successfully, e-pin is delivered
+########################################################
+A	send_and_must_receive	2158	via web	"You have purchased <Publisher> <e-pin\/denom> for P<amt>\. Gamer 	0.00

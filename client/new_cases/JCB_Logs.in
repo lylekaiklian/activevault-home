@@ -1,0 +1,56 @@
+########################################################
+# Ref.#1 - Help keyword
+########################################################
+A	send_and_must_receive	2910	HELP JCB	"Win Sony Experia Z3 just by using your JCB credit cards for a minimum of a single-receipt transaction of Php 500\. To submit entry, text in  JCB<space>Name\/Address\/1st 6-digit of card\/Approval Code\/Transaction Date\(MMDDYY\)\/Transaction Amount  to 2910\. Ex\. JCB Anna Reyes\/23 Adams St\., Brgy\. Poblacion, Makati City\/356232\/123456\/021615\/600\.20\s*\s* \s*\s*Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\.\s*\s*"	 -   
+########################################################
+# Ref.#2 - (Invalid help keyword)
+########################################################
+A	send_and_must_receive	2910	JCB1	"These are the closest match to your request:\s*\s*JCB\s*\s*JCB HELP\s*\s*JCB INFO\s*\s*HELP JCB\s*\s*INFO JCB\s*\s*Simply text keywords to 2910\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#3 - "Incorrect format,  Incomplete parameter,  1st 6 digits are invalid    Here's the list of valid first 6 digits of JCB cards:  356232  356233  356277  356278  356286  356288  356540  "
+########################################################
+A	send_and_must_receive	2910	JCB JOSH/	"Sorry your format is incorrect\. To submit entry, text in  JCB<space>Name\/Address\/1st 6-digit of card\/Approval Code\/Transaction Date\(MMDDYY\)\/Transaction Amount to 2910\. Ex\. JCB Anna Reyes\/23 Adams St\., Brgy\. Poblacion, Makati City\/356232\/123456\/021615\/600\.20\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#4 - Used transaction slip based on approval code 
+########################################################
+A	send_and_must_receive	2910	JCB Ninay/Makati/356540/3452/013015/700	"Sorry this transaction has been entered already\. One entry per charge slip\. To submit entry, text in JCB<space>Name\/Address\/1st 6-digit of card\/Approval Code\/Transaction Date\(MMDDYY\)\/Transaction Amount to 2910\. Ex\. JCB Anna Reyes\/23 Adams St\., Brgy\. Poblacion, Makati City\/356232\/123456\/021615\/600\.20\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#5 - Used transaction slip based on approval code 
+########################################################
+A	send_and_must_receive	2910	JCB Ninay/Makati/356232/3452/013015/700	"Sorry this transaction has been entered already\. One entry per charge slip\. To submit entry, text in JCB<space>Name\/Address\/1st 6-digit of card\/Approval Code\/Transaction Date\(MMDDYY\)\/Transaction Amount to 2910\. Ex\. JCB Anna Reyes\/23 Adams St\., Brgy\. Poblacion, Makati City\/356232\/123456\/021615\/600\.20\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#6 - Received Share a load P20.00
+########################################################
+A	send_and_must_receive			Received Share a load P20\.00	 (20.00)
+########################################################
+# Ref.#7 - Valid entry
+########################################################
+A	send_and_must_receive	2910	JCB Jenina/Makati/356278/3452/013015/1000	"Thank you! You have successfully submitted an entry\. To check your total entries, reply JCB CHECK\.\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 -   
+########################################################
+# Ref.#8 - Valid entry
+########################################################
+A	send_and_must_receive	2910	JCB Jenina/Makati/356286/3452/020415/1000	"Thank you! You have successfully submitted an entry\. To check your total entries, reply JCB CHECK\.\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#9 - Valid entry
+########################################################
+A	send_and_must_receive	2910	JCB KAT/Makati/356540/020415/10	"Thank you! You have successfully submitted an entry\. To check your total entries, reply JCB CHECK\.\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#10 - Valid entry
+########################################################
+A	send_and_must_receive	2910	JCB Jenina/Makati/356232/1234/013015/1234	"Thank you! You have successfully submitted an entry\. To check your total entries, reply JCB CHECK\.\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#11 - Valid entry
+########################################################
+A	send_and_must_receive	2910	JCB Jenina/Makati/356232/4812/013015/1234	"Thank you! You have successfully submitted an entry\. To check your total entries, reply JCB CHECK\.\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#12 - User inquires for total entries submitted
+########################################################
+A	send_and_must_receive	2910	JCB CHECK	"You have a total of 2 entries for the JCB Swipe More to Win Smartphone promo\. Earn more entries just by using your JCB credit cards for a minimum single-receipt transaction of Php 500 and text in JCB<space>Name\/Address\/1st 6-digit of card\/Approval Code\/Transaction Date\(MMDDYY\)\/Transaction Amount\s*\s* \s*\s* Promo from Feb 16 to Apr 30, 2015 only\. DTI-FTEB SPD XXXX S\.2015 P1\/txt\. Help? Call \(02\) 887-3973, M-F, 9-5\. P1\/txt\s*\s*"	 1.00 
+########################################################
+# Ref.#13 - (End of Promo)
+########################################################
+A	send_and_must_receive	2910	JCB	Sorry, the JCB Promo ended last April 30, 2015\.Thanks for your interest\. Watch out for more promos in the future or visit www\.jcbcard\.com! This msg is charged P1\.	 1.00 
+########################################################
+# Ref.#14 - (End of Promo)
+########################################################
+A	send_and_must_receive	2910	JCB HELP	Sorry, the JCB Promo ended last April 30, 2015\.Thanks for your interest\. Watch out for more promos in the future or visit www\.jcbcard\.com! This msg is charged P1\.	 1.00 
