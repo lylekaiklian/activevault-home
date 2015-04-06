@@ -9,6 +9,11 @@
  */
 angular.module('frontendYoApp')
   .controller('MainCtrl', function ($scope) {
+      
+    var statuses = {
+        'local_queue': 'Local Queue',
+        'remote_queue': 'Remote Queue'
+    };
 
     $scope.lost_treasure = {};
     $scope.lost_treasure.service = 'ABS-CBN Customer Care Text Hotline';
@@ -69,6 +74,7 @@ angular.module('frontendYoApp')
             $scope.lost_treasure.running = true;
             for (var i = 0; i < $scope.lost_treasure.entries.length; i++) {
                 $scope.lost_treasure.entries[i].meta.loading = true;
+                $scope.lost_treasure.entries[i].status = statuses['local_queue'];
             }
         
         }

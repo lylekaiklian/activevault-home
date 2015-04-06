@@ -10,6 +10,8 @@ class LostTreasureController < ApplicationController
      
   end
   
+  
+  
 end
  
  

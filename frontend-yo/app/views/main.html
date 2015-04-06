@@ -47,6 +47,7 @@
             <td>
                 <button class="btn btn-xs btn-success lt-add-entry" ng-click="lost_treasure.methods.add_entry()" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-plus"></button>
                 <button class="btn btn-xs btn-danger lt-remove-entry" ng-click="lost_treasure.methods.remove_entry($index)" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-minus"></button>
+                {{entry.status}}
             </td>
         </tr>
     </tbody>

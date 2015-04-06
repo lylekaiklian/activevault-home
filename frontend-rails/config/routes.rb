@@ -2,10 +2,13 @@ Rails.application.routes.draw do
   
 
 
+  resources :scenarios
+
   root 'lost_treasure#index'
       
   get 'lost_treasure/index' 
   post 'lost_treasure/submit'
+  
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
