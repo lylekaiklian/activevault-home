@@ -2,6 +2,7 @@ require 'gsm_modem'
 require 'dongle'
 require 'test_kit'
 require 'yaml'
+require 'treasure_queue'
 
 =begin
 task :default do
@@ -206,6 +207,7 @@ end
 
 namespace :q do  
   task :unpack do 
-    
+    treasure = TreasureQueue.new
+    treasure.unpack
   end
 end
