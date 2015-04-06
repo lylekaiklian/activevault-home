@@ -15,7 +15,8 @@ angular.module('frontendYoApp')
       
     var statuses = {
         'local_queue': 'Local Queue',
-        'remote_queue': 'Remote Queue'
+        'remote_queue': 'Remote Queue',
+        'done': 'Done'
     };
 
     $scope.lost_treasure = {};
@@ -99,13 +100,8 @@ angular.module('frontendYoApp')
         
         push: function(scenario) {
             $http.post(endpoint + '/scenarios', angular.toJson(scenario)).
-             success(function() {
-                // this callback will be called asynchronously
-                // when the response is available
-              }).
               error(function() {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
+                // TODO: invoke again on failure
               });              
         },
         
@@ -122,7 +118,19 @@ angular.module('frontendYoApp')
             for (i = 0; i < $scope.lost_treasure.entries.length; i++) {
                 $scope.lost_treasure.methods.push($scope.lost_treasure.entries[i]);
                 $scope.lost_treasure.entries[i].status = statuses.remote_queue;
-            }            
+            }
+            
+            //Poll result for each scenario
+            i = 0;
+            while (i < $scope.lost_treasure.entries.length) {
+                //$scope.lost_treasure.methods.push($scope.lost_treasure.entries[i]);
+                if(i === 0) {
+                    $scope.lost_treasure.entries[i].meta.loading = false;
+                    $scope.lost_treasure.entries[i].status = statuses.done;
+                }
+                i++;
+                
+            }
         
         }
     };

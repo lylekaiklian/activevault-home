@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
 
   resources :scenarios, only: [:create, :options], defaults: { format:'json' }
+  post 'scenarios/:batch/:sequence_no' => 'scenarios#create_results', defaults: {format: 'json'}
+  get 'scenarios/:batch/:sequence_no' => 'scenarios#get_results', defaults: {format: 'json'}
     
   #CORS policy
   match "/*all" , :to => 'lost_treasure#index',  :via => [:options]

@@ -31,19 +31,24 @@ class ScenariosController < ApplicationController
     rescue StandardError => ex
         render json: @scenario.errors, status: :unprocessable_entity
     end
-    
-
-    
-
-    #respond_to do |format|
-    #  if @scenario.save
-    #    format.html { redirect_to @scenario, notice: 'Scenario was successfully created.' }
-    #    format.json { render :show, status: :created, location: @scenario }
-    #  else
-    #    format.html { render :new }
-    #    format.json { render json: @scenario.errors, status: :unprocessable_entity }
-    #  end
-    #end
+  end
+  
+  def create_results
+      batch = scenario_params[:batch]
+      sequence_no = scenario_params[:sequence_no]
+      @scenario = Scenario.new(scenario_params)
+      redis_key = "scenarios:#{batch}:#{sequence_no}"
+      $redis.set(redis_key, @scenario.to_json)
+      $redis.expire(redis_key, 3.hours)
+      
+      render json: @scenario
+  end
+  
+  def get_results 
+      batch = scenario_params[:batch]
+      sequence_no = scenario_params[:sequence_no]
+      @scenario = JSON.parse($redis.get("scenarios:#{batch}:#{sequence_no}"))
+      render json: @scenario
   end
 
   # PATCH/PUT /scenarios/1

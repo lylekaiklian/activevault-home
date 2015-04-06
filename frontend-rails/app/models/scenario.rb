@@ -12,15 +12,16 @@ class Scenario
         :description, :keyword, :a_number, 
         :b_number, :expected_result
         
-    attr_reader :id, :batch, :sequence_no, :time_sent, :time_received,
+    attr_reader :batch, :sequence_no, :time_sent, :time_received,
         :beginning_balance, :ending_balance, :amount_charged,
-        :expected_result, :actual_result, :pass_or_fail, :remarks, :errors
+        :actual_result, :pass_or_fail, :remarks
+        
+    attr_reader :errors
     
     def initialize(params = {})
         
         #Assign-once parameters here
         @batch = params[:batch]
-        @id = params[:id]
         @sequence_no = params[:sequence_no]
         
         #Enable writable parameters to be assigned simultaneously
@@ -40,10 +41,23 @@ class Scenario
         @errors = []
     end
     
+    
+    def process(params = {})
+        
+        #modify internal values based on backend processing
+        @time_sent = params[:time_sent] 
+        params[:time_received]
+        params[:beginning_balance] 
+        params[:ending_balance] 
+        params[:amount_charged]
+        params[:actual_result]
+        params[:pass_or_fail]
+        params[:remarks]
+    end
+    
     def as_json(options)
         {
             batch: batch,
-            id: id,
             sequence_no: sequence_no,
             ref_no: ref_no,
             test_date: test_date,
