@@ -8,7 +8,10 @@
  * Controller of the frontendYoApp
  */
 angular.module('frontendYoApp')
-  .controller('MainCtrl', function ($scope) {
+  .controller('MainCtrl', function ($scope, $http) {
+      
+    /** TODO: Configure this somewhere **/
+    var endpoint = 'http://dev.aws.galoretv.com:3007';
       
     var statuses = {
         'local_queue': 'Local Queue',
@@ -47,7 +50,40 @@ angular.module('frontendYoApp')
     $scope.lost_treasure.entries = $scope.lost_treasure.mock_entries;
     $scope.lost_treasure.running = false;
     
+    $scope.lost_treasure.tmp = {
+        batch: new Date().getTime(),
+        sequence_no: 1
+    };
+    
     $scope.lost_treasure.methods = {
+        
+        /** Test method **/
+        honk:function() {   
+            
+            /** Randomize message **/
+            
+            var scenario = {
+                'batch': $scope.lost_treasure.tmp.batch,
+                'id': new Date().getTime(),
+                'sequence_no': $scope.lost_treasure.tmp.sequence_no++,
+                'keyword': 'BAL',
+                'a_number': '+639173292739',
+                'b_number': '222',
+                'expected_result':'Blurbblurb'
+            };
+            
+            $http.post(endpoint + '/scenarios', scenario).
+             success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+              }).
+              error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+              });            
+            
+        },
+        
         add_entry: function() {
             var last_entry = $scope.lost_treasure.entries[$scope.lost_treasure.entries.length - 1];
             var ref_no;
@@ -74,7 +110,7 @@ angular.module('frontendYoApp')
             $scope.lost_treasure.running = true;
             for (var i = 0; i < $scope.lost_treasure.entries.length; i++) {
                 $scope.lost_treasure.entries[i].meta.loading = true;
-                $scope.lost_treasure.entries[i].status = statuses['local_queue'];
+                $scope.lost_treasure.entries[i].status = statuses.local_queue;
             }
         
         }

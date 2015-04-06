@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   
 
 
-  resources :scenarios, only: [:create], defaults: { format:'json' }
+  resources :scenarios, only: [:create, :options], defaults: { format:'json' }
+    
+  #CORS policy
+  match "/*all" , :to => 'lost_treasure#index',  :via => [:options]
 
   root 'lost_treasure#index'
       
