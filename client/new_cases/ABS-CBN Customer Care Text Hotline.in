@@ -1,0 +1,16 @@
+########################################################
+# Ref # 01 - Subscriber sends query or message for the 1st or 2nd time within the day
+########################################################
+A	send_and_must_receive	23661	How do I join the MMK text promo?	ABS-CBN TV Plus: Hi Kapamilya! Salamat po sa interest ninyo sa ABS-CBN TV plus\. Ito po ay available na sa SM Appliance, SolidService Center, 2GO, Silicon Valley, Villman, Puregold Ambassador, Asianic, Complink, Accent Micro, PC Hub, PC Express, PC Corner, PC Worx sa halagang P2,500\.00\. Salamat po\. This message is free of charge\.	0.00
+########################################################
+# Ref # 02 - Subscriber sends query or message for the 3rd time within the day
+########################################################
+A	send_and_must_receive	23661	How do I join the MMK text promo?	ABS-CBN TV Plus: Hi Kapamilya! Salamat po sa interest ninyo sa ABS-CBN TV plus\. Ito po ay available na sa SM Appliance, SolidService Center, 2GO, Silicon Valley, Villman, Puregold Ambassador, Asianic, Complink, Accent Micro, PC Hub, PC Express, PC Corner, PC Worx sa halagang P2,500\.00\. Salamat po\. This message is free of charge\. Ang mga susunod mong text for the day ay may charge nang P2\.50\.	0.00
+########################################################
+# Ref # 03 - Subscriber sends query or message for the 3rd time within the day
+########################################################
+A	send_and_must_receive	23661	How do I join the MMK text promo?	ABS-CBN TV Plus: Hi Kapamilya! Salamat po sa interest ninyo sa ABS-CBN TV plus\. Ito po ay available na sa SM Appliance, SolidService Center, 2GO, Silicon Valley, Villman, Puregold Ambassador, Asianic, Complink, Accent Micro, PC Hub, PC Express, PC Corner, PC Worx sa halagang P2,500\.00\. Salamat po\. This message is free of charge\. Ang mga susunod mong text for the day ay may charge nang P2\.50\.	0.00
+########################################################
+# Ref # 04 - Subscriber sends query or message for the 4th and up time within the day
+########################################################
+A	send_and_must_receive	23661	How do I join the MMK text promo?	ABS-CBN TV Plus: Hi Kapamilya! Salamat po sa interest ninyo sa ABS-CBN TV plus\. Ito po ay available na sa SM Appliance, SolidService Center, 2GO, Silicon Valley, Villman, Puregold Ambassador, Asianic, Complink, Accent Micro, PC Hub, PC Express, PC Corner, PC Worx sa halagang P2,500\.00\. Salamat po\. You’ve been charged P2\.50\.	0.00

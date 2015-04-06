@@ -1,0 +1,100 @@
+########################################################
+# Ref # 01 - Reload
+########################################################
+A	send_and_must_receive	2346		Reloading successful	100.00
+########################################################
+# Ref # 02 - received SMS from other vas "SELFIE" charged P50
+########################################################
+A	send_and_must_receive	2363		received SMS from other vas "SELFIE" charged P50	50.00
+########################################################
+# Ref # 03 - Promo information keyword
+########################################################
+A	send_and_must_receive	2346	LIPADHELP	"Buksan ang Kahon 1-9 at baka ikaw ang ma-swerteng Manalo ng LOAD or baka makakuha ka ng MILES to win a plane ticket to SG\/Korea\/Japan\.\s*\s*\s*\s*Earn miles for more chances of winning plane tickets to SG, KOREA or JAPAN\. Join now, text LIPAD to 2346\.\s*\s*\s*\s*Enjoy your free access to the featured mobile service today when you text the promo keyword\.\s*\s*\s*\s*For more info, visit http:\/\/dloadstation\.com\/lipadatswertekahonfaqs\. To opt out, text STOP BOXHELP to 2346 for free\. DTI#XXXXXXs\s*\s*"	0.00
+########################################################
+# Ref # 04 - User receives registration instructions
+########################################################
+A	send_and_must_receive	2346	KREG	" Register to validate your mile entries to LIPAD KA SA SAYA AT SWERTE SA KAHON PROMO and Win Plane Tickets to SG\/Korea\/Japan!\s*\s*\s*\s*Text KREG<space><Name*Address*Birth Year*Gender> and send to 2346\. Ex: KREG ANA UY*99 France St\. Pasay City*1990*F to 2346\.\s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. Qs? Call 02-8929999 M-F from 9am-5pm\. DTI#XXXXXXs\s*\s*"	0.00
+########################################################
+# Ref # 05 -  To opt in from promo alerts
+########################################################
+A	send_and_must_receive	2346	SGMILES CHECK	 As of {date}, you have earned {xxxxx} miles to <Singapore\/Korea\/Japan>\. Nobody has reached <required miles>miles yet! First to reach will win! Stays subscribed to your current subscription service or join more\. Help? Call 02-8929999 Mon-Fri 9am-5pm\.	0.00
+########################################################
+# Ref # 06 -  Catch-All Reply
+########################################################
+A	send_and_must_receive	2346	XXX	" Sorry, you sent an invalid keyword\. Text CHECK to 2346 for free to know your services\. \s*\s*To Activate your MMS, txt GO to 2951\. Need help on 2346 downloads? Call \(02\)892-9999, Mon-Fri 9am-5pm\. Thank you\s*\s*"	2.50
+########################################################
+# Ref # 07 -  Without Subscription
+########################################################
+A	send_and_must_receive	2346	STOP	 You do not have any subscriptions on 2346\. This text is FREE\. Get hot music and game downloads for your mobile visit http:\/\/dloadstation\.com browsing is FREE\. Questions? Call 892-9999 Mon-Fri 9am-5pm\.	0.00
+########################################################
+# Ref # 08 -  Registration alert to UNREGISTERED subscribers prompting them to register to validate their entries
+########################################################
+A	send_and_must_receive	2346	Push Scenario	" Validate your miles to the LIPAD KA SA SAYA AT SWERTE SA KAHON PROMO for a chance to win Plane tickets to SG\/KOREA\/JAPAN\.\s*\s*\s*\s*To register text KREG<space><Name*Address*BirthYear*Gender> and send to 2346 for free\.Ex: KREG KIM UY*99 France St\. Pasay City*1990*F to 2346\.\s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. Qs? Call 02-8929999 M-F from 9am-5pm\. DTI#XXXXXXs\s*\s*"	0.00
+########################################################
+# Ref # 09 -  User receives confirmation of registration
+########################################################
+A	send_and_must_receive	2346	KREG JOEL POE*Temple St. Pasig City*1990*M	" Thank you! You have successfully registered to Lipad Ka Sa Saya At Swerte Sa Kahon Promo for free\. Earn miles for more chances of winning plane ticket to SG\/Korea\/Japan!\s*\s*\s*\s*Text LIPAD to 2346\. Enjoy your free access today to the featured mobile service of the day\. \s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. Qs? Call 02-8929999 M-F from 9am-5pm\. DTI#XXXXXXs\s*\s*"	0.00
+########################################################
+# Ref # 10 -  User registers for 2nd or 3rd time
+########################################################
+A	send_and_must_receive	2346	KREG JOEL POE*Temple St. Pasig City*1990*M	" Thank you! You have successfully updated your registration to the LIPAD KA SA SAYA AT SWERTE SA KAHON PROMO\. \s*\s*\s*\s*Join daily by sending LIPAD to 2346\.Enjoy your free access today to the featured mobile service of the day\.\s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. Qs? Call 02-8929999 M-F from 9am-5pm\. DTI#XXXXXXs\s*\s*"	2.50
+########################################################
+# Ref # 11 - "Subscriber texts promo activation keyword and is subscribed to the featured Info Service of the day – 1st attempt    Scenarios:  Subscriber is within first 3 attempts to join for free      (winner of load)  "
+########################################################
+A	send_and_must_receive	2346	SG	" Ang saya!! Nabuksan mo ang BOX <#> You have won <LOAD> instant load, to be credited within the day\. Text ka ulit at baka makuha mo ang miles para sa plane ticket to SG\/KOREA\/JAPAN\. DTI FTEB SPDXXXX\.\s*\s*\s*\s*Open another Box at baka makuha mo ang LOAD or MILES to fly to SG\/KOREA\/JAPAN\. Text LIPAD to 2346, to try again & get free access to featured service today! More info? Text BOXHELP to 2346\.\s*\s*\s*\s*Enjoy your free access today to <Service>\. Text <Service>INFO to 2346 for more info\.\s*\s*\s*\s*\s*\s*<LOAD PRIZE>\s*\s*<Content>\s*\s*"	-20.00
+########################################################
+# Ref # 12 -  With SUBSCRIPTIONS
+########################################################
+A	send_and_must_receive	2346	CHECK	" You are currently subscribed to the following services :\|{ SERVICE NAME} \|\|To unsubscribe from any service for free, reply STOP <service name>\.\|  \s*\s*\s*\s*Ex: STOP HANEP To unsubscribe from all ur services, reply STOP ALL for free\. Help? Call 02-8929999 Mon-Fri 9am-5pm\. This text is FREE\.\s*\s*"	0.00
+########################################################
+# Ref # 13 - " Subscriber texts promo activation keyword and is subscribed to the featured Service of the day - 1st to 3rd attempt    (non-winning of load)  "
+########################################################
+A	send_and_must_receive	2346	KR	" SAYANG!! Nakuha mo ang BOX <#>\. You didn’t win any load! Open another box at baka mabuksan mo ang kahon na naglalaman ng P50 instant LOAD or MILES para sa ticket to SINGAPORE\/KOREA\/JAPAN\. DTI#XXXXXXs\.\s*\s*\s*\s*Meron 9 na kahon na pde mo pagpilian! Text BOX1 to BOX9 to 2346, to try again & get free access to featured service today! For more info, text BOXHELP to 2346 for free\.\s*\s*\s*\s*Enjoy your free today to <Service>\. Text <Service>Info to 2346 for more info\.\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	0.00
+########################################################
+# Ref # 14 - " Subscriber texts promo activation keyword and is subscribed to the featured Service of the day - 1st to 3rd attempt    (non-winning of load)  "
+########################################################
+A	send_and_must_receive	2346	SG	" SAYANG!! Nakuha mo ang BOX <#>\. You didn’t win any load! Open another box at baka mabuksan mo ang kahon na naglalaman ng P50 instant LOAD or MILES para sa ticket to SINGAPORE\/KOREA\/JAPAN\. DTI#XXXXXXs\.\s*\s*\s*\s*Meron 9 na kahon na pde mo pagpilian! Text BOX1 to BOX9 to 2346, to try again & get free access to featured service today! For more info, text BOXHELP to 2346 for free\.\s*\s*\s*\s*Enjoy your free today to <Service>\. Text <Service>Info to 2346 for more info\.\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	0.00
+########################################################
+# Ref # 15 - " Subscriber texts promo activation keyword and is subscribed to the featured Service of the day - 1st to 3rd attempt    (non-winning of load)  "
+########################################################
+A	send_and_must_receive	2346	SG	" SAYANG!! Nakuha mo ang BOX <#>\. You didn’t win any load! Open another box at baka mabuksan mo ang kahon na naglalaman ng P50 instant LOAD or MILES para sa ticket to SINGAPORE\/KOREA\/JAPAN\. DTI#XXXXXXs\.\s*\s*\s*\s*Meron 9 na kahon na pde mo pagpilian! Text BOX1 to BOX9 to 2346, to try again & get free access to featured service today! For more info, text BOXHELP to 2346 for free\.\s*\s*\s*\s*Enjoy your free today to <Service>\. Text <Service>Info to 2346 for more info\.\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	0.00
+########################################################
+# Ref # 16 - "Subscriber texts promo activation keyword and is subscribed to the featured  Service of the day     Scenarios:  Subscriber is within first 3 attempts to join for free      (winning MILES to SINGAPORE)  "
+########################################################
+A	send_and_must_receive	2346	SG	" Ang saya!! Nabuksan mo ang BOX <#> You have won <##> Miles to a plane ticket to SINGAPORE!! To check your MILES text SGMILES CHECK to 2346\. DTI#XXXXXXs\.\s*\s*\s*\s*OPEN MORE BOX at baka makuha mo ang P50 instant LOAD or MILES to fly to SINGAPORE! 1st to reach 1,478 miles wins!\s*\s*\s*\s*Text KAHON to 2346, to try again & get free access to featured service today! More info? Text BOXHELP to 2346\.\s*\s*\s*\s*Enjoy your free access today to <Service>\. Text <Service>INFO to 2346 for more info\.\s*\s*\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	0.00
+########################################################
+# Ref # 17 - " Subscriber texts promo activation keyword and is subscribed to the featured  Service of the day     Scenarios:  Subscriber is within first 3 attempts to join for free      (winning MILES to KOREA)  "
+########################################################
+A	send_and_must_receive	2346	KR	" Ang saya!! Nabuksan mo ang BOX <#> You have won <##> Miles to a plane ticket to KOREA!! To check your MILES text KRMILES CHECK to 2346\.DTI-FTEB-SPD#0868\s*\s*\s*\s*OPEN MORE BOX at baka makuha mo ang P50 instant LOAD or MILES to fly to KOREA! 1st to reach 1,623 miles wins!\s*\s*\s*\s*Text KAHON to 2346, to try again & get free access to featured service today! More info? Text BOXHELP to 2346\.\s*\s*\s*\s*Enjoy your free access today to <Service>\. Text <Service>INFO to 2346 for more info\.\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	0.00
+########################################################
+# Ref # 18 - "Subscriber texts promo activation keyword and is subscribed to the featured  Service of the day     Scenarios:  Subscriber is within first 3 attempts to join for free      (winning MILES to JAPAN)  "
+########################################################
+A	send_and_must_receive	2346	JAPAN	" Ang saya!! Nabuksan mo ang BOX <#> You have won <##> Miles to a plane ticket to JAPAN!! To check your MILES text JPMILES CHECK to 2346\. DTI-FTEB-SPD#0868\s*\s*\s*\s*OPEN MORE BOX at baka makuha mo ang P50 instant LOAD or MILES to fly to JAPAN! 1st to reach 1,898 miles wins!\s*\s*\s*\s*Text KAHON to 2346, to try again & get free access to featured service today! More info? Text BOXHELP to 2346\.\s*\s*\s*\s*Enjoy your free access today to <Service>\. Text <Service>INFO to 2346 for more info\.\s*\s*\s*\s*<Content>\s*\s*"	0.00
+########################################################
+# Ref # 19 - " Subscriber texts promo activation keyword and is already subscribed to the featured Service of the day – 4th attempt    (PULL)  Non-winning  "
+########################################################
+A	send_and_must_receive	2346	LIPAD	" Sayang!! Nakuha mo ang Box <#>\. Sorry walang laman ang kahon! OPEN MORE BOX! At baka makuha mo ang P50 instant LOAD or MILES to fly to SG\/KOREA\/JAPAN\. Text LIPAD to 2346, to try again\.\s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. DTI-FTEB-SPD#0868\s*\s*\s*\s*Enjoy your wonderful quote for just 1 Peso\.\s*\s*\s*\s*<Content>\s*\s*"	1.00
+########################################################
+# Ref # 20 - " Subscriber texts promo activation keyword and is already subscribed to the featured Service of the day – 4th attempt    (PULL)  Winning  SINGAPORE  "
+########################################################
+A	send_and_must_receive	2346	Push Scenario	" Ang saya!! Nabuksan mo ang BOX {BOXNUM} You have won {MILES} Miles to a plane ticket to SINGAPORE!! To check your MILES text SGMILES CHECK to 2346\.\s*\s*\s*\s*OPEN MORE BOX at baka makuha mo ang P50 instant LOAD or MILES to fly to SINGAPORE! 1st to reach 1,478 miles wins!\s*\s*\s*\s*Text LIPAD to 2346, to try again\.\s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. DTI-FTEB-SPD#0868\s*\s*\s*\s*Enjoy your wonderful quote for just 1 Peso\.\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	1.00
+########################################################
+# Ref # 21 - received push SMS from  "Jungle fever" sticker charged P1
+########################################################
+A	send_and_must_receive	2346		"You are not subscribed to JUNGLE FEVER sticker service\. If you wish to join and get a free sticker today, simply text ON JUNGLE to the service, text ON SAFARI to2346 for free and enjoy your free sticker today\. To cancel the service, simply text OFF SAFARI to 2346 for free Need help? call 892-9999 M-F 9am-5pm\. just 1 peso\s*\s*\s*\s*\s*\s*Content:\s*\s*BOX: Or deal or adventure? It just depends on what atttude you decide to bring with you\.\s*\s*"	1.00
+########################################################
+# Ref # 22 - received download content sticker charged P15
+########################################################
+A	send_and_must_receive	2346		received download content sticker charged P15	15.00
+########################################################
+# Ref # 23 - " Subscriber texts promo activation keyword and is already subscribed to the featured Service of the day – 4th attempt    (PULL)  Winning  KOREA  "
+########################################################
+A	send_and_must_receive	2346	Push Scenario	" Ang saya!! Nabuksan mo ang BOX {BOXNUM} You have won {MILES} Miles to a plane ticket to KOREA!! To check your MILES text KRMILES CHECK to 2346\. \s*\s*\s*\s*OPEN MORE BOX at baka makuha mo ang P50 instant LOAD or MILES to fly to KOREA! 1st to reach 1,623 miles wins!\s*\s*\s*\s*Text LIPAD to 2346, to try again\.\s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. DTI-FTEB-SPD#0868\s*\s*\s*\s*Enjoy your wonderful quote for just 1 Peso\.\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	1.00
+########################################################
+# Ref # 24 - " Subscriber texts promo activation keyword and is already subscribed to the featured Service of the day – 4th attempt    (PULL)  Winning  JAPAN  "
+########################################################
+A	send_and_must_receive	2346	Push Scenario	" Ang saya!! Nabuksan mo ang BOX {BOXNUM} You have won {MILES} Miles to a plane ticket to JAPAN!! To check your MILES text JPMILES CHECK to 2346\.\s*\s*\s*\s*OPEN MORE BOX at baka makuha mo ang P50 instant LOAD or MILES to fly to JAPAN! 1st to reach 1,898 miles wins!\s*\s*\s*\s*Text LIPAD to 2346, to try again\.\s*\s*\s*\s*For more info, text BOXHELP to 2346 for free\. DTI-FTEB-SPD#0868\s*\s*\s*\s*Enjoy your wonderful quote for just 1 Peso\.\s*\s*\s*\s*\s*\s*<Content>\s*\s*"	1.00
+########################################################
+# Ref # 25 -  Unsubscribe to alerts
+########################################################
+A	send_and_must_receive	2346	 STOP BOXHELP	 You will no longer receive FREE promo alerts from Lipad Ka Sa Saya At Swerte Sa Kahon Promo\. For more promo info, text BOXHELP to 2346 for free or visit http:\/\/dloadstation\.com\/lipadatswertekahonfaqs\. DTI-FTEB-SPD#0868 	45.00

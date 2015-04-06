@@ -1,0 +1,24 @@
+########################################################
+# Ref.#1 - "Texter sends invalid keyword to 2331    In Blue: Subject to change.  "
+########################################################
+A	send_and_must_receive	2331	INVALID	"Sorry, Kapamilya\. You have entered an invalid keyword\. Choose from:\s*\s*NEWSTXT - news \s*\s*CELEBRITXT - celebrity \s*\s*SERYETXT - teleserye \s*\s*\s*\s*I-text ang gustong keyword sa 2131 to receive 4 updates for only P1\. Ex\. CELEBRITXT to 2131\. P1\.00\/txt \s*\s*For assistance, call the Customer Care hotline at 7878 for Prepaid or 7979 for ABS-CBNmobile MHP\.\s*\s*"	 1.00 
+########################################################
+# Ref.#2 - "Texter inquires about the service  "
+########################################################
+A	send_and_must_receive	2331	DESTINY HELP	DESTINY: We’d love to hear from you! Share your thoughts\. Comments, questions and suggestions are welcome\. Text DESTINY <your message> to 2331\. Ex\. DESTINY I want to upgrade to HD\. Please tell me how\. P1\.00\/txt\. Destiny 24\/7 hotline \(02\) 381-0000\.	 1.00 
+########################################################
+# Ref.#3 - "Texter inquires about the service  "
+########################################################
+A	send_and_must_receive	2331	DESTINY HELP	DESTINY: We’d love to hear from you! Share your thoughts\. Comments, questions and suggestions are welcome\. Text DESTINY <your message> to 2331\. Ex\. DESTINY I want to upgrade to HD\. Please tell me how\. P1\.00\/txt\. Destiny 24\/7 hotline \(02\) 381-0000\.	 1.00 
+########################################################
+# Ref.#4 - "Texter inquires about the service  "
+########################################################
+A	send_and_must_receive	2331	DESTINY HELP	DESTINY: We’d love to hear from you! Share your thoughts\. Comments, questions and suggestions are welcome\. Text DESTINY <your message> to 2331\. Ex\. DESTINY I want to upgrade to HD\. Please tell me how\. P1\.00\/txt\. Destiny 24\/7 hotline \(02\) 381-0000\.	 1.00 
+########################################################
+# Ref.#5 - "Texter inquires about the service  "
+########################################################
+A	send_and_must_receive	2331	DESTINY HELP	DESTINY: We’d love to hear from you! Share your thoughts\. Comments, questions and suggestions are welcome\. Text DESTINY <your message> to 2331\. Ex\. DESTINY I want to upgrade to HD\. Please tell me how\. P1\.00\/txt\. Destiny 24\/7 hotline \(02\) 381-0000\.	 1.00 
+########################################################
+# Ref.#6 - "Texter sends message, question, reaction or feedback    Note: Any letter/word/number/character will be accepted after the main keyword DESTINY.  "
+########################################################
+A	send_and_must_receive	2331	DESTINY How can I purchase UAAP Season Pass?	DESTINY: Thank you for your message\. Our customer Associate shall contact you soon\. P1\.00\/txt\.	 1.00 

@@ -1,0 +1,56 @@
+########################################################
+# Ref # 02 - INFO / HELP KEYWORDS
+########################################################
+A	send_and_must_receive	2346	Rewardshelp	Box Office Hits & Big Load Rewards Promo is a promo wherein you can win free cinema tickets for 2 to the featured Movie of the Month! You can also win P10 load daily and a One Year Movie Pass for 2! Subscribe to any 2346 services to earn entries! To join, text BOXHITS to 2346 & enjoy free access to <Service> for 3 days\. After the trial period, you will continue to enjoy <Service> for just <Tariff> <Frequency>\.  Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015	0.00
+########################################################
+# Ref # 03 - HELP KEYWORD FOR CLAIMING MOVIE TICKETS
+########################################################
+A	send_and_must_receive	2346	claimhelp	Winners of the movie tickets for promo: Box Office Hits & Big Load Rewards Promo will be notified by our promo representative\. For questions, call 02-8929999 Monday to Friday 9am-5pm\. Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015	0.00
+########################################################
+# Ref # 04 - "User receives Registration instructions  <No Parameter>"
+########################################################
+A	send_and_must_receive	2346	Nreg	"Validate your entries to win cinema tickets for 2 to the featured Movie of the Month! Libre Sine, popcorn nalang ang kulang!\s*\s*\s*\s*Text NREG Name*Address*BirthYear*Gender\. \s*\s*Ex: NREG Ann Paz*102 Rada St Makati City*1976*F\. For more info, text REWARDSHELP to 2346\. Questions? Call 02-8929999 Mondays to Fridays from 9am - 5pm\. Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015\s*\s*"	0.00
+########################################################
+# Ref # 05 - "User receives Registration instructions  <Incorrect Parameter>"
+########################################################
+A	send_and_must_receive	2346	Nreg anne//	"Validate your entries to win cinema tickets for 2 to the featured Movie of the Month! Libre Sine, popcorn nalang ang kulang!\s*\s*\s*\s*Text NREG Name*Address*BirthYear*Gender\. \s*\s*Ex: NREG Ann Paz*102 Rada St Makati City*1976*F\. For more info, text REWARDSHELP to 2346\. Questions? Call 02-8929999 Mondays to Fridays from 9am - 5pm\. Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015\s*\s*"	0.00
+########################################################
+# Ref # 06 - User receives confirmation of Registration
+########################################################
+A	send_and_must_receive	2346	nreg anne*taguig*1992*f	You are now successfully registered to Box Office Hits & Big Load Rewards Promo! Thank you! Earn more raffle entries for more chances of winning! Text BOXHITS to 2346 to join & enjoy free 3-day access to <Service>, <Tariff> <Frequency> after the trial period\. More promo info? Text REWARDSHELP to 2346 for free\. Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015	0.00
+########################################################
+# Ref # 07 - User Registers a 2nd or 3rd time
+########################################################
+A	send_and_must_receive	2346	nreg anne*taguig*1992*f	Thank you for updating your registration info! Earn more raffle entries for more chances of winning! Text BOXHITS to 2346 to join & enjoy free 3-day access to <Service>, <Tariff> <Frequency> after the trial period\. More promo info? Text REWARDSHELP to 2346 for free\. Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015	0.00
+########################################################
+# Ref # 08 - User Registers a 2nd or 3rd time
+########################################################
+A	send_and_must_receive	2346	nreg anne*taguig*1991*f	Thank you for updating your registration info! Earn more raffle entries for more chances of winning! Text BOXHITS to 2346 to join & enjoy free 3-day access to <Service>, <Tariff> <Frequency> after the trial period\. More promo info? Text REWARDSHELP to 2346 for free\. Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015	2.50
+########################################################
+# Ref # 09 - Promo keyword activates featured service of the day
+########################################################
+A	send_and_must_receive	2346	cinema	"Thank you! You now have a chance to win 2 cinema tickets for the featured Movie of the Month! Enjoy free trial access today to <Service> to earn raffle entries and will be charged <Tariff> <Frequency> after the trial period\. Libre na ang sine may chance ka pa manalo ng libreng load araw araw! For more info, text <Service Info Keyword> to 2346 for free\. Promo pd ‘til 01\/15\/16\.  Per DTI-FTEB SPD Permit#0612\. S2015 \s*\s*Thanks for getting your free <Title> by <Artist>\. We will deliver it to you shortly\.\s*\s*\s*\s*<Content>\s*\s*"	0.00
+########################################################
+# Ref # 10 - User checks total points earned for the day
+########################################################
+A	send_and_must_receive	2346	nwpts	"You have {XX} points as of {MM\/DD} for The Box Office Hits & Big Load Rewards Promo! DTI-NCR Permit#0612 Promo Till January 15, 2016\. For questions, call 02-8929999 Monday to Friday 9am-5pm\. To earn more raffle entries, text BOXHITS to 2346 & enjoy free 3-day <Service> access today and <Tariff> <Frequency> after the trial period\.\s*\s*\s*\s*"	0.00
+########################################################
+# Ref # 11 - "Promo Alerts  Opting in to the Promo Alerts"
+########################################################
+A	send_and_must_receive	2346	on boxoffice	You will now start receiving alerts from The Box Office Hits and Big Load Rewards Promo\. For more promo info, text REWARDSHELP to 2346 for free\. To earn more raffle entries, text BOXHITS to 2346 & enjoy free 3-day <Service> access today and <Tariff> <Frequency> after the trial period\. Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015	0.00
+########################################################
+# Ref # 12 - Winning scenario of Random 30 subscribers with billed transaction 
+########################################################
+A	send_and_must_receive	2346		Dahil loyal ka, you have FREE P10 load today! Enjoy your wonderful reward! It will be credited to you within 24 hours\. Text BOXOFFICE to 2346 & get subscribed to <Service> free for 3 days, <Tariff>\/<Frequency> after the trial period\. More entries, more chances of winning! Promo pd ‘til 01\/15\/16\.  Per DTI-FTEB SPD Permit#0612\. S2015	0.00
+########################################################
+# Ref # 13 - AutoloadMax
+########################################################
+A	send_and_must_receive	AutoloadMax		AutoloadMax P10\.00	0.00
+########################################################
+# Ref # 14 - "Winner Cast Scenario  Automated message for the winners to claim their prize"
+########################################################
+A	send_and_must_receive	2346		Oh yeah! Reserve the night dahil you won 2 tickets from The Box Office Hits & Big Load Rewards Promo to the <Movie Title> in <Cinema> <Time> on <Date>! Ayos! Popcorn nalang ang kulang! To claim your ticket, please show this message to the booth of Cinema 3 on <Date> starting <Time> to <Time>\. Please bring the official sim card that you used when you joined the promo\. Failure to claim the ticket on the said date will be subject to disqualification\. To know more about the claiming of movie tickets, please text CLAIMHELP to 2346 for free\. Promo pd’til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612 S2015	0.00
+########################################################
+# Ref # 15 - Opting out from the Promo Alerts
+########################################################
+A	send_and_must_receive	2346	stop boxoffice	Thank you, you will no longer receive updates from the Box Office Hits & Big Load Rewards Promo! Promo pd ‘til 01\/15\/16\. Per DTI-FTEB SPD Permit#0612\. S2015	0.00

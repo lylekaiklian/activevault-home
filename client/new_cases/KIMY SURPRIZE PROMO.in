@@ -1,0 +1,60 @@
+########################################################
+# Ref # 01 - Reload
+########################################################
+A	send_and_must_receive	2600		Reloading successful	-50.00
+########################################################
+# Ref # 02 - Before Promo reply
+########################################################
+A	send_and_must_receive	2600	KIMY HELP	"Join the NESTLE KIMY SURPRIZE PROMO: Buy NESTLE KIMY variants with coded sticks\. Text KIMY <code> to 2600 \(Ex\. KIMY JRM299\)\. P2\.50\/txt\. Promo starts February 15, 2015!\s*\s*\s*\s*Get a chance to win PS4 and 3D TV in the GRAND DRAW! Keep KIMY stick to claim prize if you win\. \s*\s*\s*\s*Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 03 - Registrant is below 14 years old on day of registration
+########################################################
+A	send_and_must_receive	2600	KIMY REG Karen santos/Pasay City/10/F/N	"Sorry, you must be at least 14 years old to join the promo\. P2\.50\/txt\. \s*\s*\s*\s*Please ask a family member who is 14 years old or above to text KIMY REG <name\/address\/age\/gender\/L for Luzon, V for Vis, M for Min, N for NCR> to 2600\. Ex\. KIMY REG Jo Uy\/4 Atis St\., QC\/30\/F\/L\. \s*\s* \s*\s*Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 04 - To get information about the promo.
+########################################################
+A	send_and_must_receive	2600	KIMY HELP	"Join the NESTLE KIMY SURPRIZE PROMO: Buy NESTLE KIMY variants with coded sticks\. Text KIMY <code> to 2600 \(Ex\. KIMY JRM299\)\. P2\.50\/txt\. Get a chance to win PS4 and 3D TV in the GRAND DRAW!\s*\s*\s*\s*Txt KIMY<space>POINTS to 2600 to get your total entries in the draws\. P2\.50\/txt\. KEEP KIMY stick to CLAIM PRIZE if you win\.\s*\s*\s*\s*Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 05 - Registrant is below 14 years old on day of registration
+########################################################
+A	send_and_must_receive	2600	KIMY REG Karen santos/Pasay City/10/F/N	"Sorry, you must be at least 14 years old to join the promo\. P2\.50\/txt\. \s*\s*\s*\s*Please ask a family member who is 14 years old or above to text KIMY REG <name\/address\/age\/gender\/L for Luzon, V for Vis, M for Min, N for NCR> to 2600\. Ex\. KIMY REG Jo Uy\/4 Atis St\., QC\/30\/F\/L\. \s*\s* \s*\s*Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 06 - "To earn entries      *unregistered  "
+########################################################
+A	send_and_must_receive	2600	KIMY 111AAA	"You have <xx> entries to the KIMY SURPRIZE PROMO! Reg for FREE to qualify\. Txt KIMY REG <name\/address\/age\/gender\/L for Luzon, V for Vis, M for Min, N for NCR> to 2600\. Ex\. KIMY REG Jo Uy\/4 Atis St\., QC\/30\/F\/L\. \s*\s*\s*\s*Get a chance to win PS4 and 3D TV in the GRAND DRAW!KEEP KIMY stick to CLAIM PRIZE if you win\.\s*\s*\s*\s*Wanna vote for the PRIZE OF THE WEEK? Visit facebook\.com\/kimyphilippines or call 8980061 for more info\.Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 07 - Invalid Registration
+########################################################
+A	send_and_must_receive	2600	KIMY REG Karen Santos/Pasay City/18	"Oh no, your registration was invalid! Please try again by texting KIMY REG <name\/address\/age\/gender\/L for Luzon, V for Vis, M for Min, N for NCR> to 2600\. Ex\. KIMY REG Jo Uy\/4 Atis St\., QC\/30\/F\/L\.\s*\s*\s*\s*Get a chance to win PS4 and 3D TV in the GRAND DRAW! Keep KIMY stick to claim prize if you win\. \s*\s*\s*\s*Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 08 - To register and validate the entry sent 
+########################################################
+A	send_and_must_receive	2600	KIMY REG Karen santos/Pasay City/20/F/N	"Hi, <name>! You are now registered to the NESTLE KIMY SURPRIZE PROMO! You have <xx> entries\. \s*\s*\s*\s*Get a chance to win PS4 and 3D TV in the GRAND DRAW! Keep KIMY stick to claim prize if you win\.  \s*\s*\s*\s*Wanna vote for the PRIZE OF THE WEEK? Visit facebook\.com\/kimyphilippines or call 8980061 for more info\.Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	0.00
+########################################################
+# Ref # 09 - "Repeat registration    Will overwrite existing registration details  "
+########################################################
+A	send_and_must_receive	2600	KIMY REG Karen santos/Pasay City/20/F/N	"Hi, <name>! You are now registered to the NESTLE KIMY SURPRIZE PROMO! You have <xx> entries\.\s*\s*\s*\s*Get a chance to win PS4 and 3D TV in the GRAND DRAW! Keep KIMY stick to claim prize if you win\.  Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 10 - To know the number of submitted entries
+########################################################
+A	send_and_must_receive	2600	KIMY POINTS	"Wow! You have <xx> entries for a total of <xx> as of <hh:mm>, <dd\/mm\/yy>!\s*\s*\s*\s*Visit facebook\.com\/kimyphilippines for the announcement of winners\. Get a chance to win PS4 and 3D TV in the GRAND DRAW! Keep KIMY stick to claim prize if you win\. \s*\s*\s*\s*Keep buying participating KIMY products to submit entries! \s*\s*\s*\s*Wanna vote for the PRIZE OF THE WEEK? Visit facebook\.com\/kimyphilippines or call 8980061 for more info\.Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 11 - Repeat code 
+########################################################
+A	send_and_must_receive	2600	KIMY 111AAA	"This code is already used\.  Please check again\. Text KIMY <code> to 2600\. Ex\. KIMY JRM299\. P2\.50\/txt\.\s*\s*\s*\s*Get a chance to win PS4 and 3D TV in the GRAND DRAW! Keep KIMY stick to claim prize if you win\. \s*\s*\s*\s*Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 12 - "Invalid Code    For users who sent a single code in a single SMS"
+########################################################
+A	send_and_must_receive	2600	KIMY ZZZZZ	"Sorry, you sent an invalid code\.  Please check again\. Text KIMY <code> to 2600\. Ex\. KIMY JRM299\. P2\.50\/txt\.\s*\s*\s*\s*Get a chance to win PS4 and 3D TV in the GRAND DRAW! Keep KIMY stick to claim prize if you win\. \s*\s*\s*\s*Keep buying participating KIMY products to submit entries\. Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 13 - "Invalid Code    For users who sent more than one code in a single SMS "
+########################################################
+A	send_and_must_receive	2600	KIMY 222BBB/ZZZZZ	"Sorry, one of your codes is invalid or used\. Please check again\. No entries earned from this transaction\. P2\.50\/txt\.\s*\s*\s*\s*Visit facebook\.com\/kimyphilippines for full mechanics or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015 \s*\s*"	2.50
+########################################################
+# Ref # 14 - "To earn entries      **registered  "
+########################################################
+A	send_and_must_receive	2600	KIMY 333CCC	"Yay! You submitted <xx> entries for a total of <xx> as of <hh:mm>, <dd\/mm\/yy>!\s*\s*\s*\s*Visit facebook\.com\/kimyphilippines for the announcement of winners\. KEEP KIMY stick to CLAIM PRIZE if you win\.\s*\s*\s*\s*Wanna vote for the PRIZE OF THE WEEK? Visit facebook\.com\/kimyphilippines or call 8980061 for more info\. Til 4\/25\/15\. DOH-FDA-CFRR-Permit#1007s\.2015\s*\s*"	2.50
+########################################################
+# Ref # 15 - After Promo reply
+########################################################
+A	send_and_must_receive	2600	KIMY 333CCC	Sorry, NESTLE KIMY SURPRIZE PROMO has ended on April 25, 2015\. Watch out for more exciting promos from NESTLE!	2.50
