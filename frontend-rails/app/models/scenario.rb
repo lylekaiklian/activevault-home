@@ -6,54 +6,34 @@ class Scenario
     extend ActiveModel::Naming
 
     
-    
-    
-    attr_accessor :ref_no, :test_date, 
+    @@readonly_attributes = :batch, :sequence_no, :ref_no, :test_date, 
         :description, :keyword, :a_number, 
-        :b_number, :expected_result
-        
-    attr_reader :batch, :sequence_no, :time_sent, :time_received,
+        :b_number, :expected_result, :time_sent, :time_received,
         :beginning_balance, :ending_balance, :amount_charged,
-        :actual_result, :pass_or_fail, :remarks
-        
+        :actual_result, :pass_or_fail, :remarks 
+    @@attributes = @@readonly_attributes
+    
+    @@attributes.each do |attr|
+        attr_reader attr.to_sym
+    end
+
+    #Validation errors    
     attr_reader :errors
     
     def initialize(params = {})
         
-        #Assign-once parameters here
-        @batch = params[:batch]
-        @sequence_no = params[:sequence_no]
-        
-        #Enable writable parameters to be assigned simultaneously
-        @ref_no = params[:ref_no]
-        @test_date = params[:test_date]
-        @description = params[:description]
-        @keyword = params[:keyword]
-        @a_number = params[:a_number]
-        @b_number = params[:b_number]
-        @expected_result = params[:expected_result]
+        @@attributes.each do |attr|
+            instance_variable_set("@#{attr}", params[attr.to_sym])
+        end
 
         #Amazon-related settings. remove hardcoded settings later.
         @sqs = Aws::SQS::Client.new(region: 'ap-southeast-1')
         @sqs_url = "https://sqs.ap-southeast-1.amazonaws.com/119554206391/lost_treasure" 
         
-        #Validation errors
+
         @errors = []
     end
     
-    
-    def process(params = {})
-        
-        #modify internal values based on backend processing
-        @time_sent = params[:time_sent] 
-        params[:time_received]
-        params[:beginning_balance] 
-        params[:ending_balance] 
-        params[:amount_charged]
-        params[:actual_result]
-        params[:pass_or_fail]
-        params[:remarks]
-    end
     
     def as_json(options)
         {
