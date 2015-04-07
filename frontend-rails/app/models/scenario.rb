@@ -72,7 +72,6 @@ class Scenario
         
         #Sequence numbers are required to be able to get the appropriate response
         (@errors << "Batch (batch) is required."; does_validate = false)  if batch.blank?
-        (@errors << "ID (id) is required."; does_validate = false)  if id.blank?
         (@errors << "Sequence Number (sequence_no) is required."; does_validate = false)  if sequence_no.blank?
         
         #Can't make the thing work without these

@@ -39,5 +39,7 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   
-  Rails.logger = Logger.new(STDOUT)
+  #http://stackoverflow.com/questions/21938124/why-is-my-rails-server-logging-everything-twice
+  #Rails.logger = Logger.new(STDOUT)
+  config.logger = Logger.new('/dev/null')
 end
