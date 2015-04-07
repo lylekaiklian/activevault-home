@@ -62,8 +62,23 @@ class TreasureQueue
 
   end
   
-  def mock_process(scenario)
-    puts scenario.to_json
+  def mock_process(request)
+    
+    response = request.dup
+    response[:time_sent] = "09:17AM"
+    response[:time_received] = "09:19AM"
+    response[:beginning_balance] = 37
+    response[:ending_balance] = 35.50
+    response[:amount_charged] = 2.50
+    response[:actual_result] = "I hope senpai notices me."
+    response[:pass_or_fail] = "pass"
+    response[:remarks] = "OK"
+    
+    
+    puts "===REQUEST==="
+    puts request.to_json
+    puts "===RESPONSE==="
+    puts response.to_json
   end
   
 end
