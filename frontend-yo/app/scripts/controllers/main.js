@@ -120,17 +120,50 @@ angular.module('frontendYoApp')
                 $scope.lost_treasure.entries[i].status = statuses.remote_queue;
             }
             
-            //Poll result for each scenario
-            i = 0;
-            while (i < $scope.lost_treasure.entries.length) {
-                //$scope.lost_treasure.methods.push($scope.lost_treasure.entries[i]);
-                if(i === 0) {
-                    $scope.lost_treasure.entries[i].meta.loading = false;
-                    $scope.lost_treasure.entries[i].status = statuses.done;
-                }
-                i++;
+            //Poll result for each scenario until result is obtained.
+
+            var infinite_poke = function(scenario_index) {
                 
-            }
+                //base case - reached end of line already.
+                if ($scope.lost_treasure.entries.length <= scenario_index) { 
+                    $scope.lost_treasure.running = false;
+                    return; 
+                }
+                
+                var batch = $scope.lost_treasure.entries[scenario_index].batch;
+                var sequence_no = $scope.lost_treasure.entries[scenario_index].sequence_no;
+                
+                $http.head(endpoint + '/scenarios/' + batch + '/' + sequence_no)
+                .success(function() {
+                    $scope.lost_treasure.entries[scenario_index].meta.loading = false;
+                    $scope.lost_treasure.entries[scenario_index].status = statuses.done;
+                    $http.get(endpoint + '/scenarios/' + batch + '/' + sequence_no)
+                    .success(function(data){
+                        //unpack data from back-end
+                        $scope.lost_treasure.entries[scenario_index].time_sent = data.time_sent;
+                        $scope.lost_treasure.entries[scenario_index].time_received = data.time_received;
+                        $scope.lost_treasure.entries[scenario_index].beginning_balance = data.beginning_balance;
+                        infinite_poke(scenario_index + 1);
+                    })
+                     .error(function(){
+                       //When, unfortunately, the GET fails for some weird reason     
+                       setTimeout(function(){infinite_poke(scenario_index);}, 500); 
+                    })                  
+                    ;
+                    
+                })
+                .error(function(){
+                   //Retry after 0.5 seconds     
+                   setTimeout(function(){infinite_poke(scenario_index);}, 500); 
+                });
+                
+            };
+  
+       
+        
+
+            infinite_poke(0);
+
         
         }
     };
@@ -138,7 +171,7 @@ angular.module('frontendYoApp')
     $scope.lost_treasure.mock_entries = [
         {
             'batch': $scope.lost_treasure.counters.batch,
-            'id': $scope.lost_treasure.methods.generate_id(),
+            //'id': $scope.lost_treasure.methods.generate_id(),
             'sequence_no': $scope.lost_treasure.counters.sequence_no++,
             'ref_no': 1,
             'test_date': '2/26/2015',
@@ -162,7 +195,7 @@ angular.module('frontendYoApp')
          },
          {
             'batch': $scope.lost_treasure.counters.batch,
-            'id': $scope.lost_treasure.methods.generate_id(),
+            //'id': $scope.lost_treasure.methods.generate_id(),
             'sequence_no': $scope.lost_treasure.counters.sequence_no++,             
             'ref_no': 2,
             'test_date': '2/26/2015',
@@ -186,7 +219,7 @@ angular.module('frontendYoApp')
         },
         {
             'batch': $scope.lost_treasure.counters.batch,
-            'id': $scope.lost_treasure.methods.generate_id(),
+            //'id': $scope.lost_treasure.methods.generate_id(),
             'sequence_no': $scope.lost_treasure.counters.sequence_no++,            
             'ref_no': 3,
             'test_date': '2/26/2015',

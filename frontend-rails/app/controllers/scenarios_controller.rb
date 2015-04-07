@@ -59,19 +59,9 @@ class ScenariosController < ApplicationController
   end
   
   def sns
-      sns_message_type = request.headers['x-amz-sns-message-type']
+        sns_message_type = request.headers['x-amz-sns-message-type']
 
-      request_json = JSON.parse(request.raw_post, {symbolize_names: true})
-      
-      
-     
-      #Prevent duplicate Notification. Do not process if message ID is known already.
-      #Non-duplication window is 30 minutes
-      #redis_key = "scenarios:sns:#{message_id}"
-      
-      #if ($redis.get(redis_key).nil?)
-      #  $redis.set(redis_key, true)
-      #  $redis.expire(redis_key, 30.minutes)
+        request_json = JSON.parse(request.raw_post, {symbolize_names: true})
       
         #begin processing
         logger.debug "SNS Message Type: #{sns_message_type}"
@@ -91,13 +81,7 @@ class ScenariosController < ApplicationController
             subscribe_url = request_json[:SubscribeURL]
             #TODO: Manual subscription for now
         end
-     #else
-     #    logger.debug "Message ID #{message_id} is duplicate. ignore."
-     #end
-          
-      
-      #logger.debug subscribe_url
-      #redirect_to subscribe_url
+  
       render json: {}
   end
 
