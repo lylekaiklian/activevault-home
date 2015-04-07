@@ -53,7 +53,7 @@ angular.module('frontendYoApp')
                 'expected_result':'Blurbblurb'
             };
             
-            $http.post(endpoint + '/scenarios', scenario).
+            $http.post(endpoint + '/scenarios', angular.toJson(scenario)).
              success(function() {
                 // this callback will be called asynchronously
                 // when the response is available
