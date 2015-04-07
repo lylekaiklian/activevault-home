@@ -3,23 +3,33 @@ require 'jar/aws-java-sdk-1.9.20.1.jar'
 require 'set'
 
 class TreasureQueue
-  def unpack
-    import('com.amazonaws.services.sqs.AmazonSQSClient')
+  
+  import 'com.amazonaws.services.sqs.AmazonSQSClient'
+  import 'com.amazonaws.services.sns.AmazonSNSClient'
+  import 'com.amazonaws.regions.Regions'
+  
+  def initialize
+    @sqs = AmazonSQSClient.new
+    @sns = AmazonSNSClient.new
+    @sns.region = Regions::AP_SOUTHEAST_1
     
     #Refactor: remove hard-coded url
-    queue_url = "https://sqs.ap-southeast-1.amazonaws.com/119554206391/lost_treasure"
-    sqs = AmazonSQSClient.new    
+    @queue_url = "https://sqs.ap-southeast-1.amazonaws.com/119554206391/lost_treasure"
+    @sns_arn = "arn:aws:sns:ap-southeast-1:119554206391:lost-treasure"     
+  end 
+  
+  def unpack   
+       
     messages_sorted = {};
     batches = Set.new [];
     message_index = {};
     
     puts "Waiting for messages..."
   
-
     loop do
       begin
         
-          messages = sqs.receive_message(queue_url).get_messages
+          messages = @sqs.receive_message(@queue_url).get_messages
         
           messages.each do |message|
             receipt_handle = message.get_receipt_handle
@@ -30,7 +40,7 @@ class TreasureQueue
             messages_sorted[message_body[:batch].to_s.to_sym] = {} if messages_sorted[message_body[:batch].to_s.to_sym].nil?
             messages_sorted[message_body[:batch].to_s.to_sym][message_body[:sequence_no]] = message_body
             
-            sqs.delete_message(queue_url, receipt_handle)
+            @sqs.delete_message(@queue_url, receipt_handle)
           end
           
           #Keep track of indeces for every batch
@@ -74,6 +84,7 @@ class TreasureQueue
     response[:pass_or_fail] = "pass"
     response[:remarks] = "OK"
     
+    @sns.publish(@sns_arn , response.to_json)
     
     puts "===REQUEST==="
     puts request.to_json
