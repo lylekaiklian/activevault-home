@@ -143,6 +143,11 @@ angular.module('frontendYoApp')
                         $scope.lost_treasure.entries[scenario_index].time_sent = data.time_sent;
                         $scope.lost_treasure.entries[scenario_index].time_received = data.time_received;
                         $scope.lost_treasure.entries[scenario_index].beginning_balance = data.beginning_balance;
+                        $scope.lost_treasure.entries[scenario_index].ending_balance = data.ending_balance;
+                        $scope.lost_treasure.entries[scenario_index].amount_charged = data.amount_charged;
+                        $scope.lost_treasure.entries[scenario_index].actual_result = data.actual_result;
+                        $scope.lost_treasure.entries[scenario_index].remarks = data.remarks;
+                        $scope.lost_treasure.entries[scenario_index].pass_or_fail = data.pass_or_fail;
                         infinite_poke(scenario_index + 1);
                     })
                      .error(function(){
@@ -187,7 +192,7 @@ angular.module('frontendYoApp')
             'expected_charge': 2.50,
             'expected_result':'Sorry, you sent an invalid keyword. Text CHECK to 2346 for free to know your services. To Activate your MMS, txt GO to 2951 .Need help on 2346 downloads? Call (02)892-9999, Mon-Fri 9am-5pm. Thank you',
             'actual_result': null,
-            'pass_fail': null,
+            'pass_or_fail': null,
             'remarks': null,
             'meta': {
                 'loading': false
@@ -211,7 +216,7 @@ angular.module('frontendYoApp')
             'expected_charge': 0,
             'expected_result':'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
             'actual_result': null,
-            'pass_fail': null,
+            'pass_or_fail': null,
             'remarks': null,
             'meta': {
                 'loading': false
@@ -235,7 +240,7 @@ angular.module('frontendYoApp')
             'expected_charge': 0,
             'expected_result':'PISO Club Service is your premium access to fun & latest MP3’s, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily. To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.',
             'actual_result': null,
-            'pass_fail': null,
+            'pass_or_fail': null,
             'remarks': null,
             'meta': {
                 'loading': false
