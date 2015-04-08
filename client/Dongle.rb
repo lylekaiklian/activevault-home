@@ -261,19 +261,19 @@ class Dongle
 		text.gsub(/(\r\nOK\r\n)$/, '').strip
 	end
 	
-	def self.port_sweep(timeout_seconds = nil, must_have_balance = false)
+	def self.port_sweep(mode = :simple)
 		sticks = {}
 		labels = ('A'..'Z').to_a
 		label_index = 0
 		seen_imei = []	#collect all imei's encountered already so as not to repeat.
 		import('gnu.io.CommPortIdentifier')
-		
-		# Reversing port sweeping. This seems to be more agreeable to Huawei
-		#port_identifiers = []
-		#CommPortIdentifier.getPortIdentifiers.each do |port_ids|
-		#	port_identifiers << port_ids.get_name
-		#end
-		
+
+    # Available modes:
+    # :simple - just see ports available in the system. Very fast.
+    # :info - issue an "ATI" command to all ports. For simple port check.
+    # :identity - obtain IMEI and number for all ports. 
+    # :complete - issues balance inquiry as well. Takes a bit of time.
+    				
 		CommPortIdentifier.getPortIdentifiers.each do |port_ids|
 			port = port_ids.get_name
 			puts "\nSweeping port #{port}..."
@@ -283,21 +283,43 @@ class Dongle
 			balance = nil
 			begin
 				dongle = Dongle.new(port)
-				dongle.gsm_modem.timeout_seconds = timeout_seconds if !timeout_seconds.nil?
-				dongle.imei do |response1|
-					imei = response1.strip
-					dongle.number do |response2|
-						number = response2.strip
-						balance = dongle.balance_inquiry if must_have_balance
-					end					
+
+				case mode
+				when :simple
+				  dongle.gsm_modem.timeout_seconds = 10
+				  puts "Port #{port} is operational."
+				when :info
+				  dongle.gsm_modem.timeout_seconds = 10
+				  puts dongle.device_info
+				when :identity
+				  dongle.gsm_modem.timeout_seconds = 10
+          dongle.imei do |response1|
+               imei = response1.strip
+               dongle.number do |response2|
+                 number = response2.strip
+               end         
+              end
+              puts "IMEI: #{imei}"
+              puts "Number: #{number}"				  
+				when :complete
+				  dongle.gsm_modem.timeout_seconds = 30
+          dongle.imei do |response1|
+             imei = response1.strip
+             dongle.number do |response2|
+               number = response2.strip
+               balance = dongle.balance_inquiry 
+             end         
+            end
+            puts "IMEI: #{imei}"
+            puts "Number: #{number}"
+            puts "Balance: #{balance[:balance]}"				  
 				end
-				puts "IMEI: #{imei}"
-				puts "Number: #{number}"
-				puts "Balance: #{balance[:balance]}" if !balance.nil? 
+				
+
 				
 				# If this is a new IMEI, then record it.
 				# Disregard ports that cannot do balance inquiry
-				if !seen_imei.member? imei #&& !(must_have_balance && balance.nil?)
+				#if !seen_imei.member? imei #&& !(must_have_balance && balance.nil?)
 				
 					label = labels[label_index].to_sym
 					sticks[label] = {
@@ -314,7 +336,7 @@ class Dongle
 					
 					seen_imei << imei
 					label_index += 1
-				end
+				
 				
 			rescue ThreadError => ex
 				puts ex.message
