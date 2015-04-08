@@ -92,8 +92,9 @@ class Dongle
 	end
 	
 	def delete_message(index, &block)
-		#puts "deleting message #{index}"
+		puts "dongle.delete_message: deleting message #{index}"
 		@gsm_modem.execute %Q(AT+CMGD=#{index}) do |response|
+			
 			#Allow further chaining
 			if !block.nil?
 				response += "#{block.call(response)}"
@@ -104,20 +105,24 @@ class Dongle
 	
 	def delete_all_messages(start_index = 0, &block)
 		#Assume sim card has 30 messages.
-		#Bad assumption, but may just work for now.
 		upper_limit = 30 
 		
 		if start_index >= upper_limit
+		  #Base case section
 			if !block.nil?
-				return block.call
-			else
-				return
+			  puts "dongle.delete_all_messages: invoking block"
+				block.call
 			end
-		end
+		else
+		  #Recursive section
+      delete_message(start_index) do
+        delete_all_messages(start_index + 1) do
+          block.call
+        end
+      end			
+  	end
 		
-		delete_message(start_index) do
-			delete_all_messages(start_index + 1)
-		end
+
 	end
 	
 =begin	

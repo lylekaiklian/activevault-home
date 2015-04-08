@@ -23,7 +23,7 @@ class TestKit
 				
 		@sticks = YAML::load(File.read('ports.yml'))
 		
-		puts "Sanity check"
+		puts "Initializing Test Kit. Performing configuration sanity check..."
 		@sticks.keys.each do |key|
 			@sticks[key][:dongle_object] = Dongle.new(@sticks[key][:port])
 			@sticks[key][:dongle_object].gsm_modem.timeout_seconds = @timeout_seconds
@@ -31,13 +31,16 @@ class TestKit
 			puts @sticks[key]
 		end
 	end
-
+	
+	# This is the central method for this project 
 	def send_and_must_receive(parameters)
-		stick = parameters[0]
-		number = parameters[1]
-		message = parameters[2]
-		regex = parameters[3]
-		charge = parameters[4]
+	  
+	  puts "test_kit.send_and_must_receive: invoked."
+		stick = parameters[:stick]
+		number = parameters[:number]
+		message = parameters[:message]
+		regex = parameters[:regex]
+		charge = parameters[:charge]
 		output = []
 		
 		#deal with 29173292739
@@ -48,82 +51,91 @@ class TestKit
 		
 		dongle = @sticks[stick.to_sym][:dongle_object]
 		
-		#but first, we do a balance inquiry
-		puts "Checking initial balance..."
-		initial_balance = nil
-		initial_balance_response = dongle.balance_inquiry(15)		
-		initial_balance =  initial_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !initial_balance_response.nil?
-		puts "Initial balance: #{initial_balance}"
+		#clean dongle
+		puts "test_kit.send_and_must_receive: Cleaning up dongle."
+		dongle.delete_all_messages do
 		
-		time_sent = Time.now
-		dongle.send_message(number, message)
-		response = dongle.wait_for_new_message(60)
-		time_received = Time.now
-		
-		@sticks[stick.to_sym][:reply_number] = response[:sender]
-		response_message = response[:message]
-		puts response_message
-		
-		#Then we do a final balance inquiry to check
-		puts "Checking final balance..."
-		final_balance = nil
-		final_balance_response = dongle.balance_inquiry(15)
-		final_balance =  final_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !final_balance_response.nil?
-		puts "Final balance: #{final_balance}"
-		
-		is_match = !(/#{regex}/m =~ response_message).nil?
-		
-		
-		is_charged_correctly = false
-		if !initial_balance.nil? && !final_balance.nil?
-			puts "Actual Charge: #{(BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)).to_s("F")}"
-			is_charged_correctly = ((BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)) == BigDecimal.new(charge.to_s))
-		else
-			puts "Cannot calculate actual charge"
-		end
-		
-		is_pass = is_match && is_charged_correctly
-		
-		#delete all messages to cleanup
-		puts "Deleting all messages..."
-		dongle.delete_all_messages
+  		#but first, we do a balance inquiry
+  		puts "test_kit.send_and_must_receive: Checking initial balance..."
+  		initial_balance = nil
+  		initial_balance_response = dongle.balance_inquiry(15)		
+  		initial_balance =  initial_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !initial_balance_response.nil?
+  		puts "test_kit.send_and_must_receive: Initial balance: #{initial_balance}"
+  		
+  		time_sent = Time.now
+  		puts "test_kit.send_and_must_receive: sending message #{message} to #{number}"
+  		dongle.send_message(number, message)
+  		response = dongle.wait_for_new_message(60)
+  		time_received = Time.now
+  		
+  		@sticks[stick.to_sym][:reply_number] = response[:sender]
+  		response_message = response[:message]
+  		puts "test_kit.send_and_must_receive: #{response_message}"
+  		
+  		#Then we do a final balance inquiry to check
+  		puts "Checking final balance..."
+  		final_balance = nil
+  		final_balance_response = dongle.balance_inquiry(15)
+  		final_balance =  final_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !final_balance_response.nil?
+  		puts "Final balance: #{final_balance}"
+  		
+  		is_match = !(/#{regex}/m =~ response_message).nil?
+  		
+  		
+  		is_charged_correctly = false
+  		if !initial_balance.nil? && !final_balance.nil?
+  			puts "Actual Charge: #{(BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)).to_s("F")}"
+  			is_charged_correctly = ((BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)) == BigDecimal.new(charge.to_s))
+  		else
+  			puts "Cannot calculate actual charge"
+  		end
+  		
+  		is_pass = is_match && is_charged_correctly
+  		
+  		    #delete all messages to cleanup
+    #puts "Deleting all messages..."
+    #dongle.delete_all_messages
+    
+
+    #Output
+    output = [
+      Time.now.strftime("%m/%d/%Y"),
+      message,
+      @sticks[stick.to_sym][:number],
+      number,
+      time_sent.strftime("%I:%M %p"),
+      time_received.strftime("%I:%M %p"),
+      "#{initial_balance}",
+      "#{final_balance}",
+      (!initial_balance.nil? && !final_balance.nil?) ? "#{initial_balance - final_balance}" : "ERROR",
+      regex,
+      response_message.gsub(/\n/, '\n'),
+      is_pass.to_s,
+      ""
+    ]
+    
+    
+    # Tame Regex later
+    #return (/#{regex}/ =~ response_message)
+    #puts /#{regex}/
+    puts "Match? #{is_match}"
+
+    if !is_pass && !is_match
+      reason = "Pattern does not match"
+      output[12] = reason
+      return [false, reason, output]
+    elsif !is_pass && !is_charged_correctly
+      reason = "Not charged correctly (or balance check failed)"
+      output[12] = reason
+      return [false, reason, output]
+    else
+      reason = "Passed"
+      return [true, nil, output]
+    end
+  		
+   end
 		
 
-		#Output
-		output = [
-			Time.now.strftime("%m/%d/%Y"),
-			message,
-			@sticks[stick.to_sym][:number],
-			number,
-			time_sent.strftime("%I:%M %p"),
-			time_received.strftime("%I:%M %p"),
-			"#{initial_balance}",
-			"#{final_balance}",
-			(!initial_balance.nil? && !final_balance.nil?) ? "#{initial_balance - final_balance}" : "ERROR",
-			regex,
-			response_message.gsub(/\n/, '\n'),
-			is_pass.to_s,
-			""
-		]
-		
-		
-		# Tame Regex later
-		#return (/#{regex}/ =~ response_message)
-		#puts /#{regex}/
-		puts "Match? #{is_match}"
-
-		if !is_pass && !is_match
-			reason = "Pattern does not match"
-			output[12] = reason
-			return [false, reason, output]
-		elsif !is_pass && !is_charged_correctly
-			reason = "Not charged correctly (or balance check failed)"
-			output[12] = reason
-			return [false, reason, output]
-		else
-			reason = "Passed"
-			return [true, nil, output]
-		end
 			
 	end
 	

@@ -15,7 +15,8 @@ class TreasureQueue
     
     #Refactor: remove hard-coded url
     @queue_url = "https://sqs.ap-southeast-1.amazonaws.com/119554206391/lost_treasure"
-    @sns_arn = "arn:aws:sns:ap-southeast-1:119554206391:lost-treasure"     
+    @sns_arn = "arn:aws:sns:ap-southeast-1:119554206391:lost-treasure"
+  
   end 
   
   def unpack   
@@ -83,6 +84,23 @@ class TreasureQueue
     response[:actual_result] = "I hope senpai notices me."
     response[:pass_or_fail] = "pass"
     response[:remarks] = "OK"
+    
+    @test_kit ||= TestKit.new    
+    
+    begin
+      @test_kit.send_and_must_receive(
+        stick: :A,     #Let's make it easier for now, and assume single stick setup
+        number: request[:b_number],
+        message: request[:keyword],
+        regex: request[:expected_result],
+        charge: request[:expected_charge]
+      )
+    rescue ThreadError => ex
+      response[:pass_or_fail] = "fail"
+      response[:remarks] = ex.message
+    ensure
+      @test_kit.close if !@test_kit.nil?
+    end
     
     @sns.publish(@sns_arn , response.to_json)
     
