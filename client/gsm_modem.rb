@@ -2,6 +2,9 @@ require 'java'
 require 'RXTXComm.jar'
 require 'thread'
 require 'queue_with_timeout'
+require 'lost_treasure_exceptions/gsm_cms_error'
+require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
+
 ##
 # Here is the abstraction of a GSM Modem, how to get input into it,
 # and how to get output from it.
@@ -73,14 +76,16 @@ class Gsm_Modem
 				#puts input if @debug
 				#puts "#{final - start}"
 				break if !input.empty?
-				raise ThreadError, "Exceeded timeout of #{@timeout_seconds} seconds" if final - start > @timeout_seconds
+				raise LostTreasureExceptions::GsmTimeoutExceededException.new("Exceeded timeout of #{@timeout_seconds} seconds") if final - start > @timeout_seconds
 				sleep timeout_throttle #Throttle loop				
 			end
 			
 			return_input += input
 			
-			if input =~ /OK\r\n/ || input =~/\+CMS ERROR/
+			if input =~ /OK\r\n/
 				break				
+			elsif input =~/\+CMS ERROR/
+			  raise LostTreasureExceptions::GsmCmsError.new(input)
 			end
 		end
 		

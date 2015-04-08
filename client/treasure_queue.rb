@@ -1,6 +1,7 @@
 #This queue connects with the web front-end to collect commands from the user
 require 'jar/aws-java-sdk-1.9.20.1.jar'
 require 'set'
+require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
 
 class TreasureQueue
   
@@ -108,7 +109,7 @@ class TreasureQueue
       end
       
           
-    rescue ThreadError => ex
+    rescue LostTreasureExceptions::GsmTimeoutExceededException => ex
       response[:pass_or_fail] = "fail"
       response[:remarks] = ex.message
     end
