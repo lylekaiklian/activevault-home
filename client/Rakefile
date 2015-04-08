@@ -69,7 +69,7 @@ end
 desc "Delete all messages on all dongles"
 task :delete_all_messages do
 	sweep_timeout = 5
-	sticks = Dongle.port_sweep(sweep_timeout, false)
+	sticks = Dongle.port_sweep(:identity)
 	sticks.each do |key, value|
 		puts "Clearing messages on port #{value[:port]}"
 		dongle = nil
@@ -207,7 +207,11 @@ end
 
 namespace :q do  
   task :unpack do 
-    treasure = TreasureQueue.new
-    treasure.unpack
+    begin
+      treasure = TreasureQueue.new
+      treasure.unpack
+    ensure
+      treasure.close if !treasure.nil?
+    end  
   end
 end

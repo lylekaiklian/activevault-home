@@ -48,6 +48,7 @@ class Gsm_Modem
 	def execute(at_command, &block)
 		#puts "Execute #{at_command}"
 		@out.write "#{at_command}\r\n".to_java_bytes
+		puts "gsm_modem.execute: query:  #{at_command}"
 		return_input = ""
 		
 		#Consume all input from the device
@@ -67,7 +68,9 @@ class Gsm_Modem
 				rescue StandardError => ex
 					#carry on
 				end
-				puts input if @debug
+				
+				puts "gsm_modem.execute: response:  #{input}"
+				#puts input if @debug
 				#puts "#{final - start}"
 				break if !input.empty?
 				raise ThreadError, "Exceeded timeout of #{@timeout_seconds} seconds" if final - start > @timeout_seconds

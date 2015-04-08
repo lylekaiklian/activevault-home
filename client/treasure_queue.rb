@@ -16,6 +16,7 @@ class TreasureQueue
     #Refactor: remove hard-coded url
     @queue_url = "https://sqs.ap-southeast-1.amazonaws.com/119554206391/lost_treasure"
     @sns_arn = "arn:aws:sns:ap-southeast-1:119554206391:lost-treasure"
+    @test_kit = TestKit.new   
   
   end 
   
@@ -76,6 +77,9 @@ class TreasureQueue
   def mock_process(request)
     
     response = request.dup
+
+=begin     
+    # Mock response
     response[:time_sent] = "09:17AM"
     response[:time_received] = "09:19AM"
     response[:beginning_balance] = 37
@@ -84,23 +88,31 @@ class TreasureQueue
     response[:actual_result] = "I hope senpai notices me."
     response[:pass_or_fail] = "pass"
     response[:remarks] = "OK"
+=end    
+ 
+   
     
-    @test_kit ||= TestKit.new    
     
     begin
-      @test_kit.send_and_must_receive(
+      output = @test_kit.send_and_must_receive(
         stick: :A,     #Let's make it easier for now, and assume single stick setup
         number: request[:b_number],
         message: request[:keyword],
-        regex: request[:expected_result],
+        expected_result: request[:expected_result],
         charge: request[:expected_charge]
       )
+      
+      [:time_sent, :time_received, :beginning_balance, :ending_balance, 
+        :amount_charged, :actual_result, :pass_or_fail, :remarks].each do |attribute|
+          response[attribute] = output[attribute]
+      end
+      
+          
     rescue ThreadError => ex
       response[:pass_or_fail] = "fail"
       response[:remarks] = ex.message
-    ensure
-      @test_kit.close if !@test_kit.nil?
     end
+
     
     @sns.publish(@sns_arn , response.to_json)
     
@@ -108,6 +120,11 @@ class TreasureQueue
     puts request.to_json
     puts "===RESPONSE==="
     puts response.to_json
+  end
+  
+  #Use in ensure blocks
+  def close
+      @test_kit.close if !@test_kit.nil?
   end
   
 end
