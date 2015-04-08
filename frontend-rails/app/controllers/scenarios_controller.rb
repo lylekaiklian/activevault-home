@@ -35,58 +35,53 @@ class ScenariosController < ApplicationController
     end
   end
   
-  def create_results
-      batch = scenario_params[:batch]
-      sequence_no = scenario_params[:sequence_no]
-      @scenario = Scenario.new(scenario_params)
-      redis_key = "scenarios:#{batch}:#{sequence_no}"
-      $redis.set(redis_key, @scenario.to_json)
-      $redis.expire(redis_key, 3.hours)
-      
-      render json: @scenario
-  end
+  #def create_results
+  #    batch = scenario_params[:batch]
+  #    sequence_no = scenario_params[:sequence_no]
+  #    @scenario = Scenario.new(scenario_params)
+  #    redis_key = "scenarios:#{batch}:#{sequence_no}"
+  #    $redis.set(redis_key, @scenario.to_json)
+  #    $redis.expire(redis_key, 3.hours)
+  #    
+  #    render json: @scenario
+  #end
   
   def get_results 
       batch = scenario_params[:batch]
       sequence_no = scenario_params[:sequence_no]
-      @scenario = JSON.parse($redis.get("scenarios:#{batch}:#{sequence_no}"))
-      render json: @scenario
+      result = $redis.get("scenarios:#{batch}:#{sequence_no}")
+      if !result.nil?
+        @scenario = JSON.parse(result, {symbolize_names: true})
+        render json: @scenario
+      else
+         render status: :not_found, json: {}
+      end
   end
   
   def sns
-      sns_message_type = request.headers['x-amz-sns-message-type']
+        sns_message_type = request.headers['x-amz-sns-message-type']
 
-      request_json = JSON.parse(request.raw_post, {symbolize_names: true})
-      message_id = request_json[:MessageId]
-      
-     
-      #Prevent duplicate Notification. Do not process if message ID is known already.
-      #Non-duplication window is 30 minutes
-      redis_key = "scenarios:sns:#{message_id}"
-      
-      if ($redis.get(redis_key).nil?)
-        $redis.set(redis_key, true)
-        $redis.expire(redis_key, 30.minutes)
+        request_json = JSON.parse(request.raw_post, {symbolize_names: true})
       
         #begin processing
-        logger.debug "Message ID: #{message_id}"
         logger.debug "SNS Message Type: #{sns_message_type}"
         logger.debug request.raw_post      
           
-          
         case sns_message_type
         when "Notification"
+          batch = request_json[:batch]
+          sequence_no = request_json[:sequence_no]
+          @scenario = Scenario.new(request_json)
+          redis_key = "scenarios:#{batch}:#{sequence_no}"
+          $redis.set(redis_key, @scenario.to_json)
+          $redis.expire(redis_key, 3.hours)            
+                
         when "SubscriptionConfirmation"
+            message_id = request_json[:MessageId]
             subscribe_url = request_json[:SubscribeURL]
             #TODO: Manual subscription for now
         end
-     else
-         logger.debug "Message ID #{message_id} is duplicate. ignore."
-     end
-          
-      
-      #logger.debug subscribe_url
-      #redirect_to subscribe_url
+  
       render json: {}
   end
 

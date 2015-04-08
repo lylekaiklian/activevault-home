@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     response.headers["Accept"] = "application/json"
     
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS, HEAD'
     response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, X-Requested-With'
     
     #http://arnab-deka.com/posts/2012/09/allowing-and-testing-cors-requests-in-rails/
