@@ -64,12 +64,14 @@ class TestKit
   		
   		time_sent = Time.now
   		puts "test_kit.send_and_must_receive: sending message #{message} to #{number}"
-  		#dongle.send_message(number, message)
+  		dongle.send_message(number, message)
+  		response = dongle.wait_for_new_message(120)
+  		actual_result = response[:message]
   		
   		#Cheaters gonna cheat
-  		# response = dongle.wait_for_new_message(60)
+  		# 
   		#response_message = expected_result
-  		actual_result = expected_result
+  		
   		time_received = Time.now
   		
   		#@sticks[stick.to_sym][:reply_number] = response[:sender]
