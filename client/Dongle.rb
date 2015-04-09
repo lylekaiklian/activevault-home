@@ -1,5 +1,7 @@
 require 'gsm_modem'
 require 'json'
+require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
+
 ##
 # Here lies the magical AT Commands
 ##
@@ -361,7 +363,7 @@ class Dongle
 					label_index += 1
 				
 				
-			rescue ThreadError => ex
+			rescue LostTreasureExceptions::GsmTimeoutExceededException => ex
 				puts ex.message
 				next
 			rescue NoMethodError =>ex2

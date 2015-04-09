@@ -9,6 +9,7 @@ require 'jar/httpcore-4.4.jar'
 require 'jar/httpclient-4.4.jar'
 require 'yaml'
 require 'bigdecimal'
+require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
 
 ##
 # Here lies the promo codes we humans are all familiar with!

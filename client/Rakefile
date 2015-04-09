@@ -3,6 +3,7 @@ require 'dongle'
 require 'test_kit'
 require 'yaml'
 require 'treasure_queue'
+require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
 
 =begin
 task :default do
