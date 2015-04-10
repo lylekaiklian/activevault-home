@@ -8,6 +8,8 @@ require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
 ##
 # Here is the abstraction of a GSM Modem, how to get input into it,
 # and how to get output from it.
+# The responsibility of the Gsm_Modem starts from the issue of the AT Command or an asynchronous signal,
+# and ends when the modem finally replies either OK or +CMS ERROR
 ##
 class Gsm_Modem
 
@@ -99,6 +101,7 @@ class Gsm_Modem
 
 	#Wait for an AT "Interrupt", while ignoring/dropping others that
 	#do not qualify
+=begin
 	def wait_for(interrupt_regex, &block)
 		loop do
 			start = Time.now
@@ -122,13 +125,22 @@ class Gsm_Modem
 			end			
 		end
 	end
+=end
 	
 	#Open the input queue for a certain number of seconds,
-	#and process listeners
-	def wait_for_via_listeners(waiting_timeout, lambda_array)
+	#and process listeners.
+	# Wait for loops until the following happens, whichever goes first:
+	# * The waiting_timeout expires, or
+	# * The waiting_counter maxes out. The waiting counter can be incremented by 
+	#   functions in the lambda_array
+	# The lambda_array is an array of function transformations for the incoming message, of the
+	# form:
+	# new_input, waiting_timeout_incremement = function(old_input)  
+	def wait_for(waiting_timeout, waiting_counter,  lambda_array)
 		start_time = Time.now
 		timeout_throttle = 0.3
 		return_value = []
+		current_waiting_counter = 0
 		loop do
 			final_time = Time.now
 			begin
@@ -137,15 +149,33 @@ class Gsm_Modem
 				#carry on
 			end	
 			
-			if !input.nil?
+			if !input.nil? 
+			  puts "gsm_modem.wait_for: input #{input}"
 				lambda_array.each do |l|
-					lambda_result = l.call(input)
-					return_value << "#{lambda_result}" if !lambda_result.nil?
+				    if !input.nil?
+				      #do the lambda transformation, for each lambda
+					   input, increment = l.call(input)
+					   current_waiting_counter =+ increment if !increment.nil?
+					end
 				end
+				
+			  #filter out unwanted input
+			  next if input.nil?
+				
+				puts "gsm_modem.wait_for: input after lambda: #{input}"
+				
+				# After input has been properly mangled, prepare as return value.
+        return_value << input
 			end
 			
-			break if final_time - start_time > waiting_timeout && return_value.count > 0
-			raise ThreadError, "Exceeded timeout of #{waiting_timeout} seconds" if final_time - start_time > waiting_timeout && return_value.count == 0
+
+			
+			#Do not wait forever.
+			# Exit either on a specific timeout, or if we got all that we need,
+			# Whichever came first.
+			break if (final_time - start_time > waiting_timeout) || current_waiting_counter >=  waiting_counter
+			
+			raise LostTreasureExceptions::GsmTimeoutExceededException.new("Exceeded timeout of #{waiting_timeout} seconds") if final_time - start_time > waiting_timeout && return_value.count == 0
 			sleep timeout_throttle #Throttle loop	
 		end	
 		return_value

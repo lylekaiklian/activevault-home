@@ -175,6 +175,7 @@ class Dongle
 =end
 
 	#Use the listener implementation for all
+=begin	
 	def wait_for_new_message(waiting_timeout = 10, &block)
 		wait_for_new_message_via_listeners(waiting_timeout) do |response|
 			if !block.nil?
@@ -184,20 +185,25 @@ class Dongle
 			end
 		end
 	end
-	
-	def wait_for_new_message_via_listeners(waiting_timeout, &block)
-		result_message_index_array = @gsm_modem.wait_for_via_listeners(waiting_timeout,[
+=end
+	def wait_for_new_message(waiting_timeout = 10, waiting_counter = 999999999999, &block)
+		result_message_index_array = @gsm_modem.wait_for(waiting_timeout, waiting_counter, [
 			(lambda do |input|
 				matches = /^\+CMTI: "[^"]*",(\d+)/.match(input)
 				if !matches.nil?
 					message_index = matches[1]
+					
+					#This is considered as one message
+					return message_index, 1
 				else
 					return nil
 				end
 			end)
 		])
 		
-		# puts result_message_index_array.to_json
+		puts "dongle.wait_for_new_message: result_message_index_array: #{result_message_index_array.to_json}"
+		
+		# puts 
 		# Process collected messages here.
 		# Read the incoming messages recursively		
 		
@@ -207,7 +213,7 @@ class Dongle
 
 			message_index = message_index_array.shift
 			
-			@gsm_modem.execute %Q(AT+CMGR=#{message_index}) do |response|
+			@gsm_modem.execute %Q(AT+CMGR=#{message_index.to_i}) do |response|
 				
 				matches = /\+CMGR: "([^"]*)","([^"]*)",,"([^"]*)"\r\n(.*)\r\n\r\n/m.match(response)
 				status = matches[1]
@@ -240,7 +246,9 @@ class Dongle
 	
 	def balance_inquiry(waiting_timeout = 10)
 		send_message(222, "BAL")
-		wait_for_new_message(waiting_timeout) do |response|
+		
+		#Do not wait any further if one +CMTI has been encountered
+		wait_for_new_message(waiting_timeout, 1) do |response|
 			matches = /Your balance as of (\d+\/\d+\/\d+ \d+:\d+) is (P\d+\.\d+) valid til (\d+\/\d+\/\d+ \d+:\d+) w\/ (\d+) FREE txts. Pls note that system time may vary from the time on ur phone\./.match(response[:message])
 			return {timestamp: matches[1], balance: matches[2], validity: matches[3], free_text: matches[4]}
 		end
