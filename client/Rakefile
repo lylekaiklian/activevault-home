@@ -5,11 +5,25 @@ require 'yaml'
 require 'treasure_queue'
 require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
 
-=begin
+
 task :default do
-	puts "Project Lost Treasure"
+  begin
+      treasure = TreasureQueue.new
+      treasure.run
+    ensure
+      treasure.close if !treasure.nil?
+  end  
 end
-=end
+
+task :mock do
+   begin
+      treasure = TreasureQueue.new(:mock)
+      treasure.run
+    ensure
+      treasure.close if !treasure.nil?
+  end   
+end
+
 
 task :default do
 	dongle = nil
@@ -202,17 +216,3 @@ namespace :dongle do
 	end
 end
 
-###############################################################################
-# Queue-related tasks 
-###############################################################################
-
-namespace :q do  
-  task :unpack do 
-    begin
-      treasure = TreasureQueue.new
-      treasure.unpack
-    ensure
-      treasure.close if !treasure.nil?
-    end  
-  end
-end
