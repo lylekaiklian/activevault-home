@@ -1,5 +1,6 @@
 require 'gsm_modem'
 require 'dongle'
+require 'dongle_factory'
 require 'test_kit'
 require 'yaml'
 require 'treasure_queue'
@@ -125,6 +126,20 @@ end
 # Dongle-related tasks 
 ###############################################################################
 namespace :dongle do
+  
+  desc "Get dongle information"
+  task :info, :com_port, :dongle_type do |task, args|
+    dongle = nil
+    dongle_type = args[:dongle_type] || :default
+    begin
+      dongle = DongleFactory.dongle(dongle_type, args[:com_port])
+      puts dongle.device_info
+    rescue ThreadError => ex
+      puts ex.message 
+    ensure
+      dongle.close if !dongle.nil?
+    end     
+  end
 
 	desc "Get the number of this dongle"
 	task :number, :com_port do |task, args|
@@ -140,10 +155,11 @@ namespace :dongle do
 	end
 	
 	desc "Get the available balance for this dongle"
-	task :balance, :com_port do |task, args| 
+	task :balance, :com_port, :dongle_type do |task, args| 
 		dongle = nil
+		dongle_type = args[:dongle_type] || :default
 		begin
-			dongle = Dongle.new(args[:com_port])
+			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.balance_inquiry(15)
 		rescue ThreadError => ex
 			puts ex.message	
