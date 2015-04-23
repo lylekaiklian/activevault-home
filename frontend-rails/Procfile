@@ -1,0 +1,2 @@
+middleware: bundle exec rails s -p 3007 -b 0.0.0.0
+web: sh -c 'cd ../frontend-yo && grunt serve'
