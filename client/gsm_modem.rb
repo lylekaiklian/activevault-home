@@ -21,6 +21,14 @@ class Gsm_Modem
 		import('gnu.io.SerialPort')
 		@port_id = CommPortIdentifier.get_port_identifier comm_port
 		@port = @port_id.open 'JRuby', 500
+		
+		@port.setSerialPortParams(
+		  115200,   #baud rate
+		  SerialPort::DATABITS_8,   #data bits
+		  SerialPort::STOPBITS_1,#stop bits
+		  SerialPort::PARITY_NONE#parity bits
+		)
+		
 		@in = @port.input_stream
 		@in_io = @in.to_io
 		@out = @port.output_stream	
