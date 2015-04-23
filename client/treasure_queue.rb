@@ -9,7 +9,7 @@ class TreasureQueue
   import 'com.amazonaws.services.sns.AmazonSNSClient'
   import 'com.amazonaws.regions.Regions'
   
-  def initialize
+  def initialize(mode = :live)
     @sqs = AmazonSQSClient.new
     @sns = AmazonSNSClient.new
     @sns.region = Regions::AP_SOUTHEAST_1
@@ -17,11 +17,17 @@ class TreasureQueue
     #Refactor: remove hard-coded url
     @queue_url = "https://sqs.ap-southeast-1.amazonaws.com/119554206391/lost_treasure"
     @sns_arn = "arn:aws:sns:ap-southeast-1:119554206391:lost-treasure"
-    @test_kit = TestKit.new   
+    @mode = mode
+    
+    if mode == :live   
+      @test_kit = TestKit.new 
+    elsif mode == :mock
+      puts "Entering MOCK mode..."
+    end
   
   end 
   
-  def unpack   
+  def run   
        
     messages_sorted = {};
     batches = Set.new [];
@@ -54,7 +60,15 @@ class TreasureQueue
             loop do
               if !messages_sorted[current_batch][message_index[current_batch]].nil?
                  puts "Processing Batch #{current_batch}, Sequence #{message_index[current_batch]}..."
-                 mock_process(messages_sorted[current_batch][message_index[current_batch]])
+                 
+                 case @mode
+                 when :live 
+                  process(messages_sorted[current_batch][message_index[current_batch]])
+                 when :mock
+                  mock_process(messages_sorted[current_batch][message_index[current_batch]])
+                 end
+                 
+                 
                  message_index[current_batch] += 1
                  next
               else
@@ -75,24 +89,31 @@ class TreasureQueue
 
   end
   
-  def mock_process(request)
+  def mock_process(request)  
     
     response = request.dup
-
-=begin     
+       
     # Mock response
     response[:time_sent] = "09:17AM"
     response[:time_received] = "09:19AM"
     response[:beginning_balance] = 37
     response[:ending_balance] = 35.50
     response[:amount_charged] = 2.50
-    response[:actual_result] = "I hope senpai notices me."
+    response[:actual_result] = request[:expected_result]
     response[:pass_or_fail] = "pass"
-    response[:remarks] = "OK"
-=end    
- 
-   
+    response[:remarks] = "OK"   
     
+    @sns.publish(@sns_arn , response.to_json)
+    
+    puts "===REQUEST==="
+    puts request.to_json
+    puts "===MOCK RESPONSE==="
+    puts response.to_json   
+  end
+  
+  def process(request)
+    
+    response = request.dup
     
     begin
       output = @test_kit.send_and_must_receive(
