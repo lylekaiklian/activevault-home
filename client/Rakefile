@@ -1,13 +1,25 @@
-require 'gsm_modem'
-require 'dongle'
-require 'dongle_factory'
-require 'test_kit'
-require 'yaml'
-require 'treasure_queue'
-require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
+task :mock do
+  require 'treasure_queue'
+  
+   begin
+      treasure = TreasureQueue.new(:mock)
+      treasure.run
+    ensure
+      treasure.close if !treasure.nil?
+  end   
+end
+
 
 
 task :default do
+  require 'treasure_queue'
+  require 'gsm_modem'
+  require 'dongle'
+  require 'dongle_factory'
+  require 'test_kit'
+  require 'yaml'
+  require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'  
+  
   begin
       treasure = TreasureQueue.new
       treasure.run
@@ -16,14 +28,6 @@ task :default do
   end  
 end
 
-task :mock do
-   begin
-      treasure = TreasureQueue.new(:mock)
-      treasure.run
-    ensure
-      treasure.close if !treasure.nil?
-  end   
-end
 
 =begin
 task :default do

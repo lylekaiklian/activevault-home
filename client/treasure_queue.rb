@@ -1,7 +1,14 @@
 #This queue connects with the web front-end to collect commands from the user
 require 'jar/aws-java-sdk-1.9.20.1.jar'
+require 'jar/commons-logging-1.2.jar'
+require 'jar/httpclient-4.4.jar'
+require 'jar/httpcore-4.4.jar'
+require 'jar/jackson-annotations-2.5.0.jar'
+require 'jar/jackson-core-2.5.0.jar'
+require 'jar/jackson-databind-2.3.1.jar'
 require 'set'
 require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
+require 'json'
 
 class TreasureQueue
   
