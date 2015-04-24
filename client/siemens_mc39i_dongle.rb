@@ -1,5 +1,4 @@
 require 'dongle'
-require 'lost_treasure_exceptions/method_not_yet_implemented_exception'
 
 class SiemensMc39iDongle < Dongle
     
@@ -81,14 +80,28 @@ class SiemensMc39iDongle < Dongle
   end
     
   def send_message(number, message)
+    # ATE0                Disable echo
     # AT+CMGF=1           Set SMS mode to "Text Mode"
     # AT+CNMI=3,1         Enable Unsolicited Result Code for SMS (via +CMTI)
     # AT+CMGW=222         Write SMS to memory. Returns +CMGW: <index>, to be used by +CMSS
     # AT+CMSS=1           Send the SMS.
-    response = @gsm_modem.execute %Q(ATE1) do |response|
-     response = @gsm_modem.execute %Q(AT+CMGF=1;+CNMI=3,1) do |response|
-        response = @gsm_modem.execute(%Q(AT+CMGW=#{number}\r\n#{message}), "\x1a") do |response|
-          response
+    @gsm_modem.execute %Q(ATE0) do |response|
+      @gsm_modem.execute %Q(AT+CMGF=1;+CNMI=3,1) do |response|
+        @gsm_modem.execute("AT+CMGW=#{number}", "#{message}\x1A") do |response|          
+          input = response
+          
+          #Get the index from the last operation
+          matches = /\+CMGW: (\d+)/.match(input)
+          
+          if !matches.nil?
+            index = matches[1]
+          else 
+            raise LostTreasureExceptions::SmsSendingFailedException
+          end
+          
+          @gsm_modem.execute("AT+CMSS=#{index}") do |response|
+            response
+          end
         end
       end
     end
@@ -100,37 +113,19 @@ class SiemensMc39iDongle < Dongle
   end
   
   def delete_message(index, &block)
-    @gsm_modem.execute "AT+CMGF=1" do |response|
-      puts "dongle.delete_message: deleting message #{index}"
-      @gsm_modem.execute %Q(AT+CMGD=#{index}) do |response|
-        
+    puts "dongle.delete_message: deleting message #{index}"
+    @gsm_modem.execute %Q(AT+CMGF=1;+CMGD=#{index}) do |response|
+              
         #Allow further chaining
         if !block.nil?
           block.call(response)
         else
           response
         end     
-      end
     end
   end
   
-  def delete_all_messages(&block)
-    raise LostTreasureExceptions::MethodNotYetImplementedException  
-    #@gsm_modem.execute "AT+CMGF=1" do |response|
-    #  puts "dongle.delete_all_messages deleting ALL messages"
-    #  @gsm_modem.execute %Q(AT+CMGD=0,4) do |response|
-        
-        #Allow further chaining
-    #    if !block.nil?
-    #      block.call(response)
-    #    else
-    #      response
-    #    end      
-    #  end
-    #end
-  end 
-
-=begin  
+  #MC39i has no built-in delete all message, so we do recursive deletion. 
   def delete_all_messages(start_index = 1, &block)
     #Assume sim card has 30 messages.
     upper_limit = 30 
@@ -150,7 +145,7 @@ class SiemensMc39iDongle < Dongle
       end     
     end
   end
-=end
+
   
 =begin  
   def wait_for_new_message(&block)

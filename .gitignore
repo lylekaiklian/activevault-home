@@ -1,5 +1,3 @@
-*.jar
-*.dll
 Gemfile.lock
 ports.yml
 output.csv

@@ -1,6 +1,7 @@
 require 'gsm_modem'
 require 'json'
 require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'
+require 'lost_treasure_exceptions/sms_sending_failed_exception'
 
 ##
 # The magical AT Commands lie on subclasses of Dongle.

@@ -35,7 +35,7 @@ class Gsm_Modem
 		@response_queue = Queue.new
 		@callback_queue = Queue.new
 		@command_queue = Queue.new
-		@timeout_seconds = 100000
+		@timeout_seconds = 10
 		@debug = false
 		
 		#The purpose of this thread is to convert the asynchronous incoming stream
@@ -57,17 +57,20 @@ class Gsm_Modem
 				
 		
 	end
+		
 	
-	#Raw write, in those tricky corner cases
-	#def write(at_command)
-	#  @out.write "#{at_command}".to_java_bytes
-	#  puts "gsm_modem.write:  #{at_command}"
-	#end
-	
-	def execute(at_command, suffix="\r\n", &block)
-		#puts "Execute #{at_command}"
-		@out.write "#{at_command}#{suffix}".to_java_bytes
+	def execute(at_command, at_command_2 = nil, &block)
+		
+		@out.write "#{at_command}\r\n".to_java_bytes
+		#@out.write "#{at_command}#{suffix}"
 		puts "gsm_modem.execute: query:  #{at_command}"
+		
+		if !at_command_2.nil?
+		  puts "gsm_modem.execute: query 2: #{at_command_2}"
+		  sleep 0.1 #Wait for prompt
+		  @out.write "#{at_command_2}\r\n".to_java_bytes
+		end
+		
 		return_input = ""
 		
 		#Consume all input from the device
