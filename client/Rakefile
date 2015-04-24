@@ -13,13 +13,7 @@ end
 
 task :default do
   require 'treasure_queue'
-  require 'gsm_modem'
-  require 'dongle'
-  require 'dongle_factory'
-  require 'test_kit'
-  require 'yaml'
-  require 'lost_treasure_exceptions/gsm_timeout_exceeded_exception'  
-  
+   
   begin
       treasure = TreasureQueue.new
       treasure.run
@@ -137,6 +131,8 @@ end
 # Dongle-related tasks 
 ###############################################################################
 namespace :dongle do
+  
+  require 'dongle_factory'
   
   desc "Get dongle information"
   task :info, :com_port, :dongle_type do |task, args|
