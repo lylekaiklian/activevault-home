@@ -130,7 +130,7 @@ namespace :dongle do
   desc "Get dongle information"
   task :info, :com_port, :dongle_type do |task, args|
     dongle = nil
-    dongle_type = args[:dongle_type] || :default
+    dongle_type = args[:dongle_type].to_sym || :default
     begin
       dongle = DongleFactory.dongle(dongle_type, args[:com_port])
       puts dongle.device_info
@@ -157,7 +157,7 @@ namespace :dongle do
 	desc "Get the available balance for this dongle"
 	task :balance, :com_port, :dongle_type do |task, args| 
 		dongle = nil
-		dongle_type = args[:dongle_type] || :default
+		dongle_type = args[:dongle_type].to_sym || :default
 		begin
 			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.balance_inquiry(15)
@@ -169,10 +169,11 @@ namespace :dongle do
 	end
 	
 	desc "Send SMS to some number"
-	task :send_message, :com_port, :number, :message do |task, args|
+	task :send_message, :com_port, :number, :message, :dongle_type do |task, args|
 		dongle = nil
+		dongle_type = args[:dongle_type].to_sym || :default
 		begin
-			dongle = Dongle.new(args[:com_port])
+			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.send_message(args[:number],args[:message])
 		rescue ThreadError => ex
 			puts ex.message	
@@ -182,10 +183,11 @@ namespace :dongle do
 	end
 	
 	desc "Set number of dongle. This is not set by default on Globe prepaid sims."
-	task :set_number, :com_port, :number do |task, args|
+	task :set_number, :com_port, :number, :dongle_type do |task, args|
 		dongle = nil
+		dongle_type = args[:dongle_type].to_sym || :default
 		begin
-			dongle = Dongle.new(args[:com_port])
+			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.set_number(args[:number])
 		rescue ThreadError => ex
 			puts ex.message	
@@ -195,10 +197,11 @@ namespace :dongle do
 	end	
 	
 	desc "Delete all messages"
-	task :delete_all_messages, :com_port do |task, args|
+	task :delete_all_messages, :com_port, :dongle_type do |task, args|
 		dongle = nil
+		dongle_type = args[:dongle_type].to_sym || :default
 		begin
-			dongle = Dongle.new(args[:com_port])
+			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.delete_all_messages
 		rescue ThreadError => ex
 			puts ex.message
