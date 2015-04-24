@@ -96,11 +96,24 @@ class SiemensMc39iDongle < Dongle
           if !matches.nil?
             index = matches[1]
           else 
-            raise LostTreasureExceptions::SmsSendingFailedException
+            raise LostTreasureExceptions::SmsSendingFailedException.new("Error at +CMGW")
           end
           
           @gsm_modem.execute("AT+CMSS=#{index}") do |response|
-            response
+            input = response
+            matches = /\+CMSS: (\d+)/.match(input)
+            if !matches.nil?
+              index = matches[1]
+            else 
+              raise LostTreasureExceptions::SmsSendingFailedException.new("Error at +CMSS")
+            end
+            
+            {
+              success: true,
+              message: message,
+              number: number
+            }
+            
           end
         end
       end
@@ -247,14 +260,14 @@ class SiemensMc39iDongle < Dongle
   end
   
   def balance_inquiry(waiting_timeout = 10)
-    puts "Bulaga"
-    #send_message(222, "BAL")
+    #puts "Bulaga"
+    send_message(222, "BAL")
     
     #Do not wait any further if one +CMTI has been encountered
-    #wait_for_new_message(waiting_timeout, 1) do |response|
-    #  matches = /Your balance as of (\d+\/\d+\/\d+ \d+:\d+) is (P\d+\.\d+) valid til (\d+\/\d+\/\d+ \d+:\d+) w\/ (\d+) FREE txts. Pls note that system time may vary from the time on ur phone\./.match(response[:message])
-    #  return {timestamp: matches[1], balance: matches[2], validity: matches[3], free_text: matches[4]}
-    #end
+    wait_for_new_message(waiting_timeout, 1) do |response|
+      matches = /Your balance as of (\d+\/\d+\/\d+ \d+:\d+) is (P\d+\.\d+) valid til (\d+\/\d+\/\d+ \d+:\d+) w\/ (\d+) FREE txts. Pls note that system time may vary from the time on ur phone\./.match(response[:message])
+      return {timestamp: matches[1], balance: matches[2], validity: matches[3], free_text: matches[4]}
+    end
   end
   
   
