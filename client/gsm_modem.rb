@@ -57,11 +57,20 @@ class Gsm_Modem
 				
 		
 	end
+		
 	
-	def execute(at_command, &block)
-		#puts "Execute #{at_command}"
+	def execute(at_command, at_command_2 = nil, &block)
+		
 		@out.write "#{at_command}\r\n".to_java_bytes
+		#@out.write "#{at_command}#{suffix}"
 		puts "gsm_modem.execute: query:  #{at_command}"
+		
+		if !at_command_2.nil?
+		  puts "gsm_modem.execute: query 2: #{at_command_2}"
+		  sleep 0.1 #Wait for prompt
+		  @out.write "#{at_command_2}\r\n".to_java_bytes
+		end
+		
 		return_input = ""
 		
 		#Consume all input from the device
