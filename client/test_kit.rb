@@ -26,7 +26,8 @@ class TestKit
 		
 		puts "Initializing Test Kit. Performing configuration sanity check..."
 		@sticks.keys.each do |key|
-			@sticks[key][:dongle_object] = Dongle.new(@sticks[key][:port])
+		  dongle_type = @sticks[key][:dongle_type] || :default
+			@sticks[key][:dongle_object] = DongleFactory.dongle(dongle_type, @sticks[key][:port])
 			@sticks[key][:dongle_object].gsm_modem.timeout_seconds = @timeout_seconds
 			puts "Information for #{key}:"
 			puts @sticks[key]

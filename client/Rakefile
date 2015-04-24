@@ -25,7 +25,7 @@ task :mock do
   end   
 end
 
-
+=begin
 task :default do
 	dongle = nil
 	begin
@@ -40,7 +40,9 @@ task :default do
 	end
 	
 end
+=end
 
+=begin
 task :run, :method, :param1 do |task, args|
 	start_time = Time.now
 
@@ -63,6 +65,7 @@ task :run, :method, :param1 do |task, args|
 	elapsed_seconds = elapsed_time - (elapsed_minutes * 60)
 	puts "Elapsed time: #{elapsed_minutes.floor} minutes and #{elapsed_seconds} seconds"
 end
+=end
 
 desc "Two types of port sweep. The one that asks for balance, and the one that does not"
 task :port_sweep, :mode, :to_file do |task, args|
@@ -82,6 +85,7 @@ task :port_sweep, :mode, :to_file do |task, args|
 	end
 end
 
+=begin
 desc "Delete all messages on all dongles"
 task :delete_all_messages do
 	sweep_timeout = 5
@@ -97,7 +101,9 @@ task :delete_all_messages do
 		end
 	end
 end
+=end
 
+=begin
 task :hog_all_except, :port do |task, args|		
 	port_to_unhog = args[:port]
 	puts "Hogging all ports except #{port_to_unhog}"
@@ -121,6 +127,7 @@ task :hog_all_except, :port do |task, args|
 		end if !dongles.nil?			
 	end	
 end
+=end
 
 ###############################################################################
 # Dongle-related tasks 
@@ -130,7 +137,7 @@ namespace :dongle do
   desc "Get dongle information"
   task :info, :com_port, :dongle_type do |task, args|
     dongle = nil
-    dongle_type = args[:dongle_type].to_sym || :default
+    dongle_type = !args[:dongle_type].nil? ? args[:dongle_type].to_sym : :default
     begin
       dongle = DongleFactory.dongle(dongle_type, args[:com_port])
       puts dongle.device_info
@@ -157,7 +164,7 @@ namespace :dongle do
 	desc "Get the available balance for this dongle"
 	task :balance, :com_port, :dongle_type do |task, args| 
 		dongle = nil
-		dongle_type = args[:dongle_type].to_sym || :default
+		dongle_type = !args[:dongle_type].nil? ? args[:dongle_type].to_sym : :default
 		begin
 			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.balance_inquiry(15)
@@ -171,7 +178,7 @@ namespace :dongle do
 	desc "Send SMS to some number"
 	task :send_message, :com_port, :number, :message, :dongle_type do |task, args|
 		dongle = nil
-		dongle_type = args[:dongle_type].to_sym || :default
+		dongle_type = !args[:dongle_type].nil? ? args[:dongle_type].to_sym : :default
 		begin
 			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.send_message(args[:number],args[:message])
@@ -185,7 +192,7 @@ namespace :dongle do
 	desc "Set number of dongle. This is not set by default on Globe prepaid sims."
 	task :set_number, :com_port, :number, :dongle_type do |task, args|
 		dongle = nil
-		dongle_type = args[:dongle_type].to_sym || :default
+		dongle_type = !args[:dongle_type].nil? ? args[:dongle_type].to_sym : :default
 		begin
 			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.set_number(args[:number])
@@ -199,7 +206,7 @@ namespace :dongle do
 	desc "Delete all messages"
 	task :delete_all_messages, :com_port, :dongle_type do |task, args|
 		dongle = nil
-		dongle_type = args[:dongle_type].to_sym || :default
+		dongle_type = !args[:dongle_type].nil? ? args[:dongle_type].to_sym : :default
 		begin
 			dongle = DongleFactory.dongle(dongle_type, args[:com_port])
 			puts dongle.delete_all_messages
@@ -212,6 +219,7 @@ namespace :dongle do
 		end		
 	end
 
+=begin
 	desc "Open the port, and do not release"
 	#http://blog.stevenocchipinti.com/2013/10/18/rake-task-with-an-arbitrary-number-of-arguments/
 	task :hog do |task, args| 
@@ -233,5 +241,7 @@ namespace :dongle do
 			end if !dongles.nil?
 		end			
 	end
+=end	
+	
 end
 
