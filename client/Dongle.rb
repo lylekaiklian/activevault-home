@@ -109,17 +109,14 @@ class Dongle
 	end
 	
   def delete_all_messages(&block)
-    @gsm_modem.execute "AT+CMGF=1" do |response|
+    @gsm_modem.execute %Q(AT+CMGF=1;+CMGD=0,4) do |response|
       puts "dongle.delete_all_messages deleting ALL messages"
-      @gsm_modem.execute %Q(AT+CMGD=0,4) do |response|
-        
         #Allow further chaining
         if !block.nil?
           block.call(response)
         else
           response
         end      
-      end
     end
   end	
 

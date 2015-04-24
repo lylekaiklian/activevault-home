@@ -1,4 +1,5 @@
 require 'dongle'
+require 'lost_treasure_exceptions/method_not_yet_implemented_exception'
 
 class SiemensMc39iDongle < Dongle
   attr_reader :gsm_modem
@@ -76,11 +77,11 @@ class SiemensMc39iDongle < Dongle
   end
     
   def send_message(number, message)
-    response = @gsm_modem.execute "AT+CMGF=1" do |response|
-      response += @gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n#{message}\x1a)
-    end
-    
-    response
+    raise LostTreasureExceptions::MethodNotYetImplementedException  
+    #response = @gsm_modem.execute "AT+CMGF=1" do |response|
+    #  response += @gsm_modem.execute %Q(AT+CMGS="#{number}"\r\n#{message}\x1a)
+    #end    
+    #response
   end
   
   def messages
@@ -103,18 +104,19 @@ class SiemensMc39iDongle < Dongle
   end
   
   def delete_all_messages(&block)
-    @gsm_modem.execute "AT+CMGF=1" do |response|
-      puts "dongle.delete_all_messages deleting ALL messages"
-      @gsm_modem.execute %Q(AT+CMGD=0,4) do |response|
+    raise LostTreasureExceptions::MethodNotYetImplementedException  
+    #@gsm_modem.execute "AT+CMGF=1" do |response|
+    #  puts "dongle.delete_all_messages deleting ALL messages"
+    #  @gsm_modem.execute %Q(AT+CMGD=0,4) do |response|
         
         #Allow further chaining
-        if !block.nil?
-          block.call(response)
-        else
-          response
-        end      
-      end
-    end
+    #    if !block.nil?
+    #      block.call(response)
+    #    else
+    #      response
+    #    end      
+    #  end
+    #end
   end 
 
 =begin  
