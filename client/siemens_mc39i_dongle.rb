@@ -207,12 +207,13 @@ class SiemensMc39iDongle < Dongle
   def wait_for_new_message(waiting_timeout = 10, waiting_counter = 999999999999, &block)
     result_message_index_array = @gsm_modem.wait_for(waiting_timeout, waiting_counter, [
       (lambda do |input|
-        matches = /^\+CMTI: "[^"]*",(\d+)/.match(input)
+        matches = /^\+CMTI: "([^"]*)",(\d+)/.match(input)
         if !matches.nil?
-          message_index = matches[1]
+          message_storage = matches[1]
+          message_index = matches[2]
           
           #This is considered as one message
-          return message_index, 1
+          return {message_index: message_index, message_storage: message_storage}, 1
         else
           return nil
         end
@@ -229,9 +230,14 @@ class SiemensMc39iDongle < Dongle
 
       return {message: ""} if message_index_array.empty?
 
-      message_index = message_index_array.shift
+      message_structure = message_index_array.shift
+      message_index = message_structure[:message_index]
+      message_storage = message_structure[:message_storage]
       
-      @gsm_modem.execute %Q(AT+CMGR=#{message_index.to_i}) do |response|
+      
+      puts "dongle.wait_for_new_message: Reading message #{message_storage}, #{message_index}"
+      
+      @gsm_modem.execute %Q(AT+CPMS="#{message_storage}";+CMGR=#{message_index.to_i}) do |response|
         
         matches = /\+CMGR: "([^"]*)","([^"]*)",,"([^"]*)"\r\n(.*)\r\n\r\n/m.match(response)
         status = matches[1]
