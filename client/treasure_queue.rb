@@ -26,7 +26,8 @@ class TreasureQueue
     @sns_arn = "arn:aws:sns:ap-southeast-1:119554206391:lost-treasure"
     @mode = mode
     
-    if mode == :live   
+    if mode == :live
+      require 'test_kit'   
       @test_kit = TestKit.new 
     elsif mode == :mock
       puts "Entering MOCK mode..."
