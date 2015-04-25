@@ -82,11 +82,12 @@ class SiemensMc39iDongle < Dongle
   def send_message(number, message)
     # ATE0                Disable echo
     # AT+CMGF=1           Set SMS mode to "Text Mode"
+    # AT+CPMS="MT"        Use the machine as storage for SMS
     # AT+CNMI=3,1         Enable Unsolicited Result Code for SMS (via +CMTI)
     # AT+CMGW=222         Write SMS to memory. Returns +CMGW: <index>, to be used by +CMSS
     # AT+CMSS=1           Send the SMS.
     @gsm_modem.execute %Q(ATE0) do |response|
-      @gsm_modem.execute %Q(AT+CMGF=1;+CNMI=3,1) do |response|
+      @gsm_modem.execute %Q(AT+CMGF=1;+CNMI=3,1;+CPMS="ME") do |response|
         @gsm_modem.execute("AT+CMGW=#{number}", "#{message}\x1A") do |response|          
           input = response
           
@@ -127,14 +128,16 @@ class SiemensMc39iDongle < Dongle
   
   def delete_message(index, &block)
     puts "dongle.delete_message: deleting message #{index}"
-    @gsm_modem.execute %Q(AT+CMGF=1;+CMGD=#{index}) do |response|
-              
+    #Ensure space in both SM and MT. -_-
+    @gsm_modem.execute %Q(AT+CMGF=1;+CPMS="SM";+CMGD=#{index}) do |response|
+      @gsm_modem.execute %Q(AT+CMGF=1;+CPMS="MT";+CMGD=#{index}) do |response|          
         #Allow further chaining
         if !block.nil?
           block.call(response)
         else
           response
-        end     
+        end
+      end     
     end
   end
   
