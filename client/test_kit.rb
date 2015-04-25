@@ -67,7 +67,15 @@ class TestKit
   		time_sent = Time.now
   		puts "test_kit.send_and_must_receive: sending message #{message} to #{number}"
   		dongle.send_message(number, message)
-  		response = dongle.wait_for_new_message(120)
+  		
+  		# Either we wait for 2 minutes, or we wait for a certain number of SMS received.
+  		# The number of expected SMS is number of characters divided by 160, rounded up.
+  		max_character = 160
+  		wait_time = 120
+  		expected_number_of_messages = (expected_result.length.to_f / max_character).ceil
+  		puts "test_kit.send_and_must_receive: waiting for #{wait_time} seconds OR #{expected_number_of_messages} SMS"
+  		response = dongle.wait_for_new_message(wait_time, expected_number_of_messages)
+  		
   		actual_result = response[:message]
   		
   		#Cheaters gonna cheat

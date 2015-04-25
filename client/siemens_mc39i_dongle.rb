@@ -140,8 +140,8 @@ class SiemensMc39iDongle < Dongle
   
   #MC39i has no built-in delete all message, so we do recursive deletion. 
   def delete_all_messages(start_index = 1, &block)
-    #Assume sim card has 30 messages.
-    upper_limit = 30 
+    
+    upper_limit = 10 
     
     if start_index >= upper_limit
       #Base case section
@@ -235,6 +235,12 @@ class SiemensMc39iDongle < Dongle
         sender = matches[2]
         timestamp = matches[3]
         message = matches[4]
+        
+        #Cleanup message. Somehow MC39i has a weird header added to some messages
+        message_match = /\u0005\u0000.*\u0000(.*)/m.match(message)
+        if !message_match.nil?
+          message = message_match[1]
+        end
         
         return_value = { status: status, 
             sender: sender,

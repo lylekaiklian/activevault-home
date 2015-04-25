@@ -172,7 +172,11 @@ class Gsm_Modem
 				    if !input.nil?
 				      #do the lambda transformation, for each lambda
 					   input, increment = l.call(input)
-					   current_waiting_counter =+ increment if !increment.nil?
+					   if !increment.nil?
+					     current_waiting_counter = current_waiting_counter + increment 
+					     puts "gsm_modem.wait_for: SMS increment #{increment}"
+					     puts "gsm_modem.wait_for: SMS #{current_waiting_counter} / #{waiting_counter}"
+					   end
 					end
 				end
 				
@@ -190,6 +194,7 @@ class Gsm_Modem
 			#Do not wait forever.
 			# Exit either on a specific timeout, or if we got all that we need,
 			# Whichever came first.
+			
 			break if (final_time - start_time > waiting_timeout) || current_waiting_counter >=  waiting_counter
 			
 			raise LostTreasureExceptions::GsmTimeoutExceededException.new("Exceeded timeout of #{waiting_timeout} seconds") if final_time - start_time > waiting_timeout && return_value.count == 0
