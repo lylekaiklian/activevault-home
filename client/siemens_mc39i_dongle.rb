@@ -248,7 +248,7 @@ class SiemensMc39iDongle < Dongle
   
 
   def ussd(number, array_of_inputs=[])
-    waiting_timeout = 10
+    waiting_timeout = 20
     input_array = []
      
     @gsm_modem.execute %Q(ATD#{number};) do |response|    
@@ -271,12 +271,13 @@ class SiemensMc39iDongle < Dongle
         input = array_of_inputs.shift
         
         #wait until prompt appears.
-        @gsm_modem.raw_write %Q(#{input}\x1A), wait_before_write: 0.3
+        @gsm_modem.raw_write %Q(#{input}\x1A), wait_before_write: 0.5
       
       end
       
       #I'm done here!
-      @gsm_modem.raw_write %Q(\x1B), wait_before_write: 0.3 
+      @gsm_modem.raw_write %Q(\x1B), wait_before_write: 0.5
+
       
     end
     
