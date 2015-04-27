@@ -16,7 +16,7 @@ class TreasureQueue
   import 'com.amazonaws.services.sns.AmazonSNSClient'
   import 'com.amazonaws.regions.Regions'
   
-  def initialize(mode = :live)
+  def initialize(mode = :live, &block)
     @sqs = AmazonSQSClient.new
     @sns = AmazonSNSClient.new
     @sns.region = Regions::AP_SOUTHEAST_1
@@ -31,6 +31,15 @@ class TreasureQueue
       @test_kit = TestKit.new 
     elsif mode == :mock
       puts "Entering MOCK mode..."
+    end
+    
+    #This ensures proper cleanup of resources (i.e., ports)
+    if !block.nil?
+      begin
+        block.call
+      ensure
+        close
+      end
     end
   
   end 

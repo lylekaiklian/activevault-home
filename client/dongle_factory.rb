@@ -16,14 +16,32 @@ require 'huawei_dongle'
 
 
 class DongleFactory
-  def self.dongle(dongle_type, port)
+  def self.dongle(dongle_type, port, &block)
     case dongle_type
     when :huawei
-      HuaweiDongle.new(port)
+      if !block.nil?
+        HuaweiDongle.new(port) do |dongle|
+          block.call(dongle)
+        end
+      else
+        HuaweiDongle.new(port)
+      end
     when :siemens_mc39i
-      SiemensMc39iDongle.new(port)
+      if !block.nil?
+       SiemensMc39iDongle.new(port) do |dongle|
+         block.call(dongle)
+       end
+      else
+        SiemensMc39iDongle.new(port)
+      end
     when :default
-      SiemensMc39iDongle.new(port)
+       if !block.nil?
+       SiemensMc39iDongle.new(port) do |dongle|
+         block.call(dongle)
+       end
+      else
+        SiemensMc39iDongle.new(port)
+      end
     end
   end
 end

@@ -58,6 +58,14 @@ class Gsm_Modem
 		
 	end
 		
+	#This resembles a raw write to the output stream,
+	#and does not expect any input whatsoever	
+	def raw_write(at_command, params = {})
+	  #allow cooldown before doing a write.
+	  sleep params[:wait_before_write].to_f if !params[:wait_before_write].nil?
+	  puts "gsm_modem.raw_write: #{at_command}"
+	  @out.write "#{at_command}".to_java_bytes
+	end
 	
 	def execute(at_command, at_command_2 = nil, &block)
 		

@@ -12,8 +12,17 @@ class Dongle
 
 	attr_reader :gsm_modem
 
-	def initialize(comm_port)
+	def initialize(comm_port, &block)
 		@gsm_modem = Gsm_Modem.new comm_port
+		
+		if !block.nil?
+		  begin
+		    block.call(self)
+		  ensure
+		    close
+		  end
+		end
+		
 	end
 	
 	def close
