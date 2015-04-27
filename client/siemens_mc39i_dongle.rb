@@ -163,47 +163,7 @@ class SiemensMc39iDongle < Dongle
   end
 
   
-=begin  
-  def wait_for_new_message(&block)
-    @gsm_modem.wait_for(/^\+CMTI/) do |response|
-      matches = /^\+CMTI: "[^"]*",(\d+)/.match(response)
-      message_index = matches[1]
-      
-      @gsm_modem.execute %Q(AT+CMGR=#{message_index}) do |response|
-        
-        matches = /\+CMGR: "([^"]*)","([^"]*)",,"([^"]*)"\r\n(.*)\r\n\r\n/m.match(response)
-        status = matches[1]
-        sender = matches[2]
-        timestamp = matches[3]
-        message = matches[4]
-        
-        return_value = { status: status, 
-            sender: sender,
-            timestamp: timestamp,
-            message:message
-          }
-        if !block.nil?
-          return block.call(return_value)
-        else
-          return return_value
-        end
-      end
-    end   
-  end
-=end
 
-  #Use the listener implementation for all
-=begin  
-  def wait_for_new_message(waiting_timeout = 10, &block)
-    wait_for_new_message_via_listeners(waiting_timeout) do |response|
-      if !block.nil?
-        block.call(response)
-      else
-        response
-      end
-    end
-  end
-=end
   def wait_for_new_message(waiting_timeout = 10, waiting_counter = 999999999999, &block)
     result_message_index_array = @gsm_modem.wait_for(waiting_timeout, waiting_counter, [
       (lambda do |input|
@@ -284,36 +244,44 @@ class SiemensMc39iDongle < Dongle
       return {timestamp: matches[1], balance: matches[2], validity: matches[3], free_text: matches[4]}
     end
   end
+
   
-  
-  def messages_old
-    messages = @gsm_modem.execute %Q(AT+CMGL="ALL")
-    messages = scrub messages
+
+  def ussd(number, array_of_inputs=[])
+    waiting_timeout = 10
+    input_array = []
+     
+    @gsm_modem.execute %Q(ATD#{number};) do |response|    
+      loop do 
       
-    message_array = []
-    message_array_item = {}
-    messages.split("\r\n").each_with_index do |line, index|
-      message_index = index / 2
-      
-      if index % 2 == 0   # header
+        input_array = (@gsm_modem.wait_for(waiting_timeout, 1, [
+          (lambda do |input|
+            matches = /^\+CUSD: ([^"]*),"(.*)"/m.match(input)
+            if !matches.nil?
+              message_incoming = matches[2]
+              return message_incoming, 1
+            else
+              return nil
+            end
+          end)
+        ]))
         
-        x, header = line.split("CMGL:")
-        message_index, status, carrier, x, smsdate, smstime = header.split(",")
-        message_array_item = {
-          index: message_index.to_i,
-          status: status.sub(/^"(.*)"$/, '\1'),
-          carrier: carrier.sub(/^"(.*)"$/, '\1'),
-          smsdate: smsdate.sub(/^"(.*)/, '\1'),
-          smstime: smstime.sub(/"(.*)$/, '\1')
-        }
-      else        # message body
-        message_array_item[:message] = line
-        message_array[message_index] = message_array_item
+        break if array_of_inputs.empty? 
+        
+        input = array_of_inputs.shift
+        
+        #wait until prompt appears.
+        @gsm_modem.raw_write %Q(#{input}\x1A), wait_before_write: 0.3
+      
       end
+      
+      #I'm done here!
+      @gsm_modem.raw_write %Q(\x1B), wait_before_write: 0.3 
+      
     end
     
-    message_array.sort!{|x,y| y[:index] <=> x[:index]}.to_json
-    #messages
-  end
+    input_array[0]
+    
+  end 
   
 end
