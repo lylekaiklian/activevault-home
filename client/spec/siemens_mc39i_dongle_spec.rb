@@ -17,7 +17,7 @@ describe 'Siemens MC39i' do
       port = @sticks[:A][:port]
       
       DongleFactory.dongle(:siemens_mc39i, port) do |dongle|
-        result = dongle.ussd("*143#")
+        result = dongle.ussd(number: "*143#")
         expect(result).to_not be_nil
         expect(result.length).to be > 0
         expect(result).to match(/^1 GoSAKTO/)
@@ -27,7 +27,7 @@ describe 'Siemens MC39i' do
     it 'must have a submenu' do
       port = @sticks[:A][:port]      
       DongleFactory.dongle(:siemens_mc39i, port)  do |dongle|
-        result = dongle.ussd("*143#", [1])
+        result = dongle.ussd(number: "*143#", commands:[1])
         expect(result).to_not be_nil
         expect(result.length).to be > 0
         expect(result).to match(/^1 Create a promo/)
@@ -37,7 +37,7 @@ describe 'Siemens MC39i' do
     it 'must be able to span multiple submenus' do
       port = @sticks[:A][:port]      
       DongleFactory.dongle(:siemens_mc39i, port)  do |dongle|
-        result = dongle.ussd("*143#", [1, 7])
+        result = dongle.ussd(number: "*143#", commands:[1, 7])
         expect(result).to_not be_nil
         expect(result.length).to be > 0
         expect(result).to match(/^1 GoUnli20/)

@@ -247,8 +247,11 @@ class SiemensMc39iDongle < Dongle
 
   
 
-  def ussd(number, array_of_inputs=[])
-    waiting_timeout = 20
+  def ussd(params)
+    number = params[:number]
+    array_of_inputs= params[:commands] || []
+        
+    waiting_timeout = 60
     input_array = []
      
     @gsm_modem.execute %Q(ATD#{number};) do |response|    
