@@ -126,6 +126,9 @@ angular.module('frontendYoApp')
                 //Assign Sequence Number on Run time
                 $scope.lost_treasure.entries[i].sequence_no = $scope.lost_treasure.counters.sequence_no++;
                 
+                //Reset run time clock 
+                $scope.lost_treasure.entries[i].timer_start = null;
+                
                 $scope.lost_treasure.entries[i].meta.loading = true;
                 $scope.lost_treasure.entries[i].status = statuses.local_queue;
             }
