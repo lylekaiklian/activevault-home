@@ -13,6 +13,7 @@ describe 'Siemens MC39i' do
   
   describe 'USSD' do
     
+      
     it 'must have a main menu' do      
       port = @sticks[:A][:port]
       
@@ -40,7 +41,7 @@ describe 'Siemens MC39i' do
         result = dongle.ussd(number: "*143#", commands:[1, 7])
         expect(result).to_not be_nil
         expect(result.length).to be > 0
-        expect(result).to match(/^1 GoUnli20/)
+        expect(result).to match(/^What type of CALLS do you want/)
       end             
     end
    
