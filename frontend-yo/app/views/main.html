@@ -45,7 +45,10 @@
             <td><input class="form-control expected_charge" ng-model="entry.expected_charge"></input></td>
             <td><textarea class="form-control" ng-model="entry.expected_result"></textarea></td>
             <td><span ng-show="!entry.meta.loading">{{entry.actual_result}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
-            <td><span ng-show="!entry.meta.loading" class="glyphicon glyphicon-ok-circle" style="color:green; font-size: 25px;"></span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td>
+              <span ng-if="entry.pass_or_fail" ng-show="!entry.meta.loading && entry.pass_or_fail" class="glyphicon glyphicon-ok-circle" style="color:green; font-size: 25px;"></span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/>
+              <span ng-if="!entry.pass_or_fail" ng-show="!entry.meta.loading && entry.pass_or_fail==false" class="glyphicon glyphicon-remove-circle" style="color:red; font-size: 25px;"></span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/>
+            </td>
             <td><span ng-show="!entry.meta.loading">{{entry.remarks}}</span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td>
                 <button class="btn btn-xs btn-success lt-add-entry" ng-click="lost_treasure.methods.add_entry()" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-plus"></button>

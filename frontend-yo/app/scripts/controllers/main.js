@@ -147,7 +147,12 @@ angular.module('frontendYoApp')
                         $scope.lost_treasure.entries[scenario_index].amount_charged = data.amount_charged;
                         $scope.lost_treasure.entries[scenario_index].actual_result = data.actual_result;
                         $scope.lost_treasure.entries[scenario_index].remarks = data.remarks;
-                        $scope.lost_treasure.entries[scenario_index].pass_or_fail = data.pass_or_fail;
+                        if(data.pass_or_fail === 'pass'){
+                          $scope.lost_treasure.entries[scenario_index].pass_or_fail = true;
+                        }else{
+                          $scope.lost_treasure.entries[scenario_index].pass_or_fail = false;
+                        }
+                        console.log($scope.lost_treasure.entries[scenario_index].pass_or_fail)
                         infinite_poke(scenario_index + 1);
                     })
                      .error(function(){
