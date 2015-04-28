@@ -10,7 +10,8 @@ class Scenario
         :description, :keyword, :a_number, 
         :b_number, :expected_result, :time_sent, :time_received,
         :beginning_balance, :ending_balance, :amount_charged,
-        :actual_result, :pass_or_fail, :remarks 
+        :actual_result, :pass_or_fail, :remarks, :ussd_command,
+        :ussd_number
     @@attributes = @@readonly_attributes
     
     @@attributes.each do |attr|
@@ -53,7 +54,9 @@ class Scenario
             expected_result: expected_result,
             actual_result: actual_result,
             pass_or_fail: pass_or_fail,
-            remarks: remarks
+            remarks: remarks,
+            ussd_command: ussd_command,
+            ussd_number: ussd_number
         }
     end
     
@@ -64,7 +67,7 @@ class Scenario
         else
             throw StandardError.new(@errors.join("\n"))
         end
-    end
+        end
     
     def validates?
         @errors = []
