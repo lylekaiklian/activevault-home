@@ -11,7 +11,7 @@ class Scenario
         :b_number, :expected_result, :time_sent, :time_received,
         :beginning_balance, :ending_balance, :amount_charged,
         :actual_result, :pass_or_fail, :remarks, :ussd_command,
-        :ussd_number
+        :ussd_number, :type
     @@attributes = @@readonly_attributes
     
     @@attributes.each do |attr|
@@ -56,7 +56,8 @@ class Scenario
             pass_or_fail: pass_or_fail,
             remarks: remarks,
             ussd_command: ussd_command,
-            ussd_number: ussd_number
+            ussd_number: ussd_number,
+            type: type
         }
     end
     
