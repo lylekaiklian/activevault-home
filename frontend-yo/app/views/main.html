@@ -16,6 +16,8 @@
             <th style="width:10%;">Keyword</th>
             <th style="width:7%;">A Number</th>
             <th>B Number</th>
+            <th>USSD number</th>
+            <th>USSD command</th>
             <th style="width:10%;">Time Sent</th>
             <th style="width:10%;">Time Rcvd</th>
             <th style="width:5%;" title="Beginning Balance">Beg Bal</th>
@@ -37,6 +39,8 @@
             <td><textarea class="form-control" ng-model="entry.keyword"></textarea></td>
             <td><input type="text" class="form-control" ng-model="entry.a_number" style="width:80px"/></td>
             <td><input type="text" class="form-control" ng-model="entry.b_number" style="width:80px"/></td>
+            <td><input type="text" class="form-control" ng-model="entry.ussd_number" style="width:80px"/></td>
+            <td><input type="text" class="form-control" ng-model="entry.ussd_command" style="width:80px"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.time_sent}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.time_received}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.beginning_balance}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
