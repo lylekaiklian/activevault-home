@@ -145,9 +145,14 @@ class TestKit
     
     dongle = @sticks[stick.to_sym][:dongle_object]
 
+    time_sent = Time.now
     actual_result = dongle.ussd(number: number, commands: commands)
+    time_received = Time.now
+    
     output = {
       actual_result: actual_result,
+      time_sent: time_sent.strftime("%I:%M %p"),
+      time_received: time_received.strftime("%I:%M %p"),      
       pass_or_fail: "true",
       remarks: "OK"      
     }
