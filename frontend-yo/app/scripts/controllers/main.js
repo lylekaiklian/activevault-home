@@ -24,6 +24,11 @@ angular.module('frontendYoApp')
     $scope.lost_treasure.tester = 'KATE	';
     $scope.lost_treasure.mobtel_number = '09273299820';
     $scope.lost_treasure.network = 'GHP';
+    
+    $scope.lost_treasure.type = [
+        {'value':'sms', 'label': 'SMS'},
+        {'value':'ussd', 'label': 'USSD'}
+    ];
 
     /** Counters keep track of the sequence and batch of the scenarios **/
     $scope.lost_treasure.counters = {
@@ -147,7 +152,7 @@ angular.module('frontendYoApp')
                         $scope.lost_treasure.entries[scenario_index].amount_charged = data.amount_charged;
                         $scope.lost_treasure.entries[scenario_index].actual_result = data.actual_result;
                         $scope.lost_treasure.entries[scenario_index].remarks = data.remarks;
-                        if(data.pass_or_fail === 'pass'){
+                        if(data.pass_or_fail === 'true'){
                           $scope.lost_treasure.entries[scenario_index].pass_or_fail = true;
                         }else{
                           $scope.lost_treasure.entries[scenario_index].pass_or_fail = false;
@@ -179,35 +184,12 @@ angular.module('frontendYoApp')
     };
     
     $scope.lost_treasure.mock_entries = [
-        {
-            'batch': $scope.lost_treasure.counters.batch,
-            //'id': $scope.lost_treasure.methods.generate_id(),
-            'sequence_no': $scope.lost_treasure.counters.sequence_no++,
-            'ref_no': 1,
-            'test_date': '2/26/2015',
-            'scenario': 'Subscriber texts invalid keyword Catch All Reply',
-            'keyword': 'INVALID',
-            'a_number':'09273299820',
-            'b_number':'2346',
-            'time_sent': null,
-            'time_received': null,
-            'beginning_balance': null,
-            'ending_balance': null,
-            'amount_charged': null,
-            'expected_charge': 2.50,
-            'expected_result':'Sorry, you sent an invalid keyword. Text CHECK to 2346 for free to know your services. To Activate your MMS, txt GO to 2951 .Need help on 2346 downloads? Call (02)892-9999, Mon-Fri 9am-5pm. Thank you',
-            'actual_result': null,
-            'pass_or_fail': null,
-            'remarks': null,
-            'meta': {
-                'loading': false
-            }
-         },
          {
             'batch': $scope.lost_treasure.counters.batch,
             //'id': $scope.lost_treasure.methods.generate_id(),
             'sequence_no': $scope.lost_treasure.counters.sequence_no++,             
-            'ref_no': 2,
+            'ref_no': 1,
+            'type': 'sms',
             'test_date': '2/26/2015',
             'scenario': 'Without Subscriptions',
             'keyword': 'CHECK',
@@ -219,7 +201,8 @@ angular.module('frontendYoApp')
             'ending_balance': null,
             'amount_charged': null,
             'expected_charge': 0,
-            'expected_result':'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
+            'expected_result':
+                'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
             'actual_result': null,
             'pass_or_fail': null,
             'remarks': null,
@@ -231,7 +214,8 @@ angular.module('frontendYoApp')
             'batch': $scope.lost_treasure.counters.batch,
             //'id': $scope.lost_treasure.methods.generate_id(),
             'sequence_no': $scope.lost_treasure.counters.sequence_no++,            
-            'ref_no': 3,
+            'ref_no': 2,
+             'type': 'sms',
             'test_date': '2/26/2015',
             'scenario': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
             'keyword': 'PCLUBINFO',
@@ -243,7 +227,8 @@ angular.module('frontendYoApp')
             'ending_balance': null,
             'amount_charged': null,
             'expected_charge': 0,
-            'expected_result':'PISO Club Service is your premium access to fun & latest MP3’s, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily. To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.',
+            'expected_result':
+                "PISO Club Service is your premium access to fun & latest MP3's, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily.To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.",
             'actual_result': null,
             'pass_or_fail': null,
             'remarks': null,

@@ -12,12 +12,15 @@
         <tr>
             <th class="ref_no">Ref #</th>
             <th>Test Date</th>
+            <th style="width:200px;">Type</th>
             <th class="scenario">Scenario</th>
-            <th style="width:10%;">Keyword</th>
+            <th style="width: 80px;">Keyword</th>
+            <!--
             <th style="width:7%;">A Number</th>
-            <th>B Number</th>
-            <th>USSD number</th>
-            <th>USSD command</th>
+            -->
+            <th style="width: 100px;">B Number</th>
+            <th style="width: 80px;">USSD number</th>
+            <th style="width: 80px;">USSD command</th>
             <th style="width:10%;">Time Sent</th>
             <th style="width:10%;">Time Rcvd</th>
             <th style="width:5%;" title="Beginning Balance">Beg Bal</th>
@@ -27,7 +30,8 @@
             <th style="width:23%;">Expected Result</th>
             <th style="width:17%;">Actual Result</th>
             <th>Pass or Fail</th>
-            <th>Remarks</th>        
+            <th>Remarks</th>
+            <th>Run Time</th>
             <th class="treasure-column-action">Action</th>
         </tr>
     </thead>
@@ -35,18 +39,24 @@
         <tr ng-repeat="entry in lost_treasure.entries">
             <td class="ref_no"><input type="text" class="form-control" ng-model="entry.ref_no" style="width:20px"/></td>
             <td>{{entry.test_date}}</td>
+            <td>
+                <select class="form-control" style="width:75px; padding: 0;" ng-model="entry.type" ng-options="type.value as type.label for type in lost_treasure.type">
+                </select>
+            </td>
             <td><textarea class="form-control" ng-model="entry.scenario"></textarea></td>
-            <td><textarea class="form-control" ng-model="entry.keyword"></textarea></td>
+            <td style="width: 100px;"><textarea class="form-control" ng-model="entry.keyword" ng-show="entry.type == 'sms'"></textarea></td>
+            <!--
             <td><input type="text" class="form-control" ng-model="entry.a_number" style="width:80px"/></td>
-            <td><input type="text" class="form-control" ng-model="entry.b_number" style="width:80px"/></td>
-            <td><input type="text" class="form-control" ng-model="entry.ussd_number" style="width:80px"/></td>
-            <td><input type="text" class="form-control" ng-model="entry.ussd_command" style="width:80px"/></td>
+            -->
+            <td style="width: 100px;"><input type="text" class="form-control" ng-model="entry.b_number" ng-show="entry.type == 'sms'" style="width:80px"/></td>
+            <td style="width: 80px;"><input type="text" class="form-control" ng-model="entry.ussd_number" style="width:80px" ng-show="entry.type == 'ussd'"/></td>
+            <td style="width: 80px;"><input type="text" class="form-control" ng-model="entry.ussd_command" style="width:80px" ng-show="entry.type == 'ussd'"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.time_sent}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.time_received}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.beginning_balance}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.ending_balance}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.amount_charged}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
-            <td><input class="form-control expected_charge" ng-model="entry.expected_charge"></input></td>
+            <td style><input class="form-control expected_charge" ng-model="entry.expected_charge" ng-show="entry.type == 'sms'"></input></td>
             <td><textarea class="form-control" ng-model="entry.expected_result"></textarea></td>
             <td><span ng-show="!entry.meta.loading">{{entry.actual_result}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td>
@@ -54,6 +64,9 @@
               <span ng-if="!entry.pass_or_fail" ng-show="!entry.meta.loading && entry.pass_or_fail==false" class="glyphicon glyphicon-remove-circle" style="color:red; font-size: 25px;"></span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/>
             </td>
             <td><span ng-show="!entry.meta.loading">{{entry.remarks}}</span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
+            <td>
+                1min 10secs
+            </td>
             <td>
                 <button class="btn btn-xs btn-success lt-add-entry" ng-click="lost_treasure.methods.add_entry()" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-plus"></button>
                 <button class="btn btn-xs btn-danger lt-remove-entry" ng-click="lost_treasure.methods.remove_entry($index)" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-minus"></button>
