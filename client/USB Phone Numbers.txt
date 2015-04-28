@@ -1,2 +1,0 @@
-Model, Color, Number
-huawei E303, yellow, +639154322739
