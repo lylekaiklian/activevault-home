@@ -132,18 +132,40 @@ class TreasureQueue
     
     response = request.dup
     
+    
+    
     begin
-      output = @test_kit.send_and_must_receive(
-        stick: :A,     #Let's make it easier for now, and assume single stick setup
-        number: request[:b_number],
-        message: request[:keyword],
-        expected_result: request[:expected_result],
-        charge: request[:expected_charge]
-      )
       
-      [:time_sent, :time_received, :beginning_balance, :ending_balance, 
-        :amount_charged, :actual_result, :pass_or_fail, :remarks].each do |attribute|
-          response[attribute] = output[attribute]
+      case request[:type].to_sym
+      when :sms
+      
+        output = @test_kit.send_and_must_receive(
+          stick: :A,     #Let's make it easier for now, and assume single stick setup
+          number: request[:b_number],
+          message: request[:keyword],
+          expected_result: request[:expected_result],
+          charge: request[:expected_charge]
+        )
+        
+        [:time_sent, :time_received, :beginning_balance, :ending_balance, 
+          :amount_charged, :actual_result, :pass_or_fail, :remarks].each do |attribute|
+            response[attribute] = output[attribute]
+        end
+      
+      when :ussd
+        
+        output = @test_kit.ussd(
+           stick: :A,     
+           number: request[:ussd_number],
+           commands: request[:ussd_command].split(","),
+           expected_result: request[:expected_result],
+        )
+        
+        [:time_sent, :time_received, :beginning_balance, :ending_balance, 
+          :amount_charged, :actual_result, :pass_or_fail, :remarks].each do |attribute|
+            response[attribute] = output[attribute]
+        end          
+        
       end
       
           

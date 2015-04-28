@@ -95,10 +95,10 @@ class TestKit
   		final_balance =  final_balance_response[:balance].gsub(/[^\.0-9]/, "").to_f if !final_balance_response.nil?
   		puts "test_kit.send_and_must_receive: Final balance: #{final_balance}"
   		
+  		is_match = true
   		#is_match = !(/#{regex}/m =~ response_message).nil?
-  		
-  		
-  		#is_charged_correctly = false
+  		is_charged_correctly = true
+
   		#if !initial_balance.nil? && !final_balance.nil?
   		#	puts "Actual Charge: #{(BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)).to_s("F")}"
   		#	is_charged_correctly = ((BigDecimal.new(initial_balance.to_s) - BigDecimal.new(final_balance.to_s)) == BigDecimal.new(charge.to_s))
@@ -106,8 +106,8 @@ class TestKit
   		#	puts "Cannot calculate actual charge"
   		#end
   		
-  		#is_pass = is_match && is_charged_correctly
-  		is_pass = true
+  		is_pass = is_match && is_charged_correctly
+  		#is_pass = true
   		
   		    #delete all messages to cleanup
     #puts "Deleting all messages..."
@@ -134,6 +134,26 @@ class TestKit
    output
    
 	end
+	
+	def ussd(parameters)
+
+    puts "test_kit.ussd: invoked."
+    stick = parameters[:stick]
+    number = parameters[:number]
+    commands = parameters[:commands]
+    expected_result = parameters[:expected_result]
+    
+    dongle = @sticks[stick.to_sym][:dongle_object]
+
+    actual_result = dongle.ussd(number: number, commands: commands)
+    output = {
+      actual_result: actual_result,
+      pass_or_fail: "true",
+      remarks: "OK"      
+    }
+	  
+	end
+	
 	
 	def must_be_charged(parameters)
 		stick = parameters[0]
