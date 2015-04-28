@@ -30,11 +30,7 @@ angular.module('frontendYoApp')
         {'value':'ussd', 'label': 'USSD'}
     ];
 
-    /** Counters keep track of the sequence and batch of the scenarios **/
-    $scope.lost_treasure.counters = {
-        batch: new Date().getTime(),
-        sequence_no: 1
-    };
+
 
 
     $scope.lost_treasure.running = false;
@@ -112,9 +108,22 @@ angular.module('frontendYoApp')
         
         run: function() {
             $scope.lost_treasure.running = true;
+
+
+            /** Counters keep track of the sequence and batch of the scenarios **/
+            $scope.lost_treasure.counters = {
+                batch: new Date().getTime(),
+                sequence_no: 1
+            };
             
             //Set loading icons a-circling to give the user sense of movement and progress
             for (var i = 0; i < $scope.lost_treasure.entries.length; i++) {
+                
+                //Assign Batch Numer on Run time. This allows the scenarios to be run more than once.
+                $scope.lost_treasure.entries[i].batch = $scope.lost_treasure.counters.batch;
+                
+                //Assign Sequence Number on Run time
+                $scope.lost_treasure.entries[i].sequence_no = $scope.lost_treasure.counters.sequence_no++;
                 $scope.lost_treasure.entries[i].meta.loading = true;
                 $scope.lost_treasure.entries[i].status = statuses.local_queue;
             }
@@ -185,9 +194,6 @@ angular.module('frontendYoApp')
     
     $scope.lost_treasure.mock_entries = [
          {
-            'batch': $scope.lost_treasure.counters.batch,
-            //'id': $scope.lost_treasure.methods.generate_id(),
-            'sequence_no': $scope.lost_treasure.counters.sequence_no++,             
             'ref_no': 1,
             'type': 'sms',
             'test_date': '2/26/2015',
@@ -211,9 +217,6 @@ angular.module('frontendYoApp')
             }
         },
         {
-            'batch': $scope.lost_treasure.counters.batch,
-            //'id': $scope.lost_treasure.methods.generate_id(),
-            'sequence_no': $scope.lost_treasure.counters.sequence_no++,            
             'ref_no': 2,
              'type': 'sms',
             'test_date': '2/26/2015',
