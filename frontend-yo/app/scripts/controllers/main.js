@@ -86,6 +86,7 @@ angular.module('frontendYoApp')
             }
             $scope.lost_treasure.entries.push({
                 'ref_no': ref_no, 
+                'run_time': 0,
                 'meta': {
                     'loading':false
                 }
@@ -124,6 +125,7 @@ angular.module('frontendYoApp')
                 
                 //Assign Sequence Number on Run time
                 $scope.lost_treasure.entries[i].sequence_no = $scope.lost_treasure.counters.sequence_no++;
+                
                 $scope.lost_treasure.entries[i].meta.loading = true;
                 $scope.lost_treasure.entries[i].status = statuses.local_queue;
             }
@@ -147,6 +149,10 @@ angular.module('frontendYoApp')
                 var batch = $scope.lost_treasure.entries[scenario_index].batch;
                 var sequence_no = $scope.lost_treasure.entries[scenario_index].sequence_no;
                 
+                if (!$scope.lost_treasure.entries[scenario_index].timer_start) {
+                 $scope.lost_treasure.entries[scenario_index].timer_start = new Date().getTime();
+                }
+                
                 $http.head(endpoint + '/scenarios/' + batch + '/' + sequence_no)
                 .success(function() {
                     $scope.lost_treasure.entries[scenario_index].meta.loading = false;
@@ -161,6 +167,11 @@ angular.module('frontendYoApp')
                         $scope.lost_treasure.entries[scenario_index].amount_charged = data.amount_charged;
                         $scope.lost_treasure.entries[scenario_index].actual_result = data.actual_result;
                         $scope.lost_treasure.entries[scenario_index].remarks = data.remarks;
+                        $scope.lost_treasure.entries[scenario_index].timer_end = new Date().getTime();
+                        $scope.lost_treasure.entries[scenario_index].run_time = 
+                            $scope.lost_treasure.entries[scenario_index].timer_end - 
+                            $scope.lost_treasure.entries[scenario_index].timer_start;
+                        
                         if(data.pass_or_fail === 'true'){
                           $scope.lost_treasure.entries[scenario_index].pass_or_fail = true;
                         }else{
@@ -211,6 +222,7 @@ angular.module('frontendYoApp')
                 'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
             'actual_result': null,
             'pass_or_fail': null,
+            'run_time': 0,
             'remarks': null,
             'meta': {
                 'loading': false
@@ -234,6 +246,7 @@ angular.module('frontendYoApp')
                 "PISO Club Service is your premium access to fun & latest MP3's, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily.To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.",
             'actual_result': null,
             'pass_or_fail': null,
+            'run_time': 0,
             'remarks': null,
             'meta': {
                 'loading': false

@@ -64,7 +64,7 @@
             </td>
             <td><span ng-show="!entry.meta.loading">{{entry.remarks}}</span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td>
-                1min 10secs
+                {{entry.run_time / 1000.000}}s
             </td>
             <td>
                 <button class="btn btn-xs btn-success lt-add-entry" ng-click="lost_treasure.methods.add_entry()" ng-disabled="entry.meta.loading"><span class="glyphicon glyphicon-plus"></button>
