@@ -56,7 +56,7 @@
             <td><span ng-show="!entry.meta.loading">{{entry.ending_balance}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td><span ng-show="!entry.meta.loading">{{entry.amount_charged}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td style><input class="form-control expected_charge" ng-model="entry.expected_charge" ng-show="entry.type == 'sms'"></input></td>
-            <td><textarea class="form-control" ng-model="entry.expected_result"></textarea></td>
+            <td><textarea style="width: 140px;" class="form-control" ng-model="entry.expected_result"></textarea></td>
             <td><span ng-show="!entry.meta.loading">{{entry.actual_result}}</span> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/></td>
             <td>
               <span ng-if="entry.pass_or_fail" ng-show="!entry.meta.loading && entry.pass_or_fail" class="glyphicon glyphicon-ok-circle" style="color:green; font-size: 25px;"></span><img src="http://cdn.galoretv.com/images/loading.gif" ng-show="entry.meta.loading"/>
