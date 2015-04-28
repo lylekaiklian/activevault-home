@@ -279,8 +279,8 @@ class SiemensMc39iDongle < Dongle
       end
       
       #I'm done here!
-      @gsm_modem.raw_write %Q(\x1B), wait_before_write: 0.5
-
+      @gsm_modem.raw_write %Q(\x1A), wait_before_write: 0.5
+      @gsm_modem.execute %Q(AT+CUSD=2)
       
     end
     

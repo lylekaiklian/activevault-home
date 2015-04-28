@@ -194,7 +194,7 @@ class Gsm_Modem
 				puts "gsm_modem.wait_for: input after lambda: #{input}"
 				
 				# Check for error values
-				if input =~ /\+CM[A-Z] ERROR: (\d+)/
+				if input =~ /\+CM. ERROR: (\d+)/
 				  raise LostTreasureExceptions::GsmCmsError.new(input)
 				end
 				
