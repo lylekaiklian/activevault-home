@@ -86,6 +86,7 @@ angular.module('frontendYoApp')
             }
             $scope.lost_treasure.entries.push({
                 'ref_no': ref_no, 
+                'type':'sms',
                 'run_time': 0,
                 'meta': {
                     'loading':false
@@ -254,7 +255,45 @@ angular.module('frontendYoApp')
             'meta': {
                 'loading': false
             }
-        }        
+        },
+        {
+            'ref_no': 3,
+            'type': 'ussd',
+            'test_date': '2/26/2015',
+            'scenario': 'Movie Schedule',
+            //'keyword': 'PCLUBINFO',
+            //'a_number':'09273299820',
+            //'b_number':'2346',
+            'ussd_number': '*143#',
+            'ussd_command': '10,10',
+            'time_sent': null,
+            'time_received': null,
+            'beginning_balance': null,
+            'ending_balance': null,
+            'amount_charged': null,
+            'expected_charge': 0,
+            'expected_result':
+                "1 Greenbelt 1\n2 Glorietta 4\n3 Megamall\n4 Greenbelt 3\n5 Power Plant\n6 ATC\n7 Other Cinema\n8 Back",
+            'actual_result': null,
+            'pass_or_fail': null,
+            'run_time': 0,
+            'remarks': null,
+            'meta': {
+                'loading': false
+            }
+        },
+        /*
+        1 Create a promo
+                          2 Choose a gadget
+                                           3 Create a promo + add UnliFB for P2!
+
+4 NEW GoUNLI20
+              5 GoUNLI25
+                        6 Budget Promos
+                                       7 What's Hot?
+                                                    8 Manage registrations
+                                                                          9 Back*/
+        
     ];
     
     $scope.lost_treasure.entries = $scope.lost_treasure.mock_entries;
