@@ -24,13 +24,55 @@ angular.module('frontendYoApp')
     $scope.lost_treasure.tester = 'KATE	';
     $scope.lost_treasure.mobtel_number = '09273299820';
     $scope.lost_treasure.network = 'GHP';
+    // $scope.lost_treasure.csv_file = '';
     
+    $scope.lost_treasure.selected = {};
     $scope.lost_treasure.type = [
-        {'value':'sms', 'label': 'SMS'},
-        {'value':'ussd', 'label': 'USSD'}
+        {
+          'value':'sms',
+          'label': 'SMS',
+          'operations': [
+            {'value':'send', 'label': 'send'},
+            {'value':'check-balance', 'label': 'check-balance'}
+          ],
+          'conditions': [
+            {'value':'like', 'label': 'like'},
+            {'value':'equal', 'label': 'equal'}
+          ]
+        },
+        {
+          'value':'ussd',
+          'label': 'USSD',
+          'operations': [
+            {'value':'check-balance', 'label': 'check-balance'},
+            {'value':'check-promo', 'label': 'check-promo'}
+          ],
+          'conditions': [
+            {'value':'like', 'label': 'like'},
+            {'value':'equal', 'label': 'equal'}
+          ]
+        }
     ];
 
+    $scope.lost_treasure.sms_operations = [
+        {'value':'send', 'label': 'send'},
+        {'value':'check-balance', 'label': 'check-balance'}
+    ];
 
+    $scope.lost_treasure.ussd_operations = [
+        {'value':'check-promo', 'label': 'check-promo'},
+        {'value':'check-account', 'label': 'check-account'}
+    ];
+
+    $scope.lost_treasure.sms_conditions = [
+        {'value':'like', 'label': 'like'},
+        {'value':'equal', 'label': 'equal'}
+    ];
+
+    $scope.lost_treasure.ussd_conditions = [
+        {'value':'like', 'label': 'like'},
+        {'value':'equal', 'label': 'equal'}
+    ];
 
 
     $scope.lost_treasure.running = false;
@@ -64,6 +106,21 @@ angular.module('frontendYoApp')
                 // or server returns response with an error status.
               });            
             
+        },
+
+        import_scenario: function(csv_file){
+          if(csv_file && csv_file.length){
+            Upload.upload({
+              url: 'url',
+              file: csv_file
+            }).progress(function(evt){
+              console.log('upload on progress');
+            }).success(function(data, status, headers, config){
+              console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+            });
+          }
+          console.log('AYAY!');
+          console.log(csv_file);
         },
         
         beep: function(text) {
@@ -210,7 +267,8 @@ angular.module('frontendYoApp')
     $scope.lost_treasure.mock_entries = [
          {
             'ref_no': 1,
-            'type': 'sms',
+            'type': 'ussd',
+             'operation': 'check-promo',
             'test_date': '2/26/2015',
             'scenario': 'Without Subscriptions',
             'keyword': 'CHECK',
@@ -228,6 +286,10 @@ angular.module('frontendYoApp')
             'pass_or_fail': null,
             'run_time': 0,
             'remarks': null,
+            'ussd_command': '1, 3, 4, 6',
+            'ussd_number': '*143#',
+            'number_of_tries': '3',
+            'condition': 'equal',
             'meta': {
                 'loading': false
             }
@@ -235,6 +297,7 @@ angular.module('frontendYoApp')
         {
             'ref_no': 2,
              'type': 'sms',
+             'operation': 'check-balance',
             'test_date': '2/26/2015',
             'scenario': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
             'keyword': 'PCLUBINFO',
@@ -252,32 +315,10 @@ angular.module('frontendYoApp')
             'pass_or_fail': null,
             'run_time': 0,
             'remarks': null,
-            'meta': {
-                'loading': false
-            }
-        },
-        {
-            'ref_no': 3,
-            'type': 'ussd',
-            'test_date': '2/26/2015',
-            'scenario': 'Movie Schedule',
-            //'keyword': 'PCLUBINFO',
-            //'a_number':'09273299820',
-            //'b_number':'2346',
-            'ussd_number': '*143#',
-            'ussd_command': '10,10',
-            'time_sent': null,
-            'time_received': null,
-            'beginning_balance': null,
-            'ending_balance': null,
-            'amount_charged': null,
-            'expected_charge': 0,
-            'expected_result':
-                "1 Greenbelt 1\n2 Glorietta 4\n3 Megamall\n4 Greenbelt 3\n5 Power Plant\n6 ATC\n7 Other Cinema\n8 Back",
-            'actual_result': null,
-            'pass_or_fail': null,
-            'run_time': 0,
-            'remarks': null,
+            'ussd_command': null,
+            'ussd_number': null,
+            'number_of_tries': '5',
+            'condition': 'like',
             'meta': {
                 'loading': false
             }
