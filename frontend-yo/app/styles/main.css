@@ -18,10 +18,10 @@ body {
 }
 
 /* Custom page header */
-.header {
+/*.header {
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 10px;
-}
+}*/
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
   margin-top: 0;
@@ -34,7 +34,6 @@ body {
 .footer {
   padding-top: 19px;
   color: #777;
-  border-top: 1px solid #e5e5e5;
 }
 
 .container-narrow > hr {
@@ -130,3 +129,28 @@ body {
     border-bottom: 0;
   }
 }
+
+.navbar {
+  border: none;
+  background: #303030;
+  height: 75px;
+  border-radius: 0;
+  padding-top: 10px;
+}
+
+.navbar .navbar-header .navbar-brand {
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.custom-button {
+  border-radius: 0;
+  margin-right: 10px;
+}
+
+/*.custom-bg {
+  background: url(/imgaes/splash-footer.png);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center; 
+}*/
