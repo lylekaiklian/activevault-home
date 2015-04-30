@@ -1,0 +1,161 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ACTIVEVAULT</title>
+    <link rel="stylesheet" href="css/foundation.css" />
+    <!-- <link rel="stylesheet" href="http://static.tumblr.com/tcgqxd9/OVpn6g340/main.css" /> -->
+    <link rel="stylesheet" href="css/main.css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+    <script src="js/vendor/modernizr.js"></script>
+    <script src="js/smooth-scroll.js"></script>
+    <script src="http://static.tumblr.com/tcgqxd9/B2un262sb/jquery.js"></script>
+    <script src="http://static.tumblr.com/tcgqxd9/DGXn262t2/foundation.min.js"></script>
+    
+  </head>
+  <body>
+    <div id="main-container" class="large-12 columns">
+      <ul class="tabs vertical custom-tabs" data-tab>
+        <div class='arrow-div arrow-down'></div>
+        <li class="tab-title active">
+          <a href="#panel11">
+            <img class='nav-icon' src="img/nav-inactive.png">
+            <span>home</span>
+          </a>
+        </li>
+        <li class="tab-title">
+          <a href="#panel21">
+            <img class='nav-icon' src="img/nav-inactive.png">
+            <span>about</span>
+          </a>
+        </li>
+        <li class="tab-title">
+          <a href="#panel31">
+            <img class='nav-icon' src="img/nav-inactive.png">
+            <span>install</span>
+          </a>
+        </li>
+        <li class="tab-title">
+          <a href="#panel41">
+            <img class='nav-icon' src="img/nav-inactive.png">
+            <span>documentation</span>
+          </a>
+        </li>
+        <div class='arrow-div arrow-up'></div>
+      </ul>
+      <div class="tabs-content large-12 columns">
+        <div class="content active large-12 columns" id="panel11">
+          <div class='content-container large-12 columns left'>
+            <div class='large-4 columns large-offset-4 logo-container'>
+              <img src="img/temp-logo-lg.png">
+            </div>
+            <div class='row'></div>
+            <a href="#" class="button custom-button large-2 columns large-offset-5">download</a>
+            <div class='row'></div>
+            <div class=" large-4 columns large-offset-4 text-center">
+              <span class='custom-text-format'>powered by</span>
+              <a href="#" class=" custom-text-format link-infoshift">infoshift</a>
+            </div>
+          </div>
+          <!-- <div class='content-container large-6 columns right'></div> -->
+          <!-- <img src="img/temp-logo-lg.png" class='col-md-4 col-md-offset-4'> -->
+        </div>
+        <div class="content large-12 columns" id="panel21">
+          <div class='content-container large-12 columns two'>
+            <div class='large-6 columns two-left'>
+              <div class='large-6 columns large-offset-3 logo-container'>
+                <img src="img/temp-logo-lg.png">
+              </div>
+              <a href="#" class="button custom-button large-4 large-offset-4">get started</a>
+            </div>
+            <div class='large-6 columns about-container'>
+              <div class='custom-par large-10 columns large-offset-1'>
+                <h2 class='align-right title'>ActiveVault</h2>
+                <hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor</p>
+                <br>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu ex ea commodo consequat. Duis aute irure dolor</p>
+              </div>
+            </div>  
+          </div>
+        </div>
+        <div class="content" id="panel31">
+          
+        </div>
+        <div class="content" id="panel41">
+          
+        </div>
+      </div>
+    </div>
+
+    
+
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      $(document).ready(function(){
+        $('.fbTopBar').hide();
+        $('.skillbar').each(function(){
+          $(this).find('.skillbar-bar').animate({
+            width:$(this).attr('data-percent')
+          },3000);
+        });
+      });
+      smoothScroll.init();
+    </script>
+
+    
+    <script type="text/javascript">
+      jQuery(document).ready(function ($) {
+
+      $('#checkbox').change(function(){
+        setInterval(function () {
+            moveRight();
+        }, 3000);
+      });
+      
+      var slideCount = $('#slider ul li').length;
+      var slideWidth = $('#slider ul li').width();
+      var slideHeight = $('#slider ul li').height();
+      var sliderUlWidth = slideCount * slideWidth;
+      
+      $('#slider ul').css({ width: sliderUlWidth, marginLeft: - slideWidth });
+      
+        $('#slider ul li:last-child').prependTo('#slider ul');
+
+        function moveLeft() {
+            $('#slider ul').animate({
+                left: + slideWidth
+            }, 200, function () {
+                $('#slider ul li:last-child').prependTo('#slider ul');
+                $('#slider ul').css('left', '');
+            });
+        };
+
+        function moveRight() {
+            $('#slider ul').animate({
+                left: - slideWidth
+            }, 200, function () {
+                $('#slider ul li:first-child').appendTo('#slider ul');
+                $('#slider ul').css('left', '');
+            });
+        };
+
+        $('a.control_prev').click(function () {
+            moveLeft();
+        });
+
+        $('a.control_next').click(function () {
+            moveRight();
+        });
+
+    });    
+
+    </script>
+  </body>
+</html>
