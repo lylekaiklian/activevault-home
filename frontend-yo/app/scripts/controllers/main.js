@@ -106,13 +106,18 @@ angular.module('frontendYoApp')
         
         beep: function(text) {
           //var alert;
-          alert(text);   // jshint ignore:line
+          console.log($scope.lost_treasure.methods.current_date());
         },
         
         generate_id: function() {
             return new Date().getTime();
         },
-        
+
+        current_date: function(){
+          var d = (new Date().getMonth() + 1) + '/' + new Date().getDate() + '/' + new Date().getFullYear();
+
+          return d;
+        },
         
         add_entry: function() {
             var last_entry = $scope.lost_treasure.entries[$scope.lost_treasure.entries.length - 1];
@@ -250,11 +255,11 @@ angular.module('frontendYoApp')
             'ref_no': 1,
             'test_type': 'ussd',
              'operation': 'check-promo',
-            'test_date': '2/26/2015',
-            'scenario': 'Without Subscriptions',
+            'test_date': $scope.lost_treasure.methods.current_date(),
+            'description': 'Without Subscriptions',
             'keyword': 'CHECK',
-            'a_number':'09273299820',
-            'b_number':'2346',
+            'sender':'09273299820',
+            'recipient':'2346',
             'time_sent': null,
             'time_received': null,
             'beginning_balance': null,
@@ -279,11 +284,11 @@ angular.module('frontendYoApp')
             'ref_no': 2,
              'test_type': 'sms',
              'operation': 'check-balance',
-            'test_date': '2/26/2015',
-            'scenario': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
+            'test_date': $scope.lost_treasure.methods.current_date(),
+            'description': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
             'keyword': 'PCLUBINFO',
-            'a_number':'09273299820',
-            'b_number':'2346',
+            'sender':'09273299820',
+            'recipient':'2346',
             'time_sent': null,
             'time_received': null,
             'beginning_balance': null,
