@@ -24,7 +24,18 @@ class ScenariosController < ApplicationController
   # POST /scenarios
   # POST /scenarios.json
   
-  
+  # NOTE: This is a working method.
+  #
+  # def import_csv
+  #   response.headers["Content-Type"] = "text/csv; charset=utf-8"
+  #   response.headers["Accept"] = "text/csv"
+
+  #   if not params[:file].nil?
+  #     scenarios = Scenario.import(params[:file])
+  #   end
+  #   render json: {:success => true, scenarios: scenarios}
+  # end
+
   def create
     @scenario = Scenario.new(scenario_params)
     begin

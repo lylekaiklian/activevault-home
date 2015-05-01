@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   post 'scenarios/:batch/:sequence_no' => 'scenarios#create_results', defaults: {format: 'json'}
   get 'scenarios/:batch/:sequence_no' => 'scenarios#get_results', defaults: {format: 'json'}
   post 'scenarios/sns' => 'scenarios#sns', defaults: {format: 'json'}
+  post 'scenarios/import_csv' => 'scenarios#import_csv'
     
   #CORS policy
   match "/*all" , :to => 'lost_treasure#index',  :via => [:options]

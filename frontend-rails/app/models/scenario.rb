@@ -1,4 +1,5 @@
-class Scenario
+class Scenario < ActiveRecord::Base
+  require 'csv'
     
     include ActiveModel::Model
     include ActiveModel::Validations
@@ -11,7 +12,7 @@ class Scenario
         :b_number, :expected_result, :time_sent, :time_received,
         :beginning_balance, :ending_balance, :amount_charged,
         :actual_result, :pass_or_fail, :remarks, :ussd_command,
-        :ussd_number, :type
+        :ussd_number, :test_type
     @@attributes = @@readonly_attributes
     
     @@attributes.each do |attr|
@@ -20,6 +21,24 @@ class Scenario
 
     #Validation errors    
     attr_reader :errors
+
+    # NOTE: This is a working function
+    #
+    # def self.import(file)
+    #   CSV.foreach(file.path, headers: true) do |row|
+    #     hashed = row.to_hash
+    #     puts "IMPORT HASH!"
+    #     puts hashed
+    #     puts "IMPORT DATE!"
+    #     puts hashed["test_date"]
+    #     hashed["test_date"]= DateTime.parse(hashed["test_date"])
+    #     puts hashed["test_date"]
+    #     puts hashed["test_date"].class
+    #     Scenario.create!(hashed)
+    #   end
+
+    #   return Scenario.all
+    # end
     
     def initialize(params = {})
         
@@ -57,7 +76,7 @@ class Scenario
             remarks: remarks,
             ussd_command: ussd_command,
             ussd_number: ussd_number,
-            type: type
+            test_type: test_type
         }
     end
     

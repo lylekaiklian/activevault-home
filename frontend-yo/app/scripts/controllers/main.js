@@ -8,10 +8,11 @@
  * Controller of the frontendYoApp
  */
 angular.module('frontendYoApp')
-  .controller('MainCtrl', function ($scope, $http) {
+  .controller('MainCtrl', function ($scope, $http, Upload) {
       
     /** TODO: Configure this somewhere **/
-    var endpoint = 'http://dev.aws.galoretv.com:3007';
+    // var endpoint = 'http://dev.aws.galoretv.com:3007';
+    var endpoint = 'http://lost-treasure.ngrok.com';
       
     var statuses = {
         'local_queue': 'Local Queue',
@@ -24,34 +25,10 @@ angular.module('frontendYoApp')
     $scope.lost_treasure.tester = 'KATE	';
     $scope.lost_treasure.mobtel_number = '09273299820';
     $scope.lost_treasure.network = 'GHP';
-    // $scope.lost_treasure.csv_file = '';
     
-    $scope.lost_treasure.selected = {};
     $scope.lost_treasure.type = [
-        {
-          'value':'sms',
-          'label': 'SMS',
-          'operations': [
-            {'value':'send', 'label': 'send'},
-            {'value':'check-balance', 'label': 'check-balance'}
-          ],
-          'conditions': [
-            {'value':'like', 'label': 'like'},
-            {'value':'equal', 'label': 'equal'}
-          ]
-        },
-        {
-          'value':'ussd',
-          'label': 'USSD',
-          'operations': [
-            {'value':'check-balance', 'label': 'check-balance'},
-            {'value':'check-promo', 'label': 'check-promo'}
-          ],
-          'conditions': [
-            {'value':'like', 'label': 'like'},
-            {'value':'equal', 'label': 'equal'}
-          ]
-        }
+        {'value':'sms', 'label': 'SMS'},
+        {'value':'ussd', 'label': 'USSD'}
     ];
 
     $scope.lost_treasure.sms_operations = [
@@ -111,12 +88,16 @@ angular.module('frontendYoApp')
         import_scenario: function(csv_file){
           if(csv_file && csv_file.length){
             Upload.upload({
-              url: 'url',
+              url: endpoint + '/scenarios/import_csv',
               file: csv_file
             }).progress(function(evt){
               console.log('upload on progress');
-            }).success(function(data, status, headers, config){
-              console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+            }).success(function(data){
+              console.log('DATA', data.scenarios);
+              for(var i=0; i<data.scenarios.length; i++){
+                $scope.lost_treasure.entries.push(data.scenarios[i]);
+                console.log('SCENARIOS', data.scenarios[i]);
+              }
             });
           }
           console.log('AYAY!');
@@ -267,7 +248,7 @@ angular.module('frontendYoApp')
     $scope.lost_treasure.mock_entries = [
          {
             'ref_no': 1,
-            'type': 'ussd',
+            'test_type': 'ussd',
              'operation': 'check-promo',
             'test_date': '2/26/2015',
             'scenario': 'Without Subscriptions',
@@ -296,7 +277,7 @@ angular.module('frontendYoApp')
         },
         {
             'ref_no': 2,
-             'type': 'sms',
+             'test_type': 'sms',
              'operation': 'check-balance',
             'test_date': '2/26/2015',
             'scenario': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
@@ -323,17 +304,6 @@ angular.module('frontendYoApp')
                 'loading': false
             }
         },
-        /*
-        1 Create a promo
-                          2 Choose a gadget
-                                           3 Create a promo + add UnliFB for P2!
-
-4 NEW GoUNLI20
-              5 GoUNLI25
-                        6 Budget Promos
-                                       7 What's Hot?
-                                                    8 Manage registrations
-                                                                          9 Back*/
         
     ];
     

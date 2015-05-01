@@ -1,11 +1,8 @@
 
 <h1></h1>
 <div class='col-md-12'>
-  <button class="custom-button pull-right col-md-1 btn btn-success" type="submit" ng-click="lost_treasure.methods.add_entry()" ng-disabled="lost_treasure.running"><span class="glyphicon glyphicon-plus"></span> Import</button>
+  <button class="custom-button pull-right col-md-1 btn btn-success" ngf-select ng-model="csv_file" ngf-change="lost_treasure.methods.import_scenario(csv_file)" type="submit" ng-disabled="lost_treasure.running"><span class="glyphicon glyphicon-plus"></span> Import</button>
   <button class="custom-button pull-right col-md-1 btn btn-success" type="submit" ng-click="lost_treasure.methods.run()" ng-disabled="lost_treasure.running"><span class="glyphicon glyphicon-play"></span> Run </button> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="lost_treasure.running" />
-<!--
-<button class="btn btn-success" ngf-select ng-model="csv_file" ngf-change="lost_treasure.methods.import_scenario(csv_file)"><span class="glyphicon glyphicon-import"></span> Import</button>
--->
 </div>
 <label>Service</label><input class="form-control" type="text" ng-model="lost_treasure.service"/>
 <label>Tester / Department</label><input class="form-control" type="text" ng-model="lost_treasure.tester"/> 
@@ -26,32 +23,32 @@
             <td class="ref_no"><input type="text" class="form-control" ng-model="entry.ref_no" style="width:20px"/></td>
             <!-- <td>{{entry.test_date}}</td> -->
             <td>
-                <select class="form-control" style="width:75px; padding: 0;" ng-model="entry.type" ng-options="type.value as type.label for type in lost_treasure.type">
+                <select class="form-control" style="width:75px; padding: 0;" ng-model="entry.test_type" ng-options="type.value as type.label for type in lost_treasure.type">
                 </select>
             </td>
             <td>
-              <select ng-if="entry.type=='sms'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.operation" ng-options="type.value as type.label for type in lost_treasure.sms_operations"></select>
-              <select ng-if="entry.type=='ussd'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.operation" ng-options="type.value as type.label for type in lost_treasure.ussd_operations"></select>
+              <select ng-if="entry.test_type=='sms'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.operation" ng-options="type.value as type.label for type in lost_treasure.sms_operations"></select>
+              <select ng-if="entry.test_type=='ussd'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.operation" ng-options="type.value as type.label for type in lost_treasure.ussd_operations"></select>
             </td>
             <td>
-              <div ng-if="entry.type=='sms'">
+              <div ng-if="entry.test_type=='sms'">
                 <input type="text" class="form-control" ng-model="entry.number_of_tries" style="margin-bottom:10px" placeholder="Number of tries"/>
                 <input type="text" class="form-control" ng-model="entry.a_number" style="margin-bottom:10px" placeholder="sender"/>
                 <input type="text" class="form-control" ng-model="entry.b_number" style="margin-bottom:10px" placeholder="receiver"/>
                 <textarea class="form-control" ng-model="entry.keyword" placeholder="keyword/message"></textarea>
               </div>
-              <div ng-if="entry.type=='ussd'">
+              <div ng-if="entry.test_type=='ussd'">
                 <input type="text" class="form-control" ng-model="entry.number_of_tries" style="margin-bottom:10px" placeholder="Number of tries"/>
                 <input type="text" class="form-control" ng-model="entry.ussd_number" style="margin-bottom:10px" placeholder="USSD number"/>
                 <input type="text" class="form-control" ng-model="entry.ussd_command" style="margin-bottom:10px" placeholder="USSD command"/>
               </div>
             </td>
             <td>
-              <select ng-if="entry.type=='sms'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.condition" ng-options="type.value as type.label for type in lost_treasure.sms_conditions"></select>
-                  <select ng-if="entry.type=='ussd'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.condition" ng-options="type.value as type.label for type in lost_treasure.ussd_conditions"></select>
+              <select ng-if="entry.test_type=='sms'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.condition" ng-options="type.value as type.label for type in lost_treasure.sms_conditions"></select>
+                  <select ng-if="entry.test_type=='ussd'" class="form-control" style="width:120px; padding: 0;" ng-model="entry.condition" ng-options="type.value as type.label for type in lost_treasure.ussd_conditions"></select>
                 <textarea class="form-control" ng-model="entry.expected_result" placeholder="keyword/message"></textarea>
             </td>
-              <div ng-if="entry.type=='sms'">
+              <div ng-if="entry.test_type=='sms'">
                 <input type="text" class="form-control" ng-model="entry.number_of_tries" style="margin-bottom:10px" placeholder="Number of tries"/>
                 <input type="text" class="form-control" ng-model="entry.a_number" style="margin-bottom:10px" placeholder="sender"/>
                 <input type="text" class="form-control" ng-model="entry.b_number" style="margin-bottom:10px" placeholder="receiver"/>

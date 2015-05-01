@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429065613) do
+ActiveRecord::Schema.define(version: 20150430104056) do
 
   create_table "scenarios", force: :cascade do |t|
     t.string   "batch",             limit: 255
@@ -20,8 +20,8 @@ ActiveRecord::Schema.define(version: 20150429065613) do
     t.datetime "test_date"
     t.text     "description",       limit: 65535
     t.string   "keyword",           limit: 255
-    t.string   "a_number",          limit: 255
-    t.string   "b_number",          limit: 255
+    t.string   "sender",            limit: 255
+    t.string   "recipient",         limit: 255
     t.text     "expected_result",   limit: 65535
     t.datetime "time_sent"
     t.datetime "time_received"
@@ -33,7 +33,13 @@ ActiveRecord::Schema.define(version: 20150429065613) do
     t.text     "remarks",           limit: 65535
     t.string   "ussd_command",      limit: 255
     t.string   "ussd_number",       limit: 255
-    t.string   "type",              limit: 255
+    t.string   "test_type",         limit: 255
+    t.string   "operation",         limit: 255
+    t.string   "expected_charge",   limit: 255
+    t.string   "run_time",          limit: 255
+    t.integer  "number_of_tries",   limit: 4
+    t.string   "condition",         limit: 255
+    t.string   "status",            limit: 255
   end
 
 end
