@@ -4,17 +4,20 @@
   <button class="custom-button pull-right col-md-1 btn btn-success" ngf-select ng-model="csv_file" ngf-change="lost_treasure.methods.import_scenario(csv_file)" type="submit" ng-disabled="lost_treasure.running"><span class="glyphicon glyphicon-plus"></span> Import</button>
   <button class="custom-button pull-right col-md-1 btn btn-success" type="submit" ng-click="lost_treasure.methods.run()" ng-disabled="lost_treasure.running"><span class="glyphicon glyphicon-play"></span> Run </button> <img src="http://cdn.galoretv.com/images/loading.gif" ng-show="lost_treasure.running" />
 </div>
-<label>Service</label><input class="form-control" type="text" ng-model="lost_treasure.service"/>
-<label>Tester / Department</label><input class="form-control" type="text" ng-model="lost_treasure.tester"/> 
+<div class='form-group col-md-4'>
+    <label>Service</label><input class="form-control" type="text" ng-model="lost_treasure.service"/>
+    <label>Tester / Department</label><input class="form-control" type="text" ng-model="lost_treasure.tester"/> 
+</div>
+<br>
 <table class="table table-bordered table-hover table-striped">
-    <thead>
+    <thead class='custom-thead'>
         <tr>
-            <th class="ref_no col-md-2">Event ID</th>
-            <th class="col-md-3">Event</th>
-            <th class="col-md-3">Operation</th>
-            <th class="col-md-3">Parameter</th>
+            <th class="ref_no col-md-1">Event ID</th>
+            <th class="col-md-1">Event</th>
+            <th class="col-md-2">Operation</th>
+            <th class="col-md-2">Parameter</th>
             <th class='col-md-3'>Condition</th>
-            <th class='col-md-3'>Run time</th>
+            <th class='col-md-2'>Run time</th>
             <th class='col-md-1'>Result</th>
         </tr>
     </thead>
