@@ -8,10 +8,11 @@
  * Controller of the frontendYoApp
  */
 angular.module('frontendYoApp')
-  .controller('MainCtrl', function ($scope, $http) {
+  .controller('MainCtrl', function ($scope, $http, Upload) {
       
     /** TODO: Configure this somewhere **/
-    var endpoint = 'http://dev.aws.galoretv.com:3007';
+    // var endpoint = 'http://dev.aws.galoretv.com:3007';
+    var endpoint = 'http://lost-treasure.ngrok.com';
       
     var statuses = {
         'local_queue': 'Local Queue',
@@ -30,14 +31,39 @@ angular.module('frontendYoApp')
         {'value':'ussd', 'label': 'USSD'}
     ];
 
+    $scope.lost_treasure.sms_operations = [
+        {'value':'send', 'label': 'send'},
+        {'value':'check-balance', 'label': 'check-balance'}
+    ];
 
+    $scope.lost_treasure.ussd_operations = [
+        {'value':'check-promo', 'label': 'check-promo'},
+        {'value':'check-account', 'label': 'check-account'}
+    ];
 
+    $scope.lost_treasure.sms_conditions = [
+        {'value':'like', 'label': 'like'},
+        {'value':'equal', 'label': 'equal'}
+    ];
+
+    $scope.lost_treasure.ussd_conditions = [
+        {'value':'like', 'label': 'like'},
+        {'value':'equal', 'label': 'equal'}
+    ];
 
     $scope.lost_treasure.running = false;
-    
 
-    
     $scope.lost_treasure.methods = {
+
+        init: function(){
+          $http.get(endpoint + '/scenarios/get_all')
+            .success(function(data){
+              $scope.lost_treasure.entries = [];
+              for(var i=0; i<data.scenarios.length; i++){
+                $scope.lost_treasure.entries.push(data.scenarios[i]);
+              }
+            });
+        },
         
         /** Test method **/
         honk:function() {   
@@ -65,16 +91,36 @@ angular.module('frontendYoApp')
               });            
             
         },
+
+        import_scenario: function(csv_file){
+          if(csv_file && csv_file.length){
+            Upload.upload({
+              url: endpoint + '/scenarios/import_csv',
+              file: csv_file
+            }).progress(function(evt){
+            }).success(function(data){
+              $scope.lost_treasure.entries = [];
+              for(var i=0; i<data.scenarios.length; i++){
+                $scope.lost_treasure.entries.push(data.scenarios[i]);
+              }
+            });
+          }
+        },
         
-        beep: function(text) {
+        beep: function() {
           //var alert;
-          alert(text);   // jshint ignore:line
+          console.log($scope.lost_treasure.methods.current_date());
         },
         
         generate_id: function() {
             return new Date().getTime();
         },
-        
+
+        current_date: function(){
+          var d = (new Date().getMonth() + 1) + '/' + new Date().getDate() + '/' + new Date().getFullYear();
+
+          return d;
+        },
         
         add_entry: function() {
             var last_entry = $scope.lost_treasure.entries[$scope.lost_treasure.entries.length - 1];
@@ -181,7 +227,6 @@ angular.module('frontendYoApp')
                         }else{
                           $scope.lost_treasure.entries[scenario_index].pass_or_fail = false;
                         }
-                        console.log($scope.lost_treasure.entries[scenario_index].pass_or_fail)
                         infinite_poke(scenario_index + 1);
                     })
                      .error(function(){
@@ -207,95 +252,67 @@ angular.module('frontendYoApp')
         }
     };
     
-    $scope.lost_treasure.mock_entries = [
-         {
-            'ref_no': 1,
-            'type': 'sms',
-            'test_date': '2/26/2015',
-            'scenario': 'Without Subscriptions',
-            'keyword': 'CHECK',
-            'a_number':'09273299820',
-            'b_number':'2346',
-            'time_sent': null,
-            'time_received': null,
-            'beginning_balance': null,
-            'ending_balance': null,
-            'amount_charged': null,
-            'expected_charge': 0,
-            'expected_result':
-                'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
-            'actual_result': null,
-            'pass_or_fail': null,
-            'run_time': 0,
-            'remarks': null,
-            'meta': {
-                'loading': false
-            }
-        },
-        {
-            'ref_no': 2,
-             'type': 'sms',
-            'test_date': '2/26/2015',
-            'scenario': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
-            'keyword': 'PCLUBINFO',
-            'a_number':'09273299820',
-            'b_number':'2346',
-            'time_sent': null,
-            'time_received': null,
-            'beginning_balance': null,
-            'ending_balance': null,
-            'amount_charged': null,
-            'expected_charge': 0,
-            'expected_result':
-                "PISO Club Service is your premium access to fun & latest MP3's, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily.To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.",
-            'actual_result': null,
-            'pass_or_fail': null,
-            'run_time': 0,
-            'remarks': null,
-            'meta': {
-                'loading': false
-            }
-        },
-        {
-            'ref_no': 3,
-            'type': 'ussd',
-            'test_date': '2/26/2015',
-            'scenario': 'Movie Schedule',
-            //'keyword': 'PCLUBINFO',
-            //'a_number':'09273299820',
-            //'b_number':'2346',
-            'ussd_number': '*143#',
-            'ussd_command': '10,10',
-            'time_sent': null,
-            'time_received': null,
-            'beginning_balance': null,
-            'ending_balance': null,
-            'amount_charged': null,
-            'expected_charge': 0,
-            'expected_result':
-                "1 Greenbelt 1\n2 Glorietta 4\n3 Megamall\n4 Greenbelt 3\n5 Power Plant\n6 ATC\n7 Other Cinema\n8 Back",
-            'actual_result': null,
-            'pass_or_fail': null,
-            'run_time': 0,
-            'remarks': null,
-            'meta': {
-                'loading': false
-            }
-        },
-        /*
-        1 Create a promo
-                          2 Choose a gadget
-                                           3 Create a promo + add UnliFB for P2!
-
-4 NEW GoUNLI20
-              5 GoUNLI25
-                        6 Budget Promos
-                                       7 What's Hot?
-                                                    8 Manage registrations
-                                                                          9 Back*/
-        
-    ];
+//    $scope.lost_treasure.mock_entries = [
+//         {
+//            'ref_no': 1,
+//            'test_type': 'ussd',
+//             'operation': 'check-promo',
+//            'test_date': $scope.lost_treasure.methods.current_date(),
+//            'description': 'Without Subscriptions',
+//            'keyword': 'CHECK',
+//            'sender':'09273299820',
+//            'recipient':'2346',
+//            'time_sent': null,
+//            'time_received': null,
+//            'beginning_balance': null,
+//            'ending_balance': null,
+//            'amount_charged': null,
+//            'expected_charge': 0,
+//            'expected_result':
+//                'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
+//            'actual_result': null,
+//            'pass_or_fail': null,
+//            'run_time': 0,
+//            'remarks': null,
+//            'ussd_command': '1, 3, 4, 6',
+//            'ussd_number': '*143#',
+//            'number_of_tries': '3',
+//            'condition': 'equal',
+//            'meta': {
+//                'loading': false
+//            }
+//        },
+//        {
+//            'ref_no': 2,
+//             'test_type': 'sms',
+//             'operation': 'check-balance',
+//            'test_date': $scope.lost_treasure.methods.current_date(),
+//            'description': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
+//            'keyword': 'PCLUBINFO',
+//            'sender':'09273299820',
+//            'recipient':'2346',
+//            'time_sent': null,
+//            'time_received': null,
+//            'beginning_balance': null,
+//            'ending_balance': null,
+//            'amount_charged': null,
+//            'expected_charge': 0,
+//            'expected_result':
+//                "PISO Club Service is your premium access to fun & latest MP3's, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily.To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.",
+//            'actual_result': null,
+//            'pass_or_fail': null,
+//            'run_time': 0,
+//            'remarks': null,
+//            'ussd_command': null,
+//            'ussd_number': null,
+//            'number_of_tries': '5',
+//            'condition': 'like',
+//            'meta': {
+//                'loading': false
+//            }
+//        },
+//        
+//    ];
     
-    $scope.lost_treasure.entries = $scope.lost_treasure.mock_entries;
     
   });
