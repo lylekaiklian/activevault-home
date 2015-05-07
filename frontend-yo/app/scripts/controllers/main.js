@@ -51,12 +51,19 @@ angular.module('frontendYoApp')
         {'value':'equal', 'label': 'equal'}
     ];
 
-
     $scope.lost_treasure.running = false;
-    
 
-    
     $scope.lost_treasure.methods = {
+
+        init: function(){
+          $http.get(endpoint + '/scenarios/get_all')
+            .success(function(data){
+              $scope.lost_treasure.entries = [];
+              for(var i=0; i<data.scenarios.length; i++){
+                $scope.lost_treasure.entries.push(data.scenarios[i]);
+              }
+            });
+        },
         
         /** Test method **/
         honk:function() {   
@@ -91,20 +98,16 @@ angular.module('frontendYoApp')
               url: endpoint + '/scenarios/import_csv',
               file: csv_file
             }).progress(function(evt){
-              console.log('upload on progress');
             }).success(function(data){
-              console.log('DATA', data.scenarios);
+              $scope.lost_treasure.entries = [];
               for(var i=0; i<data.scenarios.length; i++){
                 $scope.lost_treasure.entries.push(data.scenarios[i]);
-                console.log('SCENARIOS', data.scenarios[i]);
               }
             });
           }
-          console.log('AYAY!');
-          console.log(csv_file);
         },
         
-        beep: function(text) {
+        beep: function() {
           //var alert;
           console.log($scope.lost_treasure.methods.current_date());
         },
@@ -224,7 +227,6 @@ angular.module('frontendYoApp')
                         }else{
                           $scope.lost_treasure.entries[scenario_index].pass_or_fail = false;
                         }
-                        console.log($scope.lost_treasure.entries[scenario_index].pass_or_fail)
                         infinite_poke(scenario_index + 1);
                     })
                      .error(function(){
@@ -250,68 +252,67 @@ angular.module('frontendYoApp')
         }
     };
     
-    $scope.lost_treasure.mock_entries = [
-         {
-            'ref_no': 1,
-            'test_type': 'ussd',
-             'operation': 'check-promo',
-            'test_date': $scope.lost_treasure.methods.current_date(),
-            'description': 'Without Subscriptions',
-            'keyword': 'CHECK',
-            'sender':'09273299820',
-            'recipient':'2346',
-            'time_sent': null,
-            'time_received': null,
-            'beginning_balance': null,
-            'ending_balance': null,
-            'amount_charged': null,
-            'expected_charge': 0,
-            'expected_result':
-                'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
-            'actual_result': null,
-            'pass_or_fail': null,
-            'run_time': 0,
-            'remarks': null,
-            'ussd_command': '1, 3, 4, 6',
-            'ussd_number': '*143#',
-            'number_of_tries': '3',
-            'condition': 'equal',
-            'meta': {
-                'loading': false
-            }
-        },
-        {
-            'ref_no': 2,
-             'test_type': 'sms',
-             'operation': 'check-balance',
-            'test_date': $scope.lost_treasure.methods.current_date(),
-            'description': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
-            'keyword': 'PCLUBINFO',
-            'sender':'09273299820',
-            'recipient':'2346',
-            'time_sent': null,
-            'time_received': null,
-            'beginning_balance': null,
-            'ending_balance': null,
-            'amount_charged': null,
-            'expected_charge': 0,
-            'expected_result':
-                "PISO Club Service is your premium access to fun & latest MP3's, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily.To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.",
-            'actual_result': null,
-            'pass_or_fail': null,
-            'run_time': 0,
-            'remarks': null,
-            'ussd_command': null,
-            'ussd_number': null,
-            'number_of_tries': '5',
-            'condition': 'like',
-            'meta': {
-                'loading': false
-            }
-        },
-        
-    ];
+//    $scope.lost_treasure.mock_entries = [
+//         {
+//            'ref_no': 1,
+//            'test_type': 'ussd',
+//             'operation': 'check-promo',
+//            'test_date': $scope.lost_treasure.methods.current_date(),
+//            'description': 'Without Subscriptions',
+//            'keyword': 'CHECK',
+//            'sender':'09273299820',
+//            'recipient':'2346',
+//            'time_sent': null,
+//            'time_received': null,
+//            'beginning_balance': null,
+//            'ending_balance': null,
+//            'amount_charged': null,
+//            'expected_charge': 0,
+//            'expected_result':
+//                'You do not have any subscriptions on 2346. This text is FREE. Get hot music and game downloads for your mobile visit http://dloadstation.com browsing is FREE. Questions? Call 892-9999 Mon-Fri 9am-5pm.',
+//            'actual_result': null,
+//            'pass_or_fail': null,
+//            'run_time': 0,
+//            'remarks': null,
+//            'ussd_command': '1, 3, 4, 6',
+//            'ussd_number': '*143#',
+//            'number_of_tries': '3',
+//            'condition': 'equal',
+//            'meta': {
+//                'loading': false
+//            }
+//        },
+//        {
+//            'ref_no': 2,
+//             'test_type': 'sms',
+//             'operation': 'check-balance',
+//            'test_date': $scope.lost_treasure.methods.current_date(),
+//            'description': 'Info message about the service indicating opt-in command, push frequency and tariff, opt-out command and service hotline.',
+//            'keyword': 'PCLUBINFO',
+//            'sender':'09273299820',
+//            'recipient':'2346',
+//            'time_sent': null,
+//            'time_received': null,
+//            'beginning_balance': null,
+//            'ending_balance': null,
+//            'amount_charged': null,
+//            'expected_charge': 0,
+//            'expected_result':
+//                "PISO Club Service is your premium access to fun & latest MP3's, Stickers, Quote and more! To enjoy this, reply ON PISOCLUB to 2346 for only P1.00 daily.To cancel service, reply STOP PISOCLUB. For questions, call 8929999 Monday to Friday 9-5PM.",
+//            'actual_result': null,
+//            'pass_or_fail': null,
+//            'run_time': 0,
+//            'remarks': null,
+//            'ussd_command': null,
+//            'ussd_number': null,
+//            'number_of_tries': '5',
+//            'condition': 'like',
+//            'meta': {
+//                'loading': false
+//            }
+//        },
+//        
+//    ];
     
-    $scope.lost_treasure.entries = $scope.lost_treasure.mock_entries;
     
   });

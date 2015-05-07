@@ -21,7 +21,7 @@
             <th class='col-md-1'>Result</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody ng-init="lost_treasure.methods.init()">
         <tr ng-repeat="entry in lost_treasure.entries">
             <td class="ref_no"><input type="text" class="form-control" ng-model="entry.ref_no" style="width:20px"/></td>
             <!-- <td>{{entry.test_date}}</td> -->

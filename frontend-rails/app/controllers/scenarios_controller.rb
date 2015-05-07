@@ -22,7 +22,12 @@ class ScenariosController < ApplicationController
   #end
 
   # POST /scenarios
-  # POST /scenarios.json
+  #  POST /scenarios.json
+
+  def get_all
+    @scenarios = Scenario.all
+    render json: { success: true, scenarios: @scenarios }
+  end
   
   def import_csv
     response.headers["Content-Type"] = "text/csv; charset=utf-8"
