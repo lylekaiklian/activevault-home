@@ -187,3 +187,7 @@ tr.ng-scope {
 tr.ng-scope:hover {
   background: rgb(205, 216, 236);
 }
+
+.main-buttons {
+  margin-bottom: 50px;
+}
